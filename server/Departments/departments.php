@@ -11,15 +11,18 @@ header("Content-Type: application/json");
 require_once "../config.php"; 
 
 // Fetch departments from the database along with the total number of students and faculty members
-$stmt = $conn->prepare("SELECT d.department_name, 
-                               d.department_head, 
-                               d.department_location, 
-                               COUNT(s.student_id) AS total_students, 
-                               COUNT(f.username) AS total_faculty
+$stmt = $conn->prepare("SELECT 
+                        d.department_id,
+                        d.department_name, 
+                        d.department_head, 
+                        d.department_location, 
+                        COUNT(DISTINCT s.student_id) AS total_students, 
+                        COUNT(DISTINCT f.faculty_id) AS total_faculty
                         FROM departments d
-                        LEFT JOIN students s ON d.department_name = s.department_name
-                        LEFT JOIN faculties f ON d.department_name = f.department_name
-                        GROUP BY d.department_name");
+                        LEFT JOIN students s ON d.department_id = s.department_id
+                        LEFT JOIN faculties f ON d.department_id = f.department_id
+                        GROUP BY d.department_id
+                        ");
 $stmt->execute();
 $result = $stmt->get_result();
 $departments = [];

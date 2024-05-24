@@ -21,26 +21,23 @@ function sanitize_input($data) {
 // Log the $_POST array
 error_log("Received POST data: " . print_r($_POST, true));
 
-// Check if admin username is provided
-if (!isset($_POST["username"])) {
-    http_response_code(400); 
-    echo json_encode(["error" => "Admin Username is not provided"]);
-    exit;
-}
 
-// Get admin ID from POST data
-$adminUsername = sanitize_input($_POST["username"]);
+// Get form data
+$programName = sanitize_input($_POST["programName"]);
+$schoolYear = sanitize_input($_POST["schoolYear"]);
+$semester = sanitize_input($_POST["semester"]);
+$departmentId = sanitize_input($_POST["departmentId"]);
 
-// Prepare and bind statement to delete admin
-$stmt = $conn->prepare("DELETE FROM admins WHERE username = ?");
-$stmt->bind_param("s", $adminUsername);
+// Prepare and bind statement
+$stmt = $conn->prepare("INSERT INTO programs (program_name, school_year, semester, department_id) VALUES (?,?,?,?)");
+$stmt->bind_param("sssi", $programName, $schoolYear, $semester, $departmentId);
 
 // Execute the statement
 if ($stmt->execute()) {
-    echo json_encode(["message" => "Admin deleted successfully"]);
+    echo json_encode(["message" => "Program added Successfully", ]);
 } else {
     http_response_code(404); 
-    echo json_encode(["error" => "Error deleting admin: " . $stmt->error]);
+    echo json_encode(["error" => "Error: " . $stmt->error]);
 }
 
 // Close statement

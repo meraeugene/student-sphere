@@ -1,6 +1,11 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { capitalizeFirstLetter } from "../../utils/capitalizeFirstLetter";
+import { fetchDepartmentNames } from "../../features/departments/departmentsSlice";
+import {
+  fetchProgramNames,
+  fetchPrograms,
+} from "../../features/programs/programsSlice";
 
 const AdminDashboard = () => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -15,8 +20,16 @@ const AdminDashboard = () => {
     weekday: "long",
   });
 
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchDepartmentNames());
+    dispatch(fetchPrograms());
+    dispatch(fetchProgramNames());
+  }, [dispatch]);
+
   return (
-    <main className=" w-full  flex  ml-[320px] h-screen  ">
+    <main className=" w-full  flex  ml-[300px] h-screen  ">
       <div className="left__container basis-[80%] ">
         <div className="welcome__container py-6 px-8 ">
           <div className="flex items-center justify-between">

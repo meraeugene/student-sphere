@@ -2,9 +2,21 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import authSliceReducer from "./slices/authSlice";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+import adminsReducer from "./features/users/adminsSlice";
+import departmentsReducer from "./features/departments/departmentsSlice";
+import facultiesReducer from "./features/faculties/facultiesSlice";
+import studentsReducer from "./features/students/studentsSlice";
+import programsReducer from "./features/programs/programsSlice";
+import subjectsReducer from "./features/subjects/subjectsSlice";
 
 const rootReducer = combineReducers({
   auth: authSliceReducer,
+  admins: adminsReducer,
+  departments: departmentsReducer,
+  faculties: facultiesReducer,
+  students: studentsReducer,
+  programs: programsReducer,
+  subjects: subjectsReducer,
 });
 
 const persistConfig = {

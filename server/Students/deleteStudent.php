@@ -22,14 +22,14 @@ function sanitize_input($data) {
 error_log("Received POST data: " . print_r($_POST, true));
 
 // Check if student ID is provided
-if (!isset($_POST["student_id"])) {
+if (!isset($_POST["studentId"])) {
     http_response_code(400); 
     echo json_encode(["error" => "Student ID is not provided"]);
     exit;
 }
 
 // Get student ID from POST data
-$studentId = sanitize_input($_POST["student_id"]);
+$studentId = sanitize_input($_POST["studentId"]);
 
 // Prepare and bind statement to delete admin
 $stmt = $conn->prepare("DELETE FROM students WHERE student_id = ?");

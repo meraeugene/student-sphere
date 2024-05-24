@@ -44,8 +44,6 @@ const AdminLoginForm = ({ setLoginAs }) => {
 
       dispatch(setCredentials(response.data));
 
-      console.log(response);
-
       const { redirect_uri } = response.data;
       navigate(redirect_uri);
       reset();

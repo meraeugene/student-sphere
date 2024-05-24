@@ -15,7 +15,7 @@ const FacultyAside = () => {
     "text-white w-full bg-white font-bold  gradient flex items-center gap-3 px-4 py-2 rounded-md ";
 
   return (
-    <div className=" w-[320px] bg-[#0C1E33] top-0 h-full overflow-y-scroll  text-white py-4 pb-0  fixed left-0 ">
+    <div className=" w-[300px] z-10 bg-[#0C1E33] top-0 h-full overflow-y-scroll  text-white py-4 pb-0  fixed left-0 ">
       <div className="flex items-center  gap-4  border-gray-700 pb-4 border-b px-6 ">
         <img src="/images/book.png" alt="logo" width={20} />
         <h1 className="play-bold text-base uppercase">Student Sphere</h1>
@@ -36,46 +36,6 @@ const FacultyAside = () => {
       <div className="users__container  border-b border-gray-700 px-6 py-8  ">
         <h1 className="text-sm poppins-regular mb-6">ACADEMICS</h1>
         <div className="flex flex-col gap-4  ">
-          {/* USERS */}
-          <NavLink
-            to="/admin/users"
-            className={`flex items-center gap-3 cursor-pointer px-4 py-2 ${
-              location.pathname === "/admin/users" ? activeClass : ""
-            }`}
-          >
-            <img src="/images/users.svg" alt="users" />
-            <h1 className="text-base poppins-regular font-base">Users</h1>
-          </NavLink>
-          {/* COURSES */}
-          <NavLink
-            to="/admin/courses"
-            className={`flex items-center gap-3 cursor-pointer px-4 py-2 ${
-              location.pathname === "/admin/courses" ? activeClass : ""
-            }`}
-          >
-            <img src="/images/courses.svg" alt="courses" />
-            <h1 className="text-base poppins-regular font-base">Courses</h1>
-          </NavLink>
-          {/* DEPARTMENTS */}
-          <NavLink
-            to="/admin/departments"
-            className={`flex items-center gap-3 cursor-pointer px-4 py-2 ${
-              location.pathname === "/admin/departments" ? activeClass : ""
-            }`}
-          >
-            <img src="/images/departments.svg" alt="departments" />
-            <h1 className="text-base poppins-regular font-base">Departments</h1>
-          </NavLink>
-          {/* FACULTIES */}
-          <NavLink
-            to="/admin/faculties"
-            className={`flex items-center gap-3 cursor-pointer px-4 py-2 ${
-              location.pathname === "/admin/faculties" ? activeClass : ""
-            }`}
-          >
-            <img src="/images/faculties.svg" alt="faculties" />
-            <h1 className="text-base poppins-regular font-base">Faculties</h1>
-          </NavLink>
           {/* STUDENTS */}
           <NavLink
             to="/admin/students"
@@ -133,13 +93,6 @@ const FacultyAside = () => {
             <img src="/images/settings.png" alt="settings" />
             <h1 className=" text-base  poppins-regular font-base">
               Account Settings
-            </h1>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <img src="/images/notification.png" alt="notification" />
-            <h1 className=" text-base  poppins-regular font-base">
-              Notification Preferences
             </h1>
           </div>
         </div>

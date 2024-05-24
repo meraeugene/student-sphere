@@ -30,11 +30,11 @@ const FacultyLoginForm = ({ setLoginAs }) => {
 
   const onSubmit = async (data) => {
     try {
-      const { username, password } = data;
+      const { facultyId, password } = data;
 
       const formData = new FormData();
 
-      formData.append("username", username);
+      formData.append("facultyId", facultyId);
       formData.append("password", password);
 
       const response = await axios.post(
@@ -74,24 +74,24 @@ const FacultyLoginForm = ({ setLoginAs }) => {
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-6   mt-10"
       >
-        <label htmlFor="username" className="inter  ">
+        <label htmlFor="facultyId" className="inter  ">
           <div className="flex flex-col gap-2">
-            <h1 className="font-semibold">Username</h1>
+            <h1 className="font-semibold">Faculty ID</h1>
             <div className="w-full">
               <input
                 type="text"
-                placeholder="Username"
-                name="username"
-                {...register("username", {
-                  required: "Username is required",
+                placeholder="Faculty ID"
+                name="facultId"
+                {...register("facultyId", {
+                  required: "Faculty ID is required",
                 })}
                 className={`${
-                  errors.username ? "border-[2px] border-red-500" : ""
+                  errors.facultyId ? "border-[2px] border-red-500" : ""
                 } h-[60px] border border-[#E2E8F0] outline-[#0C1E33 rounded-md px-4 w-full `}
               />
-              {errors.username && (
+              {errors.facultyId && (
                 <div className="text-red-500 font-semibold mt-2">
-                  {errors.username.message}
+                  {errors.facultyId.message}
                 </div>
               )}
             </div>

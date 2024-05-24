@@ -26,7 +26,7 @@ $studentID = sanitize_input($_POST["studentID"]);
 $password = sanitize_input($_POST["password"]);
 
 // Prepare and execute statement to fetch user from database
-$stmt = $conn->prepare("SELECT student_id, password, first_name, last_name, gender,  email,  date_of_birth, phone_number, department_name FROM students WHERE student_id = ?");
+$stmt = $conn->prepare("SELECT student_id, password, first_name, last_name, gender,  email,  date_of_birth, phone_number FROM students WHERE student_id = ?");
 if (!$stmt) {
     die("Error: " . $conn->error); // Output the error message
 }
@@ -37,7 +37,7 @@ $stmt->store_result();
 // Check if user exists
 if ($stmt->num_rows > 0) {
     // Bind result variables
-    $stmt->bind_result($studentID, $hashed_password, $firstName, $lastName,$gender,  $email,  $date_of_birth, $phone_number,  $department_name);
+    $stmt->bind_result($studentID, $hashed_password, $firstName, $lastName,$gender,  $email,  $date_of_birth, $phone_number);
     $stmt->fetch();
 
     // Verify password

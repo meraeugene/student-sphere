@@ -21,19 +21,19 @@ function sanitize_input($data) {
 // Log the $_POST array
 error_log("Received POST data: " . print_r($_POST, true));
 
-// Check if admin username is provided
-if (!isset($_POST["username"])) {
+// Check if student ID is provided
+if (!isset($_POST["facultyId"])) {
     http_response_code(400); 
-    echo json_encode(["error" => "Faculty Member Username is not provided"]);
+    echo json_encode(["error" => "Faculty ID is not provided"]);
     exit;
 }
 
-// Get admin ID from POST data
-$facultyMemberUsername = sanitize_input($_POST["username"]);
+// Get student ID from POST data
+$facultyId = sanitize_input($_POST["facultyId"]);
 
 // Prepare and bind statement to delete admin
-$stmt = $conn->prepare("DELETE FROM faculties WHERE username = ?");
-$stmt->bind_param("s", $facultyMemberUsername );
+$stmt = $conn->prepare("DELETE FROM faculties WHERE faculty_id = ?");
+$stmt->bind_param("i", $facultyId );
 
 // Execute the statement
 if ($stmt->execute()) {

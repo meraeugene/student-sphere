@@ -8,7 +8,7 @@ header("Access-Control-Allow-Headers: Content-Type");
 // Set the response content type to JSON
 header("Content-Type: application/json");
 
-require_once "../config.php"; 
+require_once "../config.php";
 
 // Function to sanitize user input
 function sanitize_input($data) {
@@ -21,21 +21,30 @@ function sanitize_input($data) {
 // Log the $_POST array
 error_log("Received POST data: " . print_r($_POST, true));
 
-
 // Get form data
-$departmentName = sanitize_input($_POST["departmentName"]);
-$departmentHead = sanitize_input($_POST["departmentHead"]);
-$departmentLocation = sanitize_input($_POST["departmentLocation"]);
+$programName = sanitize_input($_POST["programName"]);
+
+// Check if courseId is provided
+if (empty($programName)) {
+    http_response_code(400); // Bad Request
+    echo json_encode(["error" => "Program name is required"]);
+    exit();
+}
 
 // Prepare and bind statement
-$stmt = $conn->prepare("INSERT INTO departments (department_name, department_head, department_location) VALUES (?, ?, ?)");
-$stmt->bind_param("sss", $departmentName, $departmentHead, $departmentLocation);
+$stmt = $conn->prepare("DELETE FROM programs WHERE program_name = ?");
+$stmt->bind_param("s", $programName);
 
 // Execute the statement
 if ($stmt->execute()) {
-    echo json_encode(["message" => "Department Added Successfully", ]);
+    if ($stmt->affected_rows > 0) {
+        echo json_encode(["message" => "Program deleted Successfully"]);
+    } else {
+        http_response_code(404); // Not Found
+        echo json_encode(["error" => "Program not found"]);
+    }
 } else {
-    http_response_code(404); 
+    http_response_code(500); // Internal Server Error
     echo json_encode(["error" => "Error: " . $stmt->error]);
 }
 

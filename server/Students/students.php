@@ -11,10 +11,32 @@ header("Content-Type: application/json");
 require_once "../config.php"; 
 
 // Fetch users from the database excluding the password field
-$stmt = $conn->prepare("SELECT student_id, first_name, last_name,  gender, email, date_of_birth, address, phone_number, department_name FROM students");
+$sql = "
+    SELECT 
+        s.student_id, s.first_name, s.last_name, s.gender, s.email, s.date_of_birth, s.address, 
+        s.phone_number, d.department_id, d.department_name
+    FROM 
+        students s
+    JOIN 
+        departments d ON s.department_id = d.department_id
+    ORDER BY 
+        s.first_name ASC
+";
+
+$stmt = $conn->prepare($sql);
+
+// Check if the prepare() method was successful
+if ($stmt === false) {
+    http_response_code(500); // Internal Server Error
+    echo json_encode(["error" => "Failed to prepare the SQL statement"]);
+    error_log("SQL error: " . $conn->error);
+    exit;
+}
+
 $stmt->execute();
 $result = $stmt->get_result();
 $students = [];
+
 while ($row = $result->fetch_assoc()) {
     $students[] = $row;
 }

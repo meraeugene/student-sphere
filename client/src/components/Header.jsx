@@ -2,8 +2,8 @@ import React from "react";
 
 const Header = () => {
   return (
-    <header className="h-[55px] sticky w-full top-0  bg-white py-7 px-10 pl-0  border-b border flex justify-between items-center">
-      <div className="search__container relative ml-[350px]">
+    <header className="h-[55px] sticky w-full top-0 z-10  bg-white py-7 px-10 pl-0  border-b border flex justify-between items-center">
+      <div className="search__container relative ml-[330px]">
         <input
           type="search"
           placeholder="Search"
