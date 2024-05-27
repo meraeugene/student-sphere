@@ -10,17 +10,29 @@ header("Content-Type: application/json");
 
 require_once "../config.php"; 
 
+// Ensure database connection is established
+if (!$conn) {
+    http_response_code(500);
+    echo json_encode(["error" => "Database connection failed: " . mysqli_connect_error()]);
+    exit;
+}
+
 // Fetch users from the database excluding the password field
 $sql = "
     SELECT 
         f.faculty_id, f.first_name, f.last_name, f.email, f.phone_number, 
-        f.gender, f.date_of_birth, f.address, d.department_name, d.department_id, 
-        p.program_name, p.program_id  
+        f.gender, f.date_of_birth, f.address, s.section_id, s.section_name, sub.subject_code, 
+        sub.subject_name, d.department_name, d.department_id, 
+        p.program_name, p.program_id 
     FROM 
         faculties f
-    JOIN 
+    LEFT JOIN 
+        sections s ON f.section_id = s.section_id
+    LEFT JOIN 
+        subjects sub ON f.subject_code = sub.subject_code
+    LEFT JOIN 
         departments d ON f.department_id = d.department_id
-    JOIN 
+    LEFT JOIN 
         programs p ON f.program_id = p.program_id
     ORDER BY 
         f.first_name ASC
@@ -36,7 +48,15 @@ if ($stmt === false) {
     exit;
 }
 
-$stmt->execute();
+if (!$stmt->execute()) {
+    http_response_code(500); // Internal Server Error
+    echo json_encode(["error" => "Failed to execute the SQL statement"]);
+    error_log("SQL execution error: " . $stmt->error);
+    $stmt->close();
+    $conn->close();
+    exit;
+}
+
 $result = $stmt->get_result();
 $faculties = [];
 

@@ -12,20 +12,21 @@ require_once "../config.php";
 
 // Return the department_name instead of the department_id
 $stmt = $conn->prepare("
-    SELECT p.program_id, p.program_name, p.school_year ,  d.department_name , 
-    d.department_id
-    FROM programs p
-    JOIN departments d ON p.department_id = d.department_id
-    ORDER BY program_id ASC
+    SELECT s.section_id, s.section_name, s.year_level ,  d.department_name , 
+           d.department_id,p.program_id, p.program_name 
+    FROM sections s
+    JOIN departments d ON d.department_id = s.department_id
+    JOIN programs p ON p.program_id = s.program_id
+    ORDER BY section_name ASC
 ");
 $stmt->execute();
 $result = $stmt->get_result();
-$programs = [];
+$sections = [];
 while ($row = $result->fetch_assoc()) {
-    $programs[] = $row;
+    $sections[] = $row;
 }
 
-echo json_encode($programs);
+echo json_encode($sections);
 
 // Close statement
 $stmt->close();

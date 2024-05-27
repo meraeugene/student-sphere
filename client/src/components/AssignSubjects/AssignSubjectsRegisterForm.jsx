@@ -1,19 +1,90 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import InputField from "../InputField";
 import { useForm } from "react-hook-form";
 import { FiMinus } from "react-icons/fi";
+import { useSelector } from "react-redux";
+import Select from "react-select";
 
-const AssignSubjectsRegisterForm = ({ toggleAssignSubjectState }) => {
+const AssignSubjectsRegisterForm = ({
+  toggleAssignSubjectState,
+  selectedFaculty,
+  selectedSubject,
+}) => {
   // Use react hoook form
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm();
 
+  const sections = useSelector((state) => state.sections.sections);
+  const subjects = useSelector((state) => state.subjects.subjects);
+  const facultyMembers = useSelector((state) => state.faculties.faculties);
+
+  const [filteredSections, setFilteredSections] = useState([]);
+
+  useEffect(() => {
+    if (selectedFaculty && selectedSubject) {
+      const faculty = facultyMembers.find(
+        (faculty) => faculty.faculty_id === selectedFaculty
+      );
+      const subject = subjects.find(
+        (subject) => subject.subject_code === selectedSubject
+      );
+      if (faculty && subject) {
+        const programName = faculty.program_name;
+        setFilteredSections(
+          sections.filter((section) => section.program_name === programName)
+        );
+      }
+    }
+  }, [selectedFaculty, selectedSubject, facultyMembers, subjects, sections]);
+
+  useEffect(() => {
+    register("sectionIds", { required: "At least one section is required" });
+  }, [register]);
+
+  const onSectionChange = (selectedOptions) => {
+    const values = selectedOptions
+      ? selectedOptions.map((option) => option.value)
+      : [];
+    setValue("sectionIds", values);
+  };
+
   const onSubmit = async (data) => {
-    console.log(data);
+    const formData = {
+      ...data,
+      facultyId: selectedFaculty,
+      sectionIds: data.sectionIds || [], // Ensure sectionIds is an array
+    };
+    console.log(formData);
+  };
+
+  // Custom styles for react-select
+  const customStyles = {
+    control: (provided) => ({
+      ...provided,
+      minHeight: "60px",
+    }),
+    multiValue: (provided) => ({
+      ...provided,
+      backgroundColor: "#E2E8F0",
+      padding: "0.3em",
+    }),
+    multiValueLabel: (provided) => ({
+      ...provided,
+      color: "#0C1E33",
+    }),
+    multiValueRemove: (provided) => ({
+      ...provided,
+      color: "#0C1E33",
+      ":hover": {
+        backgroundColor: "#0C1E33",
+        color: "white",
+      },
+    }),
   };
 
   return (
@@ -22,7 +93,7 @@ const AssignSubjectsRegisterForm = ({ toggleAssignSubjectState }) => {
         <div className="p-10 add-user__container">
           <div className="flex items-center justify-between">
             <h1 className="text-3xl play-regular uppercase ">
-              Add Faculty Member{" "}
+              Add Subject To Faculty Member
             </h1>
             <button
               onClick={toggleAssignSubjectState}
@@ -37,38 +108,95 @@ const AssignSubjectsRegisterForm = ({ toggleAssignSubjectState }) => {
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-4 mt-10"
           >
-            <InputField
-              name="semester"
-              label="Semester"
-              placeholder="Semester"
-              required
-              register={register}
-              errors={errors}
-            />
-            <InputField
-              name="yearLevel"
-              label="Year Level"
-              placeholder="Year Level"
-              required
-              register={register}
-              errors={errors}
-            />
+            <label htmlFor="semester" className="inter  ">
+              <div className="flex flex-col gap-2">
+                <div className="flex gap-1">
+                  <h1 className="font-semibold">Semester</h1>
+                  <span className="text-red-500">*</span>
+                </div>
+                <div className="w-full">
+                  <select
+                    name="semester"
+                    {...register("semester", {
+                      required: "Semester  is required",
+                    })}
+                    className={`${
+                      errors.semester ? "border-[2px] border-red-500" : ""
+                    } h-[60px] border border-[#E2E8F0] outline-[#0C1E33] rounded-md px-4 w-full `}
+                  >
+                    <option value="" hidden>
+                      Select Semester
+                    </option>
+                    <option value="1st Semester">1st Semester</option>
+                    <option value="2nd Semester">2nd Semester</option>
+                  </select>
+                  {errors.semester && (
+                    <div className="text-red-500 font-semibold mt-2">
+                      {errors.semester.message}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </label>
+
             <InputField
               name="schoolYear"
               label="School Year"
               placeholder="School Year"
-              required
               register={register}
               errors={errors}
+              required
             />
             <InputField
-              name="sectionId"
-              label="Section Id"
-              placeholder="Section Id"
+              name="subjectCode"
+              label="Subject Code"
+              placeholder="Subject Code"
+              value={selectedSubject}
+              register={register}
+              errors={errors}
+              notEdittable
               required
+            />
+            <InputField
+              name="facultyId"
+              label="Faculty Id"
+              notEdittable
+              required
+              value={selectedFaculty}
               register={register}
               errors={errors}
             />
+            <label htmlFor="sectionIds" className="inter">
+              <div className="flex flex-col gap-2">
+                <div className="flex gap-1">
+                  <h1 className="font-semibold">Sections</h1>
+                  <span className="text-red-500">*</span>
+                </div>
+                <div className="w-full">
+                  <Select
+                    options={filteredSections.map((section) => ({
+                      value: section.section_id,
+                      label: section.section_name,
+                    }))}
+                    isMulti
+                    placeholder="Select or search a sections..."
+                    onChange={onSectionChange}
+                    styles={customStyles}
+                    className={`${
+                      errors.sectionIds
+                        ? "border-[2px] border-red-500"
+                        : "hx-[60px] "
+                    }`}
+                  />
+                  {errors.sectionIds && (
+                    <div className="text-red-500 font-semibold mt-2">
+                      {errors.sectionIds.message}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </label>
+
             <div className="flex flex-col gap-4 mt-4 ">
               <button
                 disabled={isSubmitting}

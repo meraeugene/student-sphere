@@ -87,7 +87,10 @@ const StudentRegistrationForm = ({ toggleAddStudentState, onStudentAdded }) => {
 
             <label className="inter">
               <div className="flex flex-col gap-2">
-                <h1 className="font-semibold">Gender</h1>
+                <div className="flex gap-1">
+                  <h1 className="font-semibold">Gender</h1>
+                  <span className="text-red-500">*</span>
+                </div>
                 <div className="flex items-center gap-4">
                   {["Male", "Female"].map((gender) => (
                     <label key={gender} className="flex items-center gap-2">
@@ -152,7 +155,10 @@ const StudentRegistrationForm = ({ toggleAddStudentState, onStudentAdded }) => {
 
             <label className="inter">
               <div className="flex flex-col gap-2">
-                <h1 className="font-semibold">Department</h1>
+                <div className="flex gap-1">
+                  <h1 className="font-semibold">Department</h1>
+                  <span className="text-red-500">*</span>
+                </div>
                 <div className="w-full">
                   <select
                     name="departmentId"

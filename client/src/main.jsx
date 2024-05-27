@@ -22,6 +22,7 @@ import Students from "./pages/Admin/Students.jsx";
 import Subjects from "./pages/Admin/Subjects.jsx";
 import Programs from "./pages/Admin/Programs.jsx";
 import AssignSujects from "./pages/Admin/AssignSubjects.jsx";
+import Sections from "./pages/Admin/Sections.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -39,6 +40,12 @@ const router = createBrowserRouter(
         <Route exact path="/admin/students" element={<Students />} />
         <Route exact path="/admin/subjects" element={<Subjects />} />
         <Route exact path="/admin/programs" element={<Programs />} />
+        <Route
+          exact
+          path="/admin/assign-subjects"
+          element={<AssignSujects />}
+        />
+        <Route exact path="/admin/sections" element={<Sections />} />
         <Route
           exact
           path="/admin/assign-subjects"

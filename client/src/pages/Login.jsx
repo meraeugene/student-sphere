@@ -47,7 +47,7 @@ const Login = () => {
           <h1 className="play-bold text-3xl uppercase">Student Sphere</h1>
         </div>
 
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-6">
           {!loginAs && (
             <h1 className="play-regular text-center text-4xl font-semibold ">
               Sign In to your Account

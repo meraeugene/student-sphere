@@ -25,16 +25,15 @@ error_log("Received POST data: " . print_r($_POST, true));
 // Get form data
 $programName = sanitize_input($_POST["programName"]);
 $schoolYear = sanitize_input($_POST["schoolYear"]);
-$semester = sanitize_input($_POST["semester"]);
 $departmentId = sanitize_input($_POST["departmentId"]);
 
 // Prepare and bind statement
-$stmt = $conn->prepare("INSERT INTO programs (program_name, school_year, semester, department_id) VALUES (?,?,?,?)");
-$stmt->bind_param("sssi", $programName, $schoolYear, $semester, $departmentId);
+$stmt = $conn->prepare("INSERT INTO programs (program_name, school_year, semester, department_id) VALUES (?,?,?)");
+$stmt->bind_param("ssi", $programName, $schoolYear, $departmentId);
 
 // Execute the statement
 if ($stmt->execute()) {
-    echo json_encode(["message" => "Program added Successfully", ]);
+    echo json_encode(["message" => "Program added successfully", ]);
 } else {
     http_response_code(404); 
     echo json_encode(["error" => "Error: " . $stmt->error]);

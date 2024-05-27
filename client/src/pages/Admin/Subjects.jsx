@@ -73,7 +73,7 @@ const Subjects = () => {
                     <th className="px-4 py-2 text-left font-bold">
                       SUBJECT NAME
                     </th>
-                    <th className="px-4 py-2 text-left font-bold">STATUS</th>
+                    <th className="px-4 py-2 text-center font-bold">STATUS</th>
                     <th className="px-4 py-2 text-left font-bold">HOURS</th>
                     <th className="px-4 py-2 text-left font-bold">UNIT</th>
                     <th className="px-4 py-2 text-left font-bold">PROGRAM</th>
@@ -88,7 +88,17 @@ const Subjects = () => {
                     >
                       <td className="px-4 py-2 ">{subject.subject_code}</td>
                       <td className="px-4 py-2">{subject.subject_name}</td>
-                      <td className="px-4 py-2">{subject.status}</td>
+                      <td className="px-4 py-2">
+                        <span
+                          className={
+                            subject.status === "Active"
+                              ? "bg-green-200 h-[40px] rounded-md text-green-700   flex items-center justify-center "
+                              : "bg-red-200 h-[40px] text-red-700  rounded-md  flex items-center justify-center "
+                          }
+                        >
+                          {subject.status}
+                        </span>
+                      </td>
                       <td className="px-4 py-2">{subject.hours}</td>
                       <td className="px-4 py-2">{subject.unit}</td>
                       <td className="px-4 py-2">{subject.program_name}</td>

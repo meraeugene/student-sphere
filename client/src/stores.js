@@ -8,6 +8,7 @@ import facultiesReducer from "./features/faculties/facultiesSlice";
 import studentsReducer from "./features/students/studentsSlice";
 import programsReducer from "./features/programs/programsSlice";
 import subjectsReducer from "./features/subjects/subjectsSlice";
+import sectionsReducer from "./features/sections/sectionsSlice";
 
 const rootReducer = combineReducers({
   auth: authSliceReducer,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   students: studentsReducer,
   programs: programsReducer,
   subjects: subjectsReducer,
+  sections: sectionsReducer,
 });
 
 const persistConfig = {

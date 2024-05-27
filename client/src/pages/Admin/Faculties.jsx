@@ -92,6 +92,8 @@ const Faculties = () => {
                       DEPARTMENT
                     </th>
                     <th className="px-4 py-2 text-left font-bold">PROGRAM</th>
+                    <th className="px-4 py-2 text-left font-bold">SECTION</th>
+                    <th className="px-4 py-2 text-left font-bold">SUBJECTS</th>
                     <th className="px-4 py-2"></th>
                   </tr>
                 </thead>
@@ -118,7 +120,24 @@ const Faculties = () => {
                       <td className="px-4 py-2">
                         {facultyMember.program_name}
                       </td>
-
+                      <td className="px-4 py-2">
+                        {facultyMember.section_name ? (
+                          <span>{facultyMember.section_name}</span>
+                        ) : (
+                          <span className="bg-orange-200 h-[40px] px-2 text-orange-500  rounded-md  flex items-center justify-center ">
+                            Pending
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-4 py-2">
+                        {facultyMember.subject_name ? (
+                          <span>{facultyMember.subject_name}</span>
+                        ) : (
+                          <span className="bg-orange-200 h-[40px] px-2 text-orange-500  rounded-md  flex items-center justify-center ">
+                            Pending
+                          </span>
+                        )}
+                      </td>
                       <td className="flex h-full items-center gap-2 px-4 py-2">
                         <button className="btn-sm rounded border border-gray-400 h-[35px] px-2 hover:bg-gray-200 text-sm">
                           Details

@@ -25,7 +25,6 @@ error_log("Received POST data: " . print_r($_POST, true));
 $programId = sanitize_input($_POST["programId"]);
 $programName = sanitize_input($_POST["programName"]);
 $schoolYear = sanitize_input($_POST["schoolYear"]);
-$semester = sanitize_input($_POST["semester"]);
 $departmentId = sanitize_input($_POST["departmentId"]);
 
 if (empty($programName)) {
@@ -37,14 +36,14 @@ if (empty($programName)) {
 // Prepare and bind statement
 $stmt = $conn->prepare("
     UPDATE programs 
-    SET program_name = ? , school_year = ?, semester = ? , department_id = ? 
+    SET program_name = ? , school_year = ?, department_id = ? 
     WHERE program_id = ?");
-$stmt->bind_param("ssssi", $programName, $schoolYear, $semester, $departmentId, $programId);
+$stmt->bind_param("sssi", $programName, $schoolYear, $semester, $departmentId, $programId);
 
 // Execute the statement
 if ($stmt->execute()) {
     if ($stmt->affected_rows > 0) {
-        echo json_encode(["message" => "Program updated Successfully"]);
+        echo json_encode(["message" => "Program updated successfully"]);
     } else {
         http_response_code(404); // Not Found
         echo json_encode(["error" => "Program not found or no changes made"]);

@@ -69,7 +69,6 @@ export const updateProgram = createAsyncThunk(
         "http://localhost/student-sphere/server/Programs/editProgram.php",
         formData
       );
-      console.log(response);
       toast.success(response.data.message);
       return response.data;
     } catch (error) {

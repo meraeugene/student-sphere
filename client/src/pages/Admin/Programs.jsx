@@ -75,7 +75,6 @@ const Programs = () => {
                     <th className="px-4 py-2 text-left font-bold">
                       SCHOOL YEAR
                     </th>
-                    <th className="px-4 py-2 text-left font-bold">SEMESTER</th>
                     <th className="px-4 py-2 text-left font-bold">
                       DEPARTMENT
                     </th>
@@ -91,7 +90,6 @@ const Programs = () => {
                       <td className="px-4 py-2 ">{program.program_id}</td>
                       <td className="px-4 py-2">{program.program_name}</td>
                       <td className="px-4 py-2">{program.school_year}</td>
-                      <td className="px-4 py-2">{program.semester}</td>
                       <td className="px-4 py-2">{program.department_name}</td>
                       <td className="flex h-full items-center gap-2 px-4 py-2">
                         <button

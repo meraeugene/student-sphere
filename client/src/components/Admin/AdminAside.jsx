@@ -26,7 +26,7 @@ const AdminAside = () => {
       <div className="flex items-center text-nowrap gap-4   border-gray-700 py-6 border-b px-6 ">
         <NavLink
           to="/dashboard"
-          className={`flex items-center gap-3 cursor-pointer px-4 py-2 ${
+          className={`flex items-center gap-3 cursor-pointer py-2 ${
             location.pathname === "/dashboard" ? activeClass : ""
           }`}
         >
@@ -36,20 +36,8 @@ const AdminAside = () => {
       </div>
 
       <div className="users__container  border-b border-gray-700 px-6 py-8  ">
-        <h1 className="text-sm poppins-regular mb-6">ADMINISTRATIVE</h1>
+        <h1 className="text-sm poppins-regular mb-6">USERS</h1>
         <div className="flex flex-col gap-4  ">
-          {/* ASSIGN SUBJECTS */}
-          <NavLink
-            to="/admin/assign-subjects"
-            className={`flex items-center gap-3 cursor-pointer px-4 py-2 ${
-              location.pathname === "/admin/assign-subjects" ? activeClass : ""
-            }`}
-          >
-            <GiTeacher fontSize={20} />
-            <h1 className="text-base poppins-regular font-base">
-              Assign Subjects
-            </h1>
-          </NavLink>
           {/* FACULTIES */}
           <NavLink
             to="/admin/faculties"
@@ -71,6 +59,12 @@ const AdminAside = () => {
             <FaUsers fontSize={20} />
             <h1 className="text-base poppins-regular font-base">Students</h1>
           </NavLink>
+        </div>
+      </div>
+
+      <div className="administrative__container px-6 border-b border-gray-700 py-8 ">
+        <h1 className="text-sm poppins-regular ">ADMINISTRATIVE</h1>
+        <div className="flex flex-col gap-6 mt-6 ">
           {/* DEPARTMENTS */}
           <NavLink
             to="/admin/departments"
@@ -100,6 +94,35 @@ const AdminAside = () => {
           >
             <img src="/images/subjects.svg" alt="subjects" />
             <h1 className="text-base poppins-regular font-base">Subjects</h1>
+          </NavLink>
+
+          {/* SECTIONS */}
+          <NavLink
+            to="/admin/sections"
+            className={`flex items-center gap-3 cursor-pointer px-4 py-2 ${
+              location.pathname === "/admin/sections" ? activeClass : ""
+            }`}
+          >
+            <img src="/images/section.svg" alt="subjects" />
+            <h1 className="text-base poppins-regular font-base">Sections</h1>
+          </NavLink>
+        </div>
+      </div>
+
+      <div className="users__container  border-b border-gray-700 px-6 py-8  ">
+        <h1 className="text-sm poppins-regular mb-6">DESIGNATION</h1>
+        <div className="flex flex-col gap-4  ">
+          {/* ASSIGN SUBJECTS */}
+          <NavLink
+            to="/admin/assign-subjects"
+            className={`flex items-center gap-3 cursor-pointer px-4 py-2 ${
+              location.pathname === "/admin/assign-subjects" ? activeClass : ""
+            }`}
+          >
+            <img src="/images/assign.svg" alt="subjects" />
+            <h1 className="text-base poppins-regular font-base">
+              Assign Subjects
+            </h1>
           </NavLink>
         </div>
       </div>

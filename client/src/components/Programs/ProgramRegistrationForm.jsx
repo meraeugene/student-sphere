@@ -65,7 +65,10 @@ const ProgramRegistrationForm = ({ toggleAddProgramState, onProgramAdded }) => {
 
             <label htmlFor="semester" className="inter  ">
               <div className="flex flex-col gap-2">
-                <h1 className="font-semibold">Semester</h1>
+                <div className="flex gap-1">
+                  <h1 className="font-semibold">Semester</h1>
+                  <span className="text-red-500">*</span>
+                </div>
                 <div className="w-full">
                   <select
                     name="semester"
@@ -93,7 +96,10 @@ const ProgramRegistrationForm = ({ toggleAddProgramState, onProgramAdded }) => {
 
             <label htmlFor="departmentName" className="inter  ">
               <div className="flex flex-col gap-2">
-                <h1 className="font-semibold">Department</h1>
+                <div className="flex gap-1">
+                  <h1 className="font-semibold">Department</h1>
+                  <span className="text-red-500">*</span>
+                </div>
                 <div className="w-full">
                   <select
                     name="departmentName"

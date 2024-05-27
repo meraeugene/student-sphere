@@ -1,24 +1,35 @@
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiMinus } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
+import { updateFaculty } from "../../features/faculties/facultiesSlice";
 import InputField from "../InputField";
-import { registerSubject } from "../../features/subjects/subjectsSlice";
-import { useState } from "react";
+import { updateSection } from "../../features/sections/sectionsSlice";
 
-const SubjectRegistrationForm = ({ toggleAddSubjectState, onSubjectAdded }) => {
+const EditSectionForm = ({
+  section,
+  toggleEditSectionState,
+  onSectionAdded,
+}) => {
   const dispatch = useDispatch();
-  const { departmentNames, status } = useSelector((state) => state.departments);
+  const { departmentNames } = useSelector((state) => state.departments);
   const { programs } = useSelector((state) => state.programs);
-
   const [filteredPrograms, setFilteredPrograms] = useState([]);
 
-  // Use react hoook form
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors, isSubmitting },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      sectionName: section.section_name,
+      yearLevel: section.year_level,
+      departmentId: section.department_id,
+      programId: section.program_id,
+    },
+  });
 
   const handleDepartmentChange = (event) => {
     // Convert text to number to filter out
@@ -30,23 +41,45 @@ const SubjectRegistrationForm = ({ toggleAddSubjectState, onSubjectAdded }) => {
   };
 
   const onSubmit = async (data) => {
+    console.log(section.section_id);
     try {
-      await dispatch(registerSubject(data)).unwrap();
-      reset();
-      onSubjectAdded();
+      const response = await dispatch(
+        updateSection({
+          ...data,
+          sectionId: section.section_id,
+        })
+      ).unwrap();
+      // Dispatch an action to update the course data in the Redux store
+      if (response) {
+        dispatch({ type: "sections/updateSection", payload: response });
+        reset();
+        onSectionAdded(); // Callback to re-fetch courses after updating
+        toggleEditSectionState();
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
+  useEffect(() => {
+    const initialFilteredPrograms = programs.filter(
+      (program) => program.department_id === section.department_id
+    );
+    setFilteredPrograms(initialFilteredPrograms);
+  }, [section.department_id, programs]);
+
+  useEffect(() => {
+    setValue("programId", section.program_id);
+  }, [setValue, section.program_id, filteredPrograms]);
+
   return (
-    <div className="overlay fixed inset-0 z-10 bg-[rgba(210,210,215,0.35)] backdrop-blur-[4px] transition-all duration-300 ">
-      <div className="fixed-container h-[90vh] z-20  w-full overflow-y-scroll bg-white opacity-100 transition-all duration-300 md:w-[70%] md:border md:border-r-0 md:border-t-0 md:border-l-[#d2d2d7] lg:w-1/2 rounded-md">
+    <div className="overlay fixed inset-0 z-10 bg-[rgba(210,210,215,0.35)] backdrop-blur-[4px] transition-all duration-300">
+      <div className="fixed-container z-20 w-full overflow-y-scroll bg-white opacity-100 transition-all duration-300 md:w-[70%] md:border md:border-r-0 md:border-t-0 md:border-l-[#d2d2d7] lg:w-1/2 rounded-md">
         <div className="p-10 add-user__container">
           <div className="flex items-center justify-between">
-            <h1 className="text-3xl play-regular uppercase ">Add Subject </h1>
+            <h1 className="text-3xl play-regular uppercase ">Edit Section</h1>
             <button
-              onClick={toggleAddSubjectState}
+              onClick={toggleEditSectionState}
               className="bg-[#164e8e] text-white h-[40px] rounded-md  px-4 inter flex items-center justify-center gap-3"
             >
               Close
@@ -59,77 +92,47 @@ const SubjectRegistrationForm = ({ toggleAddSubjectState, onSubjectAdded }) => {
             className="flex flex-col gap-6 mt-10  "
           >
             <InputField
-              name="subjectCode"
-              label="Subject Code"
+              name="sectionName"
+              label="Section Name"
+              placeholder="Section Name"
               required
-              register={register}
-              errors={errors}
-            />
-
-            <InputField
-              name="subjectName"
-              label="Subject Name"
-              placeholder="Subject Name"
-              required
-              register={register}
-              errors={errors}
-            />
-
-            <label htmlFor="status" className="inter  ">
-              <div className="flex flex-col gap-2">
-                <div className="flex gap-1">
-                  <h1 className="font-semibold">Status</h1>
-                  <span className="text-red-500">*</span>
-                </div>
-                <div className="w-full">
-                  <select
-                    name="status"
-                    {...register("status", {
-                      required: "Status is required",
-                    })}
-                    className={`${
-                      errors.status ? "border-[2px] border-red-500" : ""
-                    } h-[60px] border border-[#E2E8F0] outline-[#0C1E33] rounded-md px-4 w-full `}
-                  >
-                    <option value="" hidden>
-                      Select Status
-                    </option>
-                    <option value="Active">Active</option>
-                    <option value="Inactive">Inactive</option>
-                  </select>
-                  {errors.status && (
-                    <div className="text-red-500 font-semibold mt-2">
-                      {errors.status.message}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </label>
-
-            <InputField
-              name="hours"
-              label="Hours"
-              required
-              type="number"
-              register={register}
-              errors={errors}
-            />
-
-            <InputField
-              name="unit"
-              label="Unit"
-              required
-              type="number"
               register={register}
               errors={errors}
             />
 
             <label className="inter">
               <div className="flex flex-col gap-2">
-                <div className="flex gap-1">
-                  <h1 className="font-semibold">Department</h1>
-                  <span className="text-red-500">*</span>
+                <h1 className="font-semibold">Year Level</h1>
+                <div className="w-full">
+                  <select
+                    name="yearLevel"
+                    {...register("yearLevel", {
+                      required: "Year Level is required",
+                    })}
+                    className={`${
+                      errors.yearLevel ? "border-[2px] border-red-500" : ""
+                    } h-[60px] border border-[#E2E8F0] outline-[#0C1E33] rounded-md px-4 w-full`}
+                  >
+                    <option value="" hidden>
+                      Select Year Level
+                    </option>
+                    <option value="1st Year">1st Year</option>
+                    <option value="2nd Year">2nd Year</option>
+                    <option value="3rd Year">3rd Year</option>
+                    <option value="4th Year">4th Year</option>
+                  </select>
+                  {errors.yearLevel && (
+                    <div className="text-red-500 font-semibold mt-2">
+                      {errors.yearLevel.message}
+                    </div>
+                  )}
                 </div>
+              </div>
+            </label>
+
+            <label className="inter">
+              <div className="flex flex-col gap-2">
+                <h1 className="font-semibold">Department</h1>
                 <div className="w-full">
                   <select
                     name="departmentId"
@@ -154,10 +157,7 @@ const SubjectRegistrationForm = ({ toggleAddSubjectState, onSubjectAdded }) => {
 
             <label className="inter">
               <div className="flex flex-col gap-2">
-                <div className="flex gap-1">
-                  <h1 className="font-semibold">Program</h1>
-                  <span className="text-red-500">*</span>
-                </div>
+                <h1 className="font-semibold">Program</h1>
                 <div className="w-full">
                   <select
                     name="programId"
@@ -196,9 +196,9 @@ const SubjectRegistrationForm = ({ toggleAddSubjectState, onSubjectAdded }) => {
               <button
                 disabled={isSubmitting}
                 type="submit"
-                className="bg-[#0C1E33] text-white h-[55px] rounded-md mt-2 inter flex items-center justify-center gap-3"
+                className="bg-[#0C1E33] text-white h-[55px] rounded-md mt-  inter flex items-center justify-center gap-3"
               >
-                {isSubmitting || status === "loading" ? (
+                {isSubmitting === "loading" ? (
                   <l-dot-pulse
                     size="38"
                     speed="1.3"
@@ -206,7 +206,7 @@ const SubjectRegistrationForm = ({ toggleAddSubjectState, onSubjectAdded }) => {
                   ></l-dot-pulse>
                 ) : (
                   <div className="flex items-center gap-3">
-                    <span>Add Subject</span>
+                    <span>Update Section</span>
                     <svg
                       width="18"
                       height="14"
@@ -233,4 +233,4 @@ const SubjectRegistrationForm = ({ toggleAddSubjectState, onSubjectAdded }) => {
   );
 };
 
-export default SubjectRegistrationForm;
+export default EditSectionForm;
