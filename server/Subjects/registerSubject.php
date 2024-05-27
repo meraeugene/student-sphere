@@ -27,6 +27,8 @@ $subjectName = sanitize_input($_POST["subjectName"]);
 $status = sanitize_input($_POST["status"]);
 $hours = sanitize_input($_POST["hours"]);
 $unit = sanitize_input($_POST["unit"]);
+$yearLevel = sanitize_input($_POST["yearLevel"]);
+$semester = sanitize_input($_POST["semester"]);
 $departmentId = sanitize_input($_POST["departmentId"]);
 $programId = sanitize_input($_POST["programId"]);
 
@@ -43,8 +45,8 @@ if ($count > 0) {
     echo json_encode(["error" => "Subject code already exists"]);
 } else {
     // Prepare and bind statement
-    $stmt = $conn->prepare("INSERT INTO subjects (subject_code, subject_name, status, hours, unit, department_id, program_id) VALUES (?,?,?,?,?,?,?)");
-    $stmt->bind_param("ssssssi", $subjectCode, $subjectName, $status, $hours, $unit, $departmentId, $programId);
+    $stmt = $conn->prepare("INSERT INTO subjects (subject_code, subject_name, status, hours, unit, year_level, semester, department_id, program_id) VALUES (?,?,?,?,?,?,?,?,?)");
+    $stmt->bind_param("sssssssii", $subjectCode, $subjectName, $status, $hours, $unit, $yearLevel, $semester, $departmentId, $programId);
 
     // Execute the statement
     if ($stmt->execute()) {

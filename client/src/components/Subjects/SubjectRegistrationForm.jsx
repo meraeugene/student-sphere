@@ -127,6 +127,67 @@ const SubjectRegistrationForm = ({ toggleAddSubjectState, onSubjectAdded }) => {
             <label className="inter">
               <div className="flex flex-col gap-2">
                 <div className="flex gap-1">
+                  <h1 className="font-semibold">Year Level</h1>
+                  <span className="text-red-500">*</span>
+                </div>
+                <div className="w-full">
+                  <select
+                    name="yearLevel"
+                    {...register("yearLevel", {
+                      required: "Year Level is required",
+                    })}
+                    className={`${
+                      errors.yearLevel ? "border-[2px] border-red-500" : ""
+                    } h-[60px] border border-[#E2E8F0] outline-[#0C1E33] rounded-md px-4 w-full`}
+                  >
+                    <option value="" hidden>
+                      Select Year Level
+                    </option>
+                    <option value="1st Year">1st Year</option>
+                    <option value="2nd Year">2nd Year</option>
+                    <option value="3rd Year">3rd Year</option>
+                    <option value="4th Year">4th Year</option>
+                  </select>
+                  {errors.yearLevel && (
+                    <div className="text-red-500 font-semibold mt-2">
+                      {errors.yearLevel.message}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </label>
+
+            <label htmlFor="semester" className="inter  ">
+              <div className="flex flex-col gap-2">
+                <h1 className="font-semibold">Semester</h1>
+                <div className="w-full">
+                  <select
+                    name="semester"
+                    {...register("semester", {
+                      required: "Semester is required",
+                    })}
+                    className={`${
+                      errors.semester ? "border-[2px] border-red-500" : ""
+                    } h-[60px] border border-[#E2E8F0] outline-[#0C1E33] rounded-md px-4 w-full `}
+                  >
+                    <option value="" hidden>
+                      Select Semester
+                    </option>
+                    <option value="1st Semester">1st Semester</option>
+                    <option value="2nd Semester">2nd Semester</option>
+                  </select>
+                  {errors.semester && (
+                    <div className="text-red-500 font-semibold mt-2">
+                      {errors.semester.message}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </label>
+
+            <label className="inter">
+              <div className="flex flex-col gap-2">
+                <div className="flex gap-1">
                   <h1 className="font-semibold">Department</h1>
                   <span className="text-red-500">*</span>
                 </div>

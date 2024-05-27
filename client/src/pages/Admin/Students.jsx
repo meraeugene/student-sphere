@@ -73,6 +73,7 @@ const Students = () => {
             <table className="min-w-full border   ">
               <thead>
                 <tr className="whitespace-nowrap shadow-sm border shadow-blue-200">
+                  <th className="px-4 py-2 text-left font-bold">NUMBER</th>
                   <th className="px-4 py-2 text-left font-bold">STUDENT ID</th>
                   <th className="px-4 py-2 text-left font-bold">FIRST NAME</th>
                   <th className="px-4 py-2 text-left font-bold">LAST NAME</th>
@@ -94,6 +95,7 @@ const Students = () => {
                     key={index}
                     className="whitespace-nowrap border  hover:bg-gray-50  "
                   >
+                    <td className="px-4 py-2 ">{index + 1}</td>
                     <td className="px-4 py-2 ">{student.student_id}</td>
                     <td className="px-4 py-2">
                       {capitalizeFirstLetter(student.first_name)}{" "}

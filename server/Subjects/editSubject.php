@@ -27,6 +27,8 @@ $subjectName = sanitize_input($_POST["subjectName"]);
 $status = sanitize_input($_POST["status"]);
 $hours = sanitize_input($_POST["hours"]);
 $unit = sanitize_input($_POST["unit"]);
+$yearLevel = sanitize_input($_POST["yearLevel"]);
+$semester = sanitize_input($_POST["semester"]);
 $departmentId = sanitize_input($_POST["departmentId"]);
 $programId = sanitize_input($_POST["programId"]);
 
@@ -39,9 +41,9 @@ if (empty($subjectCode)) {
 // Prepare and bind statement
 $stmt = $conn->prepare("
     UPDATE subjects 
-    SET subject_name = ?, status = ? , hours = ?, unit = ?,  department_id = ?, program_id = ? 
+    SET subject_name = ?, status = ? , hours = ?, unit = ?, year_level = ?, semester = ?, department_id = ?, program_id = ?
     WHERE subject_code = ?");
-$stmt->bind_param("sssssss",$subjectName, $status, $hours, $unit,$departmentId, $programId, $subjectCode);
+$stmt->bind_param("sssssssss",$subjectName, $status, $hours, $unit, $yearLevel, $semester, $departmentId, $programId, $subjectCode);
 
 // Execute the statement
 if ($stmt->execute()) {

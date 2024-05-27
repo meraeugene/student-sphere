@@ -170,9 +170,7 @@ const Sections = () => {
               <table className="min-w-full border shadow-sm   ">
                 <thead>
                   <tr className="whitespace-nowrap shadow-sm border shadow-blue-200">
-                    <th className="px-4 py-2 text-left font-bold">
-                      SECTION ID
-                    </th>
+                    <th className="px-4 py-2 text-left font-bold">NUMBER</th>
                     <th className="px-4 py-2 text-left font-bold">
                       SECTION NAME
                     </th>
@@ -192,7 +190,7 @@ const Sections = () => {
                       key={index}
                       className="whitespace-nowrap border  hover:bg-gray-50  "
                     >
-                      <td className="px-4 py-2 ">{section.section_id}</td>
+                      <td className="px-4 py-2 ">{index + 1}</td>
                       <td className="px-4 py-2">{section.section_name}</td>
                       <td className="px-4 py-2">{section.year_level}</td>
                       <td className="px-4 py-2">{section.department_name}</td>

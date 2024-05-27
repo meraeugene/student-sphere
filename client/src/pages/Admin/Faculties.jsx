@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { GiTeacher } from "react-icons/gi";
 import { MdErrorOutline } from "react-icons/md";
 import { FaTrash, FaRegEdit } from "react-icons/fa";
@@ -24,10 +24,6 @@ const Faculties = () => {
 
   const dispatch = useDispatch();
   const facultyMembers = useSelector((state) => state.faculties.faculties);
-
-  useEffect(() => {
-    dispatch(fetchFaculties());
-  }, [dispatch]);
 
   const deleteFacultyMemberHandler = async (facultyId) => {
     if (window.confirm("Are you sure you want to delete this user?")) {
@@ -78,6 +74,7 @@ const Faculties = () => {
               <table className="min-w-full border shadow-sm   ">
                 <thead>
                   <tr className="whitespace-nowrap shadow-sm border shadow-blue-200">
+                    <th className="px-4 py-2 text-left font-bold">NUMBER</th>
                     <th className="px-4 py-2 text-left font-bold">
                       FACULTY ID
                     </th>
@@ -92,7 +89,7 @@ const Faculties = () => {
                       DEPARTMENT
                     </th>
                     <th className="px-4 py-2 text-left font-bold">PROGRAM</th>
-                    <th className="px-4 py-2 text-left font-bold">SECTION</th>
+                    <th className="px-4 py-2 text-left font-bold">SECTIONS</th>
                     <th className="px-4 py-2 text-left font-bold">SUBJECTS</th>
                     <th className="px-4 py-2"></th>
                   </tr>
@@ -103,6 +100,7 @@ const Faculties = () => {
                       key={index}
                       className="whitespace-nowrap border  hover:bg-gray-50  "
                     >
+                      <td className="px-4 py-2 ">{index + 1}</td>
                       <td className="px-4 py-2 ">{facultyMember.faculty_id}</td>
                       <td className="px-4 py-2">
                         {facultyMember?.first_name &&
@@ -124,7 +122,7 @@ const Faculties = () => {
                         {facultyMember.section_name ? (
                           <span>{facultyMember.section_name}</span>
                         ) : (
-                          <span className="bg-orange-200 h-[40px] px-2 text-orange-500  rounded-md  flex items-center justify-center ">
+                          <span className="bg-orange-200 h-[35px] px-2 text-orange-500  rounded-md  flex items-center justify-center ">
                             Pending
                           </span>
                         )}
@@ -133,7 +131,7 @@ const Faculties = () => {
                         {facultyMember.subject_name ? (
                           <span>{facultyMember.subject_name}</span>
                         ) : (
-                          <span className="bg-orange-200 h-[40px] px-2 text-orange-500  rounded-md  flex items-center justify-center ">
+                          <span className="bg-orange-200 h-[35px] px-2 text-orange-500  rounded-md  flex items-center justify-center ">
                             Pending
                           </span>
                         )}

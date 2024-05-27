@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { FiMinus } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import Select from "react-select";
+import { customStyles } from "../../utils/customStyles";
 
 const AssignSubjectsRegisterForm = ({
   toggleAssignSubjectState,
@@ -24,6 +25,8 @@ const AssignSubjectsRegisterForm = ({
   const facultyMembers = useSelector((state) => state.faculties.faculties);
 
   const [filteredSections, setFilteredSections] = useState([]);
+  const [facultyName, setFacultyName] = useState("");
+  const [subjectName, setSubjectName] = useState("");
 
   useEffect(() => {
     if (selectedFaculty && selectedSubject) {
@@ -34,6 +37,8 @@ const AssignSubjectsRegisterForm = ({
         (subject) => subject.subject_code === selectedSubject
       );
       if (faculty && subject) {
+        setFacultyName(`${faculty.first_name} ${faculty.last_name}`);
+        setSubjectName(subject.subject_name);
         const programName = faculty.program_name;
         setFilteredSections(
           sections.filter((section) => section.program_name === programName)
@@ -57,43 +62,20 @@ const AssignSubjectsRegisterForm = ({
     const formData = {
       ...data,
       facultyId: selectedFaculty,
+      facultyName: facultyName,
       sectionIds: data.sectionIds || [], // Ensure sectionIds is an array
+      subjectName: subjectName, // Ensure sectionIds is an array
     };
     console.log(formData);
   };
 
-  // Custom styles for react-select
-  const customStyles = {
-    control: (provided) => ({
-      ...provided,
-      minHeight: "60px",
-    }),
-    multiValue: (provided) => ({
-      ...provided,
-      backgroundColor: "#E2E8F0",
-      padding: "0.3em",
-    }),
-    multiValueLabel: (provided) => ({
-      ...provided,
-      color: "#0C1E33",
-    }),
-    multiValueRemove: (provided) => ({
-      ...provided,
-      color: "#0C1E33",
-      ":hover": {
-        backgroundColor: "#0C1E33",
-        color: "white",
-      },
-    }),
-  };
-
   return (
     <div className="overlay fixed inset-0 z-10 bg-[rgba(210,210,215,0.35)] backdrop-blur-[4px] transition-all duration-300 ">
-      <div className="fixed-container z-20  w-full overflow-y-scroll bg-white opacity-100 transition-all duration-300 md:w-[70%] md:border md:border-r-0 md:border-t-0 md:border-l-[#d2d2d7] lg:w-1/2 rounded-md">
+      <div className="fixed-container z-20 h-[90vh]  w-full overflow-y-scroll bg-white opacity-100 transition-all duration-300 md:w-[70%] md:border md:border-r-0 md:border-t-0 md:border-l-[#d2d2d7] lg:w-1/2 rounded-md">
         <div className="p-10 add-user__container">
           <div className="flex items-center justify-between">
             <h1 className="text-3xl play-regular uppercase ">
-              Add Subject To Faculty Member
+              Assign Subject To Faculty Member
             </h1>
             <button
               onClick={toggleAssignSubjectState}
@@ -158,6 +140,15 @@ const AssignSubjectsRegisterForm = ({
               required
             />
             <InputField
+              name="subjectName"
+              label="Subject Name"
+              placeholder="Subject Name"
+              value={subjectName}
+              register={register}
+              errors={errors}
+              notEdittable
+            />
+            <InputField
               name="facultyId"
               label="Faculty Id"
               notEdittable
@@ -165,6 +156,15 @@ const AssignSubjectsRegisterForm = ({
               value={selectedFaculty}
               register={register}
               errors={errors}
+            />
+            <InputField
+              name="facultyName"
+              label="Faculty Name"
+              placeholder="Faculty Name"
+              value={facultyName}
+              register={register}
+              errors={errors}
+              notEdittable
             />
             <label htmlFor="sectionIds" className="inter">
               <div className="flex flex-col gap-2">

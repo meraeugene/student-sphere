@@ -67,6 +67,7 @@ const Subjects = () => {
               <table className="min-w-full border shadow-sm   ">
                 <thead>
                   <tr className="whitespace-nowrap shadow-sm border shadow-blue-200">
+                    <th className="px-4 py-2 text-left font-bold">NUMBER</th>
                     <th className="px-4 py-2 text-left font-bold">
                       SUBJECT CODE
                     </th>
@@ -74,8 +75,14 @@ const Subjects = () => {
                       SUBJECT NAME
                     </th>
                     <th className="px-4 py-2 text-center font-bold">STATUS</th>
-                    <th className="px-4 py-2 text-left font-bold">HOURS</th>
-                    <th className="px-4 py-2 text-left font-bold">UNIT</th>
+                    <th className="px-4 py-2 text-center font-bold">HOURS</th>
+                    <th className="px-4 py-2 text-center font-bold">UNIT</th>
+                    <th className="px-4 py-2 text-center font-bold">
+                      YEAR LEVEL
+                    </th>
+                    <th className="px-4 py-2 text-center font-bold">
+                      SEMESTER
+                    </th>
                     <th className="px-4 py-2 text-left font-bold">PROGRAM</th>
                     <th className="px-4 py-2"></th>
                   </tr>
@@ -86,21 +93,28 @@ const Subjects = () => {
                       key={index}
                       className="whitespace-nowrap border  hover:bg-gray-50  "
                     >
+                      <td className="px-4 py-2 ">{index + 1}</td>
                       <td className="px-4 py-2 ">{subject.subject_code}</td>
                       <td className="px-4 py-2">{subject.subject_name}</td>
                       <td className="px-4 py-2">
                         <span
                           className={
                             subject.status === "Active"
-                              ? "bg-green-200 h-[40px] rounded-md text-green-700   flex items-center justify-center "
-                              : "bg-red-200 h-[40px] text-red-700  rounded-md  flex items-center justify-center "
+                              ? "bg-green-200 h-[35px] rounded-md text-green-700   flex items-center justify-center "
+                              : "bg-red-200 h-[35px] text-red-700  rounded-md  flex items-center justify-center "
                           }
                         >
                           {subject.status}
                         </span>
                       </td>
-                      <td className="px-4 py-2">{subject.hours}</td>
-                      <td className="px-4 py-2">{subject.unit}</td>
+                      <td className="px-4 py-2 text-center">{subject.hours}</td>
+                      <td className="px-4 py-2 text-center">{subject.unit}</td>
+                      <td className="px-4 py-2 text-center">
+                        {subject.year_level}
+                      </td>
+                      <td className="px-4 py-2 text-center">
+                        {subject.semester}
+                      </td>
                       <td className="px-4 py-2">{subject.program_name}</td>
                       <td className="flex h-full items-center gap-2 px-4 py-2">
                         <button

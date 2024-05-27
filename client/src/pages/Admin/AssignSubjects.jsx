@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import AssignSubjectsRegisterForm from "../../components/AssignSubjects/AssignSubjectsRegisterForm";
+import { toast } from "react-toastify";
 
 const AssignSubjects = () => {
   const facultyMembers = useSelector((state) => state.faculties.faculties);
@@ -10,10 +11,6 @@ const AssignSubjects = () => {
   const [assignSubject, setAssignSubject] = useState(false);
   const [facultySearchQuery, setFacultySearchQuery] = useState("");
   const [subjectSearchQuery, setSubjectSearchQuery] = useState("");
-
-  const toggleAssignSubjectState = () => {
-    setAssignSubject(!assignSubject);
-  };
 
   const handleFacultyCheckboxChange = (facultyId) => {
     setSelectedFaculty((prevSelected) =>
@@ -56,6 +53,15 @@ const AssignSubjects = () => {
       .includes(subjectSearchQuery.toLowerCase())
   );
 
+  // Function to handle assigning subject
+  const handleAssignSubject = () => {
+    if (!selectedFaculty || !selectedSubject) {
+      toast.error("Please select both a faculty and a subject first.");
+      return;
+    }
+    setAssignSubject(!assignSubject);
+  };
+
   return (
     <div className="w-full ml-[300px] ">
       <div className="px-8 py-10">
@@ -74,7 +80,7 @@ const AssignSubjects = () => {
           </div>
 
           <button
-            onClick={toggleAssignSubjectState}
+            onClick={handleAssignSubject}
             className="bg-[#164e8e] text-white h-[40px] rounded-md px-4 inter flex items-center justify-center gap-3 hover:bg-[#133e6e] transition-colors duration-300"
           >
             Assign Subject
@@ -210,7 +216,7 @@ const AssignSubjects = () => {
 
         {assignSubject && (
           <AssignSubjectsRegisterForm
-            toggleAssignSubjectState={toggleAssignSubjectState}
+            toggleAssignSubjectState={handleAssignSubject}
             selectedFaculty={selectedFaculty}
             selectedSubject={selectedSubject}
           />

@@ -12,8 +12,8 @@ require_once "../config.php";
 
 // Return the department_name instead of the department_id
 $stmt = $conn->prepare("
-    SELECT s.subject_code, s.subject_name, s.status ,  s.hours , s.unit, d.department_name, 
-    d.department_id, p.program_name, p.program_id  
+    SELECT s.subject_code, s.subject_name, s.status ,  s.hours , s.unit, s.year_level, s.semester,
+    d.department_name, d.department_id, p.program_name, p.program_id  
     FROM subjects s
     JOIN departments d ON d.department_id = s.department_id
     JOIN programs p ON p.program_id = s.program_id

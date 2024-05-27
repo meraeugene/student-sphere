@@ -66,9 +66,7 @@ const Programs = () => {
               <table className="min-w-full border shadow-sm   ">
                 <thead>
                   <tr className="whitespace-nowrap shadow-sm border shadow-blue-200">
-                    <th className="px-4 py-2 text-left font-bold">
-                      PROGRAM ID
-                    </th>
+                    <th className="px-4 py-2 text-left font-bold">NUMBER</th>
                     <th className="px-4 py-2 text-left font-bold">
                       PROGRAM NAME
                     </th>
@@ -87,7 +85,7 @@ const Programs = () => {
                       key={index}
                       className="whitespace-nowrap border  hover:bg-gray-50  "
                     >
-                      <td className="px-4 py-2 ">{program.program_id}</td>
+                      <td className="px-4 py-2 ">{index + 1}</td>
                       <td className="px-4 py-2">{program.program_name}</td>
                       <td className="px-4 py-2">{program.school_year}</td>
                       <td className="px-4 py-2">{program.department_name}</td>
