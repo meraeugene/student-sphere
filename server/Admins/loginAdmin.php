@@ -47,6 +47,7 @@ if ($stmt->num_rows > 0) {
          // Return user information
          echo json_encode([
             "message" => "Login successful",
+            "username" => $username,
             "firstName" => $firstName,
             "lastName" => $lastName,
             "role" => "admin",

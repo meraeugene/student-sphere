@@ -17,7 +17,7 @@ const AdminAside = () => {
     "text-white w-full bg-white font-bold  gradient flex items-center gap-3 px-4 py-2 rounded-md ";
 
   return (
-    <div className=" w-[300px] z-10  bg-[#0C1E33] top-0 h-full overflow-y-scroll  text-white py-4 pb-0  fixed left-0 ">
+    <div className=" w-[320px] z-10  bg-[#0C1E33] top-0 h-full overflow-y-scroll  text-white py-4 pb-0  fixed left-0 ">
       <div className="flex items-center  gap-4  border-gray-700 pb-4 border-b px-6 ">
         <img src="/images/book.png" alt="logo" width={20} />
         <h1 className="play-bold text-base uppercase">Student Sphere</h1>
@@ -26,7 +26,7 @@ const AdminAside = () => {
       <div className="flex items-center text-nowrap gap-4   border-gray-700 py-6 border-b px-6 ">
         <NavLink
           to="/dashboard"
-          className={`flex items-center gap-3 cursor-pointer py-2 ${
+          className={`flex items-center gap-3 cursor-pointer px-4 py-2 ${
             location.pathname === "/dashboard" ? activeClass : ""
           }`}
         >
@@ -109,7 +109,7 @@ const AdminAside = () => {
         </div>
       </div>
 
-      <div className="users__container  border-b border-gray-700 px-6 py-8  ">
+      <div className="designation__container  border-b border-gray-700 px-6 py-8  ">
         <h1 className="text-sm poppins-regular mb-6">DESIGNATION</h1>
         <div className="flex flex-col gap-4  ">
           {/* ASSIGN SUBJECTS */}
@@ -124,18 +124,48 @@ const AdminAside = () => {
               Assign Subjects
             </h1>
           </NavLink>
+          {/* ASSIGN SCHEDULE */}
+          <NavLink
+            to="/admin/assign-schedule"
+            className={`flex items-center gap-3 cursor-pointer px-4 py-2 ${
+              location.pathname === "/admin/assign-schedule" ? activeClass : ""
+            }`}
+          >
+            <img src="/images/sched.svg" alt="subjects" />
+            <h1 className="text-base poppins-regular font-base">
+              Assign Schedules
+            </h1>
+          </NavLink>
         </div>
       </div>
 
-      <div className="settings__container px-6 border-b border-gray-700 py-8 ">
-        <h1 className="text-sm poppins-regular ">SETTINGS</h1>
-        <div className="flex flex-col gap-6 mt-6 px-3">
-          <div className="flex items-center gap-3">
-            <img src="/images/settings.png" alt="settings" />
+      <div className="users__container  border-b border-gray-700 px-6 py-8  ">
+        <h1 className="text-sm poppins-regular mb-6">SETTINGS & PRIVACY</h1>
+        <div className="flex flex-col gap-4  ">
+          <NavLink
+            to="/admin/profile-management"
+            className={`flex items-center gap-3 cursor-pointer px-4 py-2 ${
+              location.pathname === "/admin/profile-management"
+                ? activeClass
+                : ""
+            }`}
+          >
+            <img src="/images/changeprofilewhite.svg" alt="settings" />
             <h1 className=" text-base  poppins-regular font-base">
-              Account Settings
+              Personal Details
             </h1>
-          </div>
+          </NavLink>
+          <NavLink
+            to="/admin/change-password"
+            className={`flex items-center gap-3 cursor-pointer px-4 py-2 ${
+              location.pathname === "/admin/change-password" ? activeClass : ""
+            }`}
+          >
+            <img src="/images/resetpass.svg" alt="settings" />
+            <h1 className=" text-base  poppins-regular font-base">
+              Password and Security
+            </h1>
+          </NavLink>
         </div>
       </div>
 

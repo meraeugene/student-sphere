@@ -15,7 +15,7 @@ const FacultyAside = () => {
     "text-white w-full bg-white font-bold  gradient flex items-center gap-3 px-4 py-2 rounded-md ";
 
   return (
-    <div className=" w-[300px] z-10 bg-[#0C1E33] top-0 h-full overflow-y-scroll  text-white py-4 pb-0  fixed left-0 ">
+    <div className="  w-[320px]  z-10 bg-[#0C1E33] top-0 h-full overflow-y-scroll  text-white py-4 pb-0  fixed left-0 ">
       <div className="flex items-center  gap-4  border-gray-700 pb-4 border-b px-6 ">
         <img src="/images/book.png" alt="logo" width={20} />
         <h1 className="play-bold text-base uppercase">Student Sphere</h1>

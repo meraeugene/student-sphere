@@ -64,7 +64,7 @@ const Faculties = () => {
   };
 
   return (
-    <div className="w-full ml-[300px] overflow-hidden">
+    <div className="w-full ml-[320px] overflow-hidden">
       <div className="px-8 py-10">
         <div className="flex items-center justify-between mb-10">
           <div className="flex items-center gap-3">

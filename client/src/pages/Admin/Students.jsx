@@ -49,7 +49,7 @@ const Students = () => {
   };
 
   return (
-    <div className="w-full  ml-[300px] px-8 overflow-auto  ">
+    <div className="w-full  ml-[320px] px-8 overflow-auto  ">
       <div className="flex items-center justify-between  my-10">
         <div className="flex items-center gap-3">
           <FaUsers fontSize={20} />

@@ -16,7 +16,7 @@ const StudentDashboard = () => {
   });
 
   return (
-    <main className=" w-full  flex  ml-[300px] h-screen  ">
+    <main className=" w-full  flex  ml-[320px] h-screen  ">
       <div className="left__container basis-[80%] ">
         <div className="welcome__container py-6 px-8 ">
           <div className="flex items-center justify-between">

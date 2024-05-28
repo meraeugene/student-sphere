@@ -23,6 +23,8 @@ import Subjects from "./pages/Admin/Subjects.jsx";
 import Programs from "./pages/Admin/Programs.jsx";
 import AssignSujects from "./pages/Admin/AssignSubjects.jsx";
 import Sections from "./pages/Admin/Sections.jsx";
+import ProfileManagement from "./pages/Admin/ProfileManagement.jsx";
+import ChangePassword from "./pages/Admin/ChangePassword.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -42,15 +44,20 @@ const router = createBrowserRouter(
         <Route exact path="/admin/programs" element={<Programs />} />
         <Route
           exact
-          path="/admin/assign-subjects"
-          element={<AssignSujects />}
+          path="/admin/profile-management"
+          element={<ProfileManagement />}
         />
-        <Route exact path="/admin/sections" element={<Sections />} />
+        <Route
+          exact
+          path="/admin/change-password"
+          element={<ChangePassword />}
+        />
         <Route
           exact
           path="/admin/assign-subjects"
           element={<AssignSujects />}
         />
+        <Route exact path="/admin/sections" element={<Sections />} />
       </Route>
     </Route>
   )

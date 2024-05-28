@@ -16,7 +16,7 @@ const Departments = () => {
   }, [dispatch]);
 
   return (
-    <div className="w-full  ml-[300px]  ">
+    <div className="w-full  ml-[320px]  ">
       <div className="px-8 py-10 ">
         <div className="flex items-center gap-3">
           <img src="/images/departments-black.svg" alt="departments" />
