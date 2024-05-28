@@ -17,7 +17,7 @@ $stmt = $conn->prepare("
     FROM sections s
     JOIN departments d ON d.department_id = s.department_id
     JOIN programs p ON p.program_id = s.program_id
-    ORDER BY section_name ASC
+    ORDER BY CAST(SUBSTRING(s.section_name, 5) AS UNSIGNED) ASC
 ");
 $stmt->execute();
 $result = $stmt->get_result();

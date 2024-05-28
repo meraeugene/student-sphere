@@ -256,7 +256,7 @@ const EditFacultyForm = ({
               </div>
             </label>
 
-            <div className="flex flex-col gap-4 ">
+            <div className="flex flex-col gap-4  mt-3">
               <button
                 disabled={isSubmitting}
                 type="submit"

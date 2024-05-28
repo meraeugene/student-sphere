@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { MdErrorOutline } from "react-icons/md";
 import { FaTrash, FaRegEdit } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
@@ -86,10 +86,6 @@ const Sections = () => {
       (filters.program ? section.program_name === filters.program : true)
     );
   });
-
-  useEffect(() => {
-    dispatch(fetchSections());
-  }, [dispatch]);
 
   return (
     <div className="w-full  ml-[300px]  ">

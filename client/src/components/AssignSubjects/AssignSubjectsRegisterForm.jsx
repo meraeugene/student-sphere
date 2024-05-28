@@ -2,14 +2,17 @@ import React, { useEffect, useState } from "react";
 import InputField from "../InputField";
 import { useForm } from "react-hook-form";
 import { FiMinus } from "react-icons/fi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import { customStyles } from "../../utils/customStyles";
+import { assignSubjectsToFaculty } from "../../features/faculties/facultiesSlice";
+import { useNavigate } from "react-router-dom";
 
 const AssignSubjectsRegisterForm = ({
   toggleAssignSubjectState,
   selectedFaculty,
   selectedSubject,
+  assignedFacultySubjectsAdded,
 }) => {
   // Use react hoook form
   const {
@@ -27,6 +30,9 @@ const AssignSubjectsRegisterForm = ({
   const [filteredSections, setFilteredSections] = useState([]);
   const [facultyName, setFacultyName] = useState("");
   const [subjectName, setSubjectName] = useState("");
+  const [semester, setSemester] = useState("");
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (selectedFaculty && selectedSubject) {
@@ -39,9 +45,17 @@ const AssignSubjectsRegisterForm = ({
       if (faculty && subject) {
         setFacultyName(`${faculty.first_name} ${faculty.last_name}`);
         setSubjectName(subject.subject_name);
+        setSemester(subject.semester);
+
         const programName = faculty.program_name;
+        const yearLevel = subject.year_level;
+
         setFilteredSections(
-          sections.filter((section) => section.program_name === programName)
+          sections.filter(
+            (section) =>
+              section.program_name === programName &&
+              section.year_level === yearLevel
+          )
         );
       }
     }
@@ -58,15 +72,26 @@ const AssignSubjectsRegisterForm = ({
     setValue("sectionIds", values);
   };
 
+  const navigate = useNavigate();
+
   const onSubmit = async (data) => {
     const formData = {
       ...data,
       facultyId: selectedFaculty,
-      facultyName: facultyName,
+      facultyName,
       sectionIds: data.sectionIds || [], // Ensure sectionIds is an array
-      subjectName: subjectName, // Ensure sectionIds is an array
+      subjectName,
+      semester,
     };
-    console.log(formData);
+
+    try {
+      await dispatch(assignSubjectsToFaculty(formData)).unwrap();
+      reset();
+      assignedFacultySubjectsAdded();
+      navigate("/admin/faculties");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -90,69 +115,10 @@ const AssignSubjectsRegisterForm = ({
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-4 mt-10"
           >
-            <label htmlFor="semester" className="inter  ">
-              <div className="flex flex-col gap-2">
-                <div className="flex gap-1">
-                  <h1 className="font-semibold">Semester</h1>
-                  <span className="text-red-500">*</span>
-                </div>
-                <div className="w-full">
-                  <select
-                    name="semester"
-                    {...register("semester", {
-                      required: "Semester  is required",
-                    })}
-                    className={`${
-                      errors.semester ? "border-[2px] border-red-500" : ""
-                    } h-[60px] border border-[#E2E8F0] outline-[#0C1E33] rounded-md px-4 w-full `}
-                  >
-                    <option value="" hidden>
-                      Select Semester
-                    </option>
-                    <option value="1st Semester">1st Semester</option>
-                    <option value="2nd Semester">2nd Semester</option>
-                  </select>
-                  {errors.semester && (
-                    <div className="text-red-500 font-semibold mt-2">
-                      {errors.semester.message}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </label>
-
-            <InputField
-              name="schoolYear"
-              label="School Year"
-              placeholder="School Year"
-              register={register}
-              errors={errors}
-              required
-            />
-            <InputField
-              name="subjectCode"
-              label="Subject Code"
-              placeholder="Subject Code"
-              value={selectedSubject}
-              register={register}
-              errors={errors}
-              notEdittable
-              required
-            />
-            <InputField
-              name="subjectName"
-              label="Subject Name"
-              placeholder="Subject Name"
-              value={subjectName}
-              register={register}
-              errors={errors}
-              notEdittable
-            />
             <InputField
               name="facultyId"
               label="Faculty Id"
               notEdittable
-              required
               value={selectedFaculty}
               register={register}
               errors={errors}
@@ -166,6 +132,26 @@ const AssignSubjectsRegisterForm = ({
               errors={errors}
               notEdittable
             />
+
+            <InputField
+              name="subjectCode"
+              label="Subject Code"
+              placeholder="Subject Code"
+              value={selectedSubject}
+              register={register}
+              errors={errors}
+              notEdittable
+            />
+            <InputField
+              name="subjectName"
+              label="Subject Name"
+              placeholder="Subject Name"
+              value={subjectName}
+              register={register}
+              errors={errors}
+              notEdittable
+            />
+
             <label htmlFor="sectionIds" className="inter">
               <div className="flex flex-col gap-2">
                 <div className="flex gap-1">
@@ -184,7 +170,7 @@ const AssignSubjectsRegisterForm = ({
                     styles={customStyles}
                     className={`${
                       errors.sectionIds
-                        ? "border-[2px] border-red-500"
+                        ? "border-[2px]  border-red-500 rounded-md"
                         : "hx-[60px] "
                     }`}
                   />
@@ -196,6 +182,24 @@ const AssignSubjectsRegisterForm = ({
                 </div>
               </div>
             </label>
+
+            <InputField
+              name="semester"
+              label="Semester"
+              notEdittable
+              value={semester}
+              register={register}
+              errors={false}
+            />
+
+            <InputField
+              name="schoolYear"
+              label="School Year"
+              placeholder="School Year"
+              register={register}
+              errors={errors}
+              required
+            />
 
             <div className="flex flex-col gap-4 mt-4 ">
               <button

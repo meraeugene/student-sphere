@@ -8,6 +8,7 @@ import {
 } from "../../features/programs/programsSlice";
 import { fetchSubjects } from "../../features/subjects/subjectsSlice";
 import { fetchFaculties } from "../../features/faculties/facultiesSlice";
+import { fetchSections } from "../../features/sections/sectionsSlice";
 
 const AdminDashboard = () => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -30,6 +31,7 @@ const AdminDashboard = () => {
     dispatch(fetchProgramNames());
     dispatch(fetchSubjects());
     dispatch(fetchFaculties());
+    dispatch(fetchSections());
   }, [dispatch]);
 
   return (

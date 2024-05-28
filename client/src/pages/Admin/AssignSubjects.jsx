@@ -1,7 +1,8 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import AssignSubjectsRegisterForm from "../../components/AssignSubjects/AssignSubjectsRegisterForm";
 import { toast } from "react-toastify";
+import { fetchFaculties } from "../../features/faculties/facultiesSlice";
 
 const AssignSubjects = () => {
   const facultyMembers = useSelector((state) => state.faculties.faculties);
@@ -60,6 +61,12 @@ const AssignSubjects = () => {
       return;
     }
     setAssignSubject(!assignSubject);
+  };
+
+  const dispatch = useDispatch();
+
+  const handleFacultySubjectsAdded = () => {
+    dispatch(fetchFaculties());
   };
 
   return (
@@ -219,6 +226,7 @@ const AssignSubjects = () => {
             toggleAssignSubjectState={handleAssignSubject}
             selectedFaculty={selectedFaculty}
             selectedSubject={selectedSubject}
+            assignedFacultySubjectsAdded={handleFacultySubjectsAdded}
           />
         )}
       </div>

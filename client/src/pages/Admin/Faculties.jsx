@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   deleteFaculty,
   fetchFaculties,
+  removeSection,
 } from "../../features/faculties/facultiesSlice";
 import EditFacultyForm from "../../components/Faculty/EditFacultyForm";
 import { capitalizeFirstLetter } from "../../utils/capitalizeFirstLetter";
@@ -29,6 +30,20 @@ const Faculties = () => {
     if (window.confirm("Are you sure you want to delete this user?")) {
       try {
         await dispatch(deleteFaculty(facultyId)).unwrap();
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    }
+  };
+
+  const removeSectionHandler = async (facultyId) => {
+    if (
+      window.confirm(
+        "Are you sure you want to remove the section of this user?"
+      )
+    ) {
+      try {
+        await dispatch(removeSection(facultyId)).unwrap();
       } catch (error) {
         console.error("Error:", error);
       }
@@ -90,14 +105,17 @@ const Faculties = () => {
                     </th>
                     <th className="px-4 py-2 text-left font-bold">PROGRAM</th>
                     <th className="px-4 py-2 text-left font-bold">SECTIONS</th>
-                    <th className="px-4 py-2 text-left font-bold">SUBJECTS</th>
+                    <th className="px-4 py-2 text-left font-bold">SUBJECT</th>
+                    <th className="px-4 py-2 text-left font-bold">
+                      SCHOOL YEAR
+                    </th>
                     <th className="px-4 py-2"></th>
                   </tr>
                 </thead>
                 <tbody>
                   {facultyMembers.map((facultyMember, index) => (
                     <tr
-                      key={index}
+                      key={index + 1}
                       className="whitespace-nowrap border  hover:bg-gray-50  "
                     >
                       <td className="px-4 py-2 ">{index + 1}</td>
@@ -119,8 +137,10 @@ const Faculties = () => {
                         {facultyMember.program_name}
                       </td>
                       <td className="px-4 py-2">
-                        {facultyMember.section_name ? (
-                          <span>{facultyMember.section_name}</span>
+                        {facultyMember.sections ? (
+                          <span className="bg-green-200 h-[35px] px-2 text-green-700  rounded-md  flex items-center justify-center ">
+                            {facultyMember.sections}
+                          </span>
                         ) : (
                           <span className="bg-orange-200 h-[35px] px-2 text-orange-500  rounded-md  flex items-center justify-center ">
                             Pending
@@ -128,8 +148,21 @@ const Faculties = () => {
                         )}
                       </td>
                       <td className="px-4 py-2">
-                        {facultyMember.subject_name ? (
-                          <span>{facultyMember.subject_name}</span>
+                        {facultyMember.subject_code ? (
+                          <span className="bg-green-200 h-[35px] px-2 text-green-700  rounded-md  flex items-center justify-center ">
+                            {facultyMember.subject_code}
+                          </span>
+                        ) : (
+                          <span className="bg-orange-200 h-[35px] px-2 text-orange-500  rounded-md  flex items-center justify-center ">
+                            Pending
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-4 py-2">
+                        {facultyMember.school_year ? (
+                          <span className="bg-green-200 h-[35px] px-2 text-green-700  rounded-md  flex items-center justify-center ">
+                            {facultyMember.school_year}{" "}
+                          </span>
                         ) : (
                           <span className="bg-orange-200 h-[35px] px-2 text-orange-500  rounded-md  flex items-center justify-center ">
                             Pending
@@ -156,6 +189,17 @@ const Faculties = () => {
                         >
                           <FaTrash color="red" />
                         </button>
+
+                        {facultyMember.sections && (
+                          <button
+                            className="btn-sm text-sm bg-[#af2833]  border-none text-white poppins-regular rounded h-[35px] px-2 outline-none hover:opacity-90 "
+                            onClick={() =>
+                              removeSectionHandler(facultyMember.faculty_id)
+                            }
+                          >
+                            REMOVE SECTION
+                          </button>
+                        )}
                       </td>
                     </tr>
                   ))}

@@ -78,6 +78,49 @@ export const deleteFaculty = createAsyncThunk(
   }
 );
 
+export const assignSubjectsToFaculty = createAsyncThunk(
+  "faculties/assignSubjectsToFaculty",
+  async (data, { rejectWithValue }) => {
+    try {
+      const formData = new FormData();
+
+      Object.entries(data).forEach(([key, value]) => {
+        formData.append(key, value);
+      });
+
+      const response = await axios.post(
+        "http://localhost/student-sphere/server/FacultySubjects/assignSubjects.php",
+        formData
+      );
+      toast.success(response.data.message);
+      return response.data;
+    } catch (error) {
+      toast.error(error.response.data.error);
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const removeSection = createAsyncThunk(
+  "faculties/removeSection",
+  async (facultyId, { dispatch }) => {
+    try {
+      const formData = new FormData();
+      formData.append("facultyId", facultyId);
+      const response = await axios.post(
+        "http://localhost/student-sphere/server/Faculties/removeSection.php",
+        formData
+      );
+      dispatch(fetchFaculties());
+      toast.success(response.data.message);
+      return response.data;
+    } catch (error) {
+      toast.error(error.response.data.error);
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const facultiesSlice = createSlice({
   name: "faculties",
   initialState: {
@@ -126,6 +169,26 @@ const facultiesSlice = createSlice({
         );
       })
       .addCase(updateFaculty.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(assignSubjectsToFaculty.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(assignSubjectsToFaculty.fulfilled, (state, action) => {
+        state.status = "succeeded";
+      })
+      .addCase(assignSubjectsToFaculty.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(removeSection.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(removeSection.fulfilled, (state, action) => {
+        state.status = "succeeded";
+      })
+      .addCase(removeSection.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       });

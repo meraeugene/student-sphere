@@ -15,7 +15,6 @@ const SectionRegistrationForm = ({ toggleAddSectionState, onSectionAdded }) => {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors, isSubmitting },
   } = useForm();
 
@@ -31,7 +30,6 @@ const SectionRegistrationForm = ({ toggleAddSectionState, onSectionAdded }) => {
   const onSubmit = async (data) => {
     try {
       await dispatch(registerSection(data)).unwrap();
-      reset();
       onSectionAdded();
     } catch (error) {
       console.log(error);
