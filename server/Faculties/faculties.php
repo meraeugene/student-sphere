@@ -25,7 +25,7 @@ $sql = "
         p.program_name, p.program_id,
         fs.subject_code,
         fs.school_year,
-        GROUP_CONCAT(s.section_name SEPARATOR ', ') AS sections
+        s.section_name
     FROM 
         faculties f
     LEFT JOIN 
@@ -38,12 +38,9 @@ $sql = "
         departments d ON f.department_id = d.department_id
     LEFT JOIN 
         programs p ON f.program_id = p.program_id
-    GROUP BY 
-        f.faculty_id
     ORDER BY 
         f.first_name ASC
 ";
-
 
 $stmt = $conn->prepare($sql);
 
@@ -73,8 +70,33 @@ $faculties = [];
 
 // Fetch the data
 while ($row = $result->fetch_assoc()) {
-    $faculties[] = $row;
+    $faculty_id = $row['faculty_id'];
+    if (!isset($faculties[$faculty_id])) {
+        $faculties[$faculty_id] = [
+            'faculty_id' => $row['faculty_id'],
+            'first_name' => $row['first_name'],
+            'last_name' => $row['last_name'],
+            'email' => $row['email'],
+            'phone_number' => $row['phone_number'],
+            'gender' => $row['gender'],
+            'date_of_birth' => $row['date_of_birth'],
+            'address' => $row['address'],
+            'department_name' => $row['department_name'],
+            'department_id' => $row['department_id'],
+            'program_name' => $row['program_name'],
+            'program_id' => $row['program_id'],
+            'subject_code' => $row['subject_code'],
+            'school_year' => $row['school_year'],
+            'sections' => []
+        ];
+    }
+    if (!is_null($row['section_name'])) {
+        $faculties[$faculty_id]['sections'][] = $row['section_name'];
+    }
 }
+
+// Reindex the array to remove gaps in keys
+$faculties = array_values($faculties);
 
 // Return faculties with their associated sections as JSON
 echo json_encode($faculties);

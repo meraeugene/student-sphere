@@ -3,7 +3,7 @@ import { resetAdminPassword } from "../../features/users/adminsSlice";
 import { BiShowAlt, BiSolidShow } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
-import { logout } from "../../slices/authSlice";
+import { logout } from "../../features/authentication/authSlice";
 
 const ChangePassword = () => {
   const {

@@ -30,7 +30,6 @@ $email = sanitize_input($_POST["email"]);
 $birthday = sanitize_input($_POST["birthday"]);
 $address = sanitize_input($_POST["address"]);
 $phoneNumber = sanitize_input($_POST["phoneNumber"]);
-$departmentId = sanitize_input($_POST["departmentId"]);
 
 // Set password to be the same as studentID
 $hashed_password = password_hash($studentID, PASSWORD_DEFAULT);
@@ -60,8 +59,8 @@ if ($result->num_rows > 0) {
 $stmt->close();
 
 // Prepare and bind statement
-$stmt = $conn->prepare("INSERT INTO students (student_id, password, first_name, last_name, gender, email, date_of_birth, address, phone_number, department_id) VALUES (?,?,?,?,?,?,?,?,?,?)");
-$stmt->bind_param("sssssssssi", $studentID, $hashed_password, $firstName, $lastName, $gender, $email, $birthday, $address, $phoneNumber, $departmentId);
+$stmt = $conn->prepare("INSERT INTO students (student_id, password, first_name, last_name, gender, email, date_of_birth, address, phone_number) VALUES (?,?,?,?,?,?,?,?,?)");
+$stmt->bind_param("ssssssssi", $studentID, $hashed_password, $firstName, $lastName, $gender, $email, $birthday, $address, $phoneNumber);
 
 // Execute the statement
 if ($stmt->execute()) {

@@ -25,6 +25,8 @@ import AssignSujects from "./pages/Admin/AssignSubjects.jsx";
 import Sections from "./pages/Admin/Sections.jsx";
 import ProfileManagement from "./pages/Admin/ProfileManagement.jsx";
 import ChangePassword from "./pages/Admin/ChangePassword.jsx";
+import AssignSchedules from "./pages/Admin/AssignSchedules.jsx";
+import Schedules from "./pages/Admin/Schedules.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -57,7 +59,13 @@ const router = createBrowserRouter(
           path="/admin/assign-subjects"
           element={<AssignSujects />}
         />
+        <Route
+          exact
+          path="/admin/assign-schedules"
+          element={<AssignSchedules />}
+        />
         <Route exact path="/admin/sections" element={<Sections />} />
+        <Route exact path="/admin/schedules" element={<Schedules />} />
       </Route>
     </Route>
   )

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiMinus } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,11 +12,17 @@ const EditStudentForm = ({
 }) => {
   const dispatch = useDispatch();
   const { departmentNames } = useSelector((state) => state.departments);
+  const { programs } = useSelector((state) => state.programs);
+  const { sections } = useSelector((state) => state.sections);
+
+  const [filteredPrograms, setFilteredPrograms] = useState([]);
+  const [filteredSections, setFilteredSections] = useState([]);
 
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: {
@@ -28,17 +34,65 @@ const EditStudentForm = ({
       email: student.email,
       birthday: student.date_of_birth,
       phoneNumber: student.phone_number,
+      enrollmentStatus: student.enrollment_status,
+      yearLevel: student.year_level,
+      semester: student.semester,
+      sectionId: student.section_id,
       departmentId: student.department_id,
+      programId: student.program_id,
     },
   });
 
+  useEffect(() => {
+    setValue("programId", student.program_id);
+    setValue("sectionId", student.section_id);
+  }, [
+    setValue,
+    student.program_id,
+    student.section_id,
+    filteredPrograms,
+    filteredSections,
+  ]);
+
+  useEffect(() => {
+    const initialFilteredPrograms = programs.filter(
+      (program) => program.department_id === student.department_id
+    );
+    setFilteredPrograms(initialFilteredPrograms);
+  }, [student.department_id, programs]);
+
+  useEffect(() => {
+    if (student) {
+      const programName = student.program_name;
+      const yearLevel = student.year_level;
+
+      setFilteredSections(
+        sections.filter(
+          (section) =>
+            section.program_name === programName &&
+            section.year_level === yearLevel
+        )
+      );
+    }
+  }, [student, sections]);
+
+  const handleDepartmentChange = (event) => {
+    // Convert text to number to filter out
+    const selectedDepartment = Number(event.target.value);
+    const filtered = programs.filter(
+      (program) => program.department_id === selectedDepartment
+    );
+    setFilteredPrograms(filtered);
+  };
+
   const onSubmit = async (data) => {
     try {
+      console.log(data);
       const response = await dispatch(updateStudent(data)).unwrap();
       // Dispatch an action to update the course data in the Redux store
       if (response) {
         dispatch({ type: "students/updateStudent", payload: response });
-        reset();
+        // reset();
         onStudentAdded(); // Callback to re-fetch courses after updating
         toggleEditStudentState();
       }
@@ -160,36 +214,175 @@ const EditStudentForm = ({
               errors={errors}
             />
 
-            <label className="inter">
-              <div className="flex flex-col gap-2">
-                <h1 className="font-semibold">Department</h1>
-                <div className="w-full">
-                  <select
-                    name="departmentId"
-                    {...register("departmentId", {
-                      required: "Department Name is required",
-                    })}
-                    className={`${
-                      errors.departmentId ? "border-[2px] border-red-500" : ""
-                    } h-[60px] border border-[#E2E8F0] outline-[#0C1E33] rounded-md px-4 w-full`}
-                  >
-                    <option value="" hidden>
-                      Select Department
-                    </option>
-                    {departmentNames.map((department, index) => (
-                      <option key={index} value={department.department_id}>
-                        {department.department_name}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.departmentId && (
-                    <div className="text-red-500 font-semibold mt-2">
-                      {errors.departmentId.message}
+            <InputField
+              name="enrollmentStatus"
+              label="Enrollment Status"
+              notEdittable
+              required
+              register={register}
+              errors={errors}
+            />
+
+            {student.enrollment_status === "Enrolled" && (
+              <>
+                <label className="inter">
+                  <div className="flex flex-col gap-2">
+                    <h1 className="font-semibold">Department</h1>
+                    <div className="w-full">
+                      <select
+                        {...register("departmentId", {
+                          required: "Department Name is required",
+                        })}
+                        className={`${
+                          errors.departmentId
+                            ? "border-[2px] border-red-500"
+                            : ""
+                        } h-[60px] border border-[#E2E8F0] outline-[#0C1E33] rounded-md px-4 w-full`}
+                        onChange={handleDepartmentChange}
+                      >
+                        <option value="" hidden>
+                          Select Department
+                        </option>
+                        {departmentNames.map((department, index) => (
+                          <option key={index} value={department.department_id}>
+                            {department.department_name}
+                          </option>
+                        ))}
+                      </select>
+                      {errors.departmentId && (
+                        <div className="text-red-500 font-semibold mt-2">
+                          {errors.departmentId.message}
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              </div>
-            </label>
+                  </div>
+                </label>
+
+                <label className="inter">
+                  <div className="flex flex-col gap-2">
+                    <h1 className="font-semibold">Program</h1>
+                    <div className="w-full">
+                      <select
+                        {...register("programId", {
+                          required: "Program Name is required",
+                        })}
+                        className={`${
+                          errors.programId ? "border-[2px] border-red-500" : ""
+                        } h-[60px] border border-[#E2E8F0] outline-[#0C1E33] rounded-md px-4 w-full`}
+                      >
+                        <option value="" hidden>
+                          Select Program
+                        </option>
+                        {filteredPrograms.length > 0 ? (
+                          filteredPrograms.map((program, index) => (
+                            <option key={index} value={program.program_id}>
+                              {program.program_name}
+                            </option>
+                          ))
+                        ) : (
+                          <option value="" disabled>
+                            No Program Available
+                          </option>
+                        )}
+                      </select>
+                      {errors.programId && (
+                        <div className="text-red-500 font-semibold mt-2">
+                          {errors.programId.message}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </label>
+
+                <label className="inter">
+                  <div className="flex flex-col gap-2">
+                    <h1 className="font-semibold">Year Level</h1>
+                    <div className="w-full">
+                      <select
+                        name="yearLevel"
+                        {...register("yearLevel", {
+                          required: "Year Level is required",
+                        })}
+                        className={`${
+                          errors.yearLevel ? "border-[2px] border-red-500" : ""
+                        } h-[60px] border border-[#E2E8F0] outline-[#0C1E33] rounded-md px-4 w-full`}
+                      >
+                        <option value="" hidden>
+                          Select Year Level
+                        </option>
+                        <option value="1st Year">1st Year</option>
+                        <option value="2nd Year">2nd Year</option>
+                        <option value="3rd Year">3rd Year</option>
+                        <option value="4th Year">4th Year</option>
+                      </select>
+                      {errors.yearLevel && (
+                        <div className="text-red-500 font-semibold mt-2">
+                          {errors.yearLevel.message}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </label>
+
+                <label htmlFor="semester" className="inter  ">
+                  <div className="flex flex-col gap-2">
+                    <h1 className="font-semibold">Semester</h1>
+                    <div className="w-full">
+                      <select
+                        name="semester"
+                        {...register("semester", {
+                          required: "Semester is required",
+                        })}
+                        className={`${
+                          errors.semester ? "border-[2px] border-red-500" : ""
+                        } h-[60px] border border-[#E2E8F0] outline-[#0C1E33] rounded-md px-4 w-full `}
+                      >
+                        <option value="" hidden>
+                          Select Semester
+                        </option>
+                        <option value="1st Semester">1st Semester</option>
+                        <option value="2nd Semester">2nd Semester</option>
+                      </select>
+                      {errors.semester && (
+                        <div className="text-red-500 font-semibold mt-2">
+                          {errors.semester.message}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </label>
+
+                <label className="inter">
+                  <div className="flex flex-col gap-2">
+                    <h1 className="font-semibold">Section</h1>
+                    <div className="w-full">
+                      <select
+                        {...register("sectionId", {
+                          required: "Section Name is required",
+                        })}
+                        className={`${
+                          errors.sectionId ? "border-[2px] border-red-500" : ""
+                        } h-[60px] border border-[#E2E8F0] outline-[#0C1E33] rounded-md px-4 w-full`}
+                      >
+                        <option value="" hidden>
+                          Select Section
+                        </option>
+                        {filteredSections.map((section, index) => (
+                          <option key={index} value={section.section_id}>
+                            {section.section_name}
+                          </option>
+                        ))}
+                      </select>
+                      {errors.sectionId && (
+                        <div className="text-red-500 font-semibold mt-2">
+                          {errors.sectionId.message}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </label>
+              </>
+            )}
 
             <div className="flex flex-col gap-4 ">
               <button

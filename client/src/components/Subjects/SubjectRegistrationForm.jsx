@@ -107,15 +107,6 @@ const SubjectRegistrationForm = ({ toggleAddSubjectState, onSubjectAdded }) => {
             </label>
 
             <InputField
-              name="hours"
-              label="Hours"
-              required
-              type="number"
-              register={register}
-              errors={errors}
-            />
-
-            <InputField
               name="unit"
               label="Unit"
               required

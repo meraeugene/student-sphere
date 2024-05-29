@@ -30,7 +30,7 @@ $confirmPassword = sanitize_input($_POST["confirmPassword"]);
 // Check if passwords match
 if ($newPassword !== $confirmPassword) {
     http_response_code(404);
-    echo json_encode(["error" => "Password do not match"]);
+    echo json_encode(["error" => "Passwords do not match"]);
     exit;
 }
 
@@ -51,6 +51,13 @@ $stmt->close();
 if (!password_verify($currentPassword, $user['password'])) {
     http_response_code(401);
     echo json_encode(["error" => "Current password does not match"]);
+    exit;
+}
+
+// Verify if new password is the same as the current password
+if (password_verify($newPassword, $user['password'])) {
+    http_response_code(400); // Bad request
+    echo json_encode(["error" => "New password cannot be the same as the current password"]);
     exit;
 }
 

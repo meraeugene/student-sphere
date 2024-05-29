@@ -23,7 +23,7 @@ const ProfileManagement = () => {
         <div className="flex items-center gap-3 mb-10">
           <img src="/images/changeprofile.svg" alt="change profile" />
           <h1 className="text-2xl poppins-medium uppercase ">
-            Profile Management
+            Profile Management (ONGOING)
           </h1>
         </div>
 

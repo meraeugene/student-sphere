@@ -73,7 +73,7 @@ const Students = () => {
             <table className="min-w-full border   ">
               <thead>
                 <tr className="whitespace-nowrap shadow-sm border shadow-blue-200">
-                  <th className="px-4 py-2 text-left font-bold">NUMBER</th>
+                  <th className="px-4 py-2 text-left font-bold">#</th>
                   <th className="px-4 py-2 text-left font-bold">STUDENT ID</th>
                   <th className="px-4 py-2 text-left font-bold">FIRST NAME</th>
                   <th className="px-4 py-2 text-left font-bold">LAST NAME</th>
@@ -83,8 +83,13 @@ const Students = () => {
                   </th>
                   <th className="px-4 py-2 text-left font-bold">GENDER</th>
                   <th className="px-4 py-2 text-left font-bold">
-                    DEPARTMENT NAME
+                    ENROLLMENT STATUS
                   </th>
+                  <th className="px-4 py-2 text-left font-bold">DEPARTMENT</th>
+                  <th className="px-4 py-2 text-left font-bold">PROGRAM</th>
+                  <th className="px-4 py-2 text-left font-bold">YEAR LEVEL</th>
+                  <th className="px-4 py-2 text-left font-bold">SEMESTER</th>
+                  <th className="px-4 py-2 text-left font-bold">SECTION</th>
 
                   <th className="px-4 py-2"></th>
                 </tr>
@@ -106,19 +111,48 @@ const Students = () => {
                     <td className="px-4 py-2">{student.email}</td>
                     <td className="px-4 py-2">{student.phone_number}</td>
                     <td className="px-4 py-2">{student.gender}</td>
-                    <td className="px-4 py-2">{student.department_name}</td>
+                    <td className="px-4 py-2">
+                      <span
+                        className={
+                          student.enrollment_status === "Enrolled"
+                            ? "bg-green-200 h-[35px] rounded-md text-green-700   flex items-center justify-center "
+                            : "bg-red-200 h-[35px] text-red-700  rounded-md  flex items-center justify-center "
+                        }
+                      >
+                        {student.enrollment_status}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2">
+                      {student.department_name
+                        ? student.department_name
+                        : "N/A"}
+                    </td>
+                    <td className="px-4 py-2">
+                      {student.program_name ? student.program_name : "N/A"}
+                    </td>
+                    <td className="px-4 py-2">
+                      {student.year_level ? student.year_level : "N/A"}
+                    </td>
+                    <td className="px-4 py-2">
+                      {student.semester ? student.semester : "N/A"}
+                    </td>
+                    <td className="px-4 py-2">
+                      {student.section_name ? student.section_name : "N/A"}
+                    </td>
 
                     <td className="flex h-full items-center gap-2 px-4 py-2">
                       <button className="btn-sm rounded border border-gray-400 h-[35px] px-2 hover:bg-gray-200 text-sm">
                         Details
                       </button>
 
-                      <button
-                        onClick={() => toggleEditStudentState(student)}
-                        className="btn-sm rounded border border-gray-400  h-[35px] px-2  hover:bg-gray-200"
-                      >
-                        <FaRegEdit color="green" />
-                      </button>
+                      {student.enrollment_status === "Enrolled" && (
+                        <button
+                          onClick={() => toggleEditStudentState(student)}
+                          className="btn-sm rounded border border-gray-400  h-[35px] px-2  hover:bg-gray-200"
+                        >
+                          <FaRegEdit color="green" />
+                        </button>
+                      )}
 
                       <button
                         className="btn-sm rounded border border-gray-400  h-[35px] px-2  hover:bg-gray-200"

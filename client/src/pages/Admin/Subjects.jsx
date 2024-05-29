@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SubjectRegistrationForm from "../../components/Subjects/SubjectRegistrationForm";
 import EditSubjectForm from "../../components/Subjects/EditSubjectForm";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,6 +17,13 @@ const Subjects = () => {
   const [addSubject, setAddSubject] = useState(false);
   const [editSubject, setEditSubject] = useState(false);
   const [subjectToEdit, setSubjectToEdit] = useState({});
+  const [yearLevelFilter, setYearLevelFilter] = useState("");
+  const [semesterFilter, setSemesterFilter] = useState("");
+  const [programFilter, setProgramFilter] = useState("");
+
+  useEffect(() => {
+    dispatch(fetchSubjects());
+  }, [dispatch]);
 
   const deleteSubjectHandler = async (subjectCode) => {
     if (window.confirm("Are you sure you want to delete this subject?")) {
@@ -41,6 +48,17 @@ const Subjects = () => {
     dispatch(fetchSubjects());
   };
 
+  const filteredSubjects = subjects.filter((subject) => {
+    return (
+      (yearLevelFilter === "" ||
+        (subject.year_level &&
+          subject.year_level.toString() === yearLevelFilter)) &&
+      (semesterFilter === "" ||
+        (subject.semester && subject.semester.toString() === semesterFilter)) &&
+      (programFilter === "" || subject.program_name === programFilter)
+    );
+  });
+
   return (
     <div className="w-full  ml-[320px] ">
       <div className="px-8 py-10 ">
@@ -61,13 +79,55 @@ const Subjects = () => {
           </button>
         </div>
 
-        {subjects.length > 0 ? (
+        <div className="flex justify-between mt-10 mb-8">
+          <div></div>
+          <div className="flex items-center gap-4">
+            <select
+              value={yearLevelFilter}
+              onChange={(e) => setYearLevelFilter(e.target.value)}
+              className="p-2 border rounded"
+            >
+              <option value="">All Year Levels</option>
+              <option value="1st Year">1st Year</option>
+              <option value="2nd Year">2nd Year</option>
+              <option value="3rd Year">3rd Year</option>
+              <option value="4th Year">4th Year</option>
+            </select>
+
+            <select
+              value={semesterFilter}
+              onChange={(e) => setSemesterFilter(e.target.value)}
+              className="p-2 border rounded"
+            >
+              <option value="">All Semesters</option>
+              <option value="1st Semester">1st Semester</option>
+              <option value="2nd Semester">2nd Semester</option>
+            </select>
+
+            <select
+              value={programFilter}
+              onChange={(e) => setProgramFilter(e.target.value)}
+              className="p-2 border rounded"
+            >
+              <option value="">All Programs</option>
+              {[
+                ...new Set(subjects.map((subject) => subject.program_name)),
+              ].map((program) => (
+                <option key={program} value={program}>
+                  {program}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {filteredSubjects.length > 0 ? (
           <div className="faculty-members-table__container my-10">
             <div className="mb-8 overflow-auto">
               <table className="min-w-full border shadow-sm   ">
                 <thead>
                   <tr className="whitespace-nowrap shadow-sm border shadow-blue-200">
-                    <th className="px-4 py-2 text-left font-bold">NUMBER</th>
+                    <th className="px-4 py-2 text-left font-bold">#</th>
                     <th className="px-4 py-2 text-left font-bold">
                       SUBJECT CODE
                     </th>
@@ -75,7 +135,6 @@ const Subjects = () => {
                       SUBJECT NAME
                     </th>
                     <th className="px-4 py-2 text-center font-bold">STATUS</th>
-                    <th className="px-4 py-2 text-center font-bold">HOURS</th>
                     <th className="px-4 py-2 text-center font-bold">UNIT</th>
                     <th className="px-4 py-2 text-center font-bold">
                       YEAR LEVEL
@@ -88,7 +147,7 @@ const Subjects = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {subjects.map((subject, index) => (
+                  {filteredSubjects.map((subject, index) => (
                     <tr
                       key={index}
                       className="whitespace-nowrap border  hover:bg-gray-50  "
@@ -107,7 +166,6 @@ const Subjects = () => {
                           {subject.status}
                         </span>
                       </td>
-                      <td className="px-4 py-2 text-center">{subject.hours}</td>
                       <td className="px-4 py-2 text-center">{subject.unit}</td>
                       <td className="px-4 py-2 text-center">
                         {subject.year_level}

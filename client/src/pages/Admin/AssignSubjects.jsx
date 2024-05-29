@@ -75,7 +75,7 @@ const AssignSubjects = () => {
         <div className="flex items-center justify-between mb-10">
           <div>
             <div className="flex items-center gap-3">
-              <img src="/images/assign-black.svg" alt="subjects" />
+              <img src="/images/subjects-black.svg" alt="subjects" />
               <h1 className="text-2xl poppins-medium uppercase">
                 Assign Subjects to Faculty Members
               </h1>

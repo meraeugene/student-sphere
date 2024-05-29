@@ -66,7 +66,7 @@ const Programs = () => {
               <table className="min-w-full border shadow-sm   ">
                 <thead>
                   <tr className="whitespace-nowrap shadow-sm border shadow-blue-200">
-                    <th className="px-4 py-2 text-left font-bold">NUMBER</th>
+                    <th className="px-4 py-2 text-left font-bold">#</th>
                     <th className="px-4 py-2 text-left font-bold">
                       PROGRAM NAME
                     </th>

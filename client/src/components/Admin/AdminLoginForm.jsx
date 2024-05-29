@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { setCredentials } from "../../slices/authSlice";
+import { setCredentials } from "../../features/authentication/authSlice";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import { BiShowAlt, BiSolidShow } from "react-icons/bi";
 import { RiAdminFill } from "react-icons/ri";

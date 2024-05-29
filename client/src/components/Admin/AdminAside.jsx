@@ -1,5 +1,5 @@
 import React from "react";
-import { logout } from "../../slices/authSlice";
+import { logout } from "../../features/authentication/authSlice";
 import { useDispatch } from "react-redux";
 import { NavLink, useLocation } from "react-router-dom";
 import { GiTeacher } from "react-icons/gi";
@@ -106,6 +106,17 @@ const AdminAside = () => {
             <img src="/images/section.svg" alt="subjects" />
             <h1 className="text-base poppins-regular font-base">Sections</h1>
           </NavLink>
+
+          {/* SCHEDULES */}
+          <NavLink
+            to="/admin/schedules"
+            className={`flex items-center gap-3 cursor-pointer px-4 py-2 ${
+              location.pathname === "/admin/schedules" ? activeClass : ""
+            }`}
+          >
+            <img src="/images/sched.svg" alt="subjects" />
+            <h1 className="text-base poppins-regular font-base">Schedules</h1>
+          </NavLink>
         </div>
       </div>
 
@@ -119,16 +130,17 @@ const AdminAside = () => {
               location.pathname === "/admin/assign-subjects" ? activeClass : ""
             }`}
           >
-            <img src="/images/assign.svg" alt="subjects" />
+            <img src="/images/subjects.svg" alt="subjects" />
             <h1 className="text-base poppins-regular font-base">
               Assign Subjects
             </h1>
           </NavLink>
-          {/* ASSIGN SCHEDULE */}
+
+          {/* ASSIGN SCHEDULES */}
           <NavLink
-            to="/admin/assign-schedule"
+            to="/admin/assign-schedules"
             className={`flex items-center gap-3 cursor-pointer px-4 py-2 ${
-              location.pathname === "/admin/assign-schedule" ? activeClass : ""
+              location.pathname === "/admin/assign-schedules" ? activeClass : ""
             }`}
           >
             <img src="/images/sched.svg" alt="subjects" />

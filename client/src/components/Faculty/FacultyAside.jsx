@@ -1,5 +1,5 @@
 import React from "react";
-import { logout } from "../../slices/authSlice";
+import { logout } from "../../features/authentication/authSlice";
 import { useDispatch } from "react-redux";
 import { NavLink, useLocation } from "react-router-dom";
 

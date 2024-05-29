@@ -99,7 +99,7 @@ const Sections = () => {
               </h1>
             </div>
             <p className="poppins-regular mt-2 text-gray-700">
-              Select a department first before using the the program filter.
+              Select a department first before using the program filter.
             </p>
           </div>
 
@@ -166,7 +166,7 @@ const Sections = () => {
               <table className="min-w-full border shadow-sm   ">
                 <thead>
                   <tr className="whitespace-nowrap shadow-sm border shadow-blue-200">
-                    <th className="px-4 py-2 text-left font-bold">NUMBER</th>
+                    <th className="px-4 py-2 text-left font-bold">#</th>
                     <th className="px-4 py-2 text-left font-bold">
                       SECTION NAME
                     </th>

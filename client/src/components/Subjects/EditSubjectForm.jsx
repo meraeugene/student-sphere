@@ -35,7 +35,6 @@ const EditSubjectForm = ({
       subjectCode: subject.subject_code,
       subjectName: subject.subject_name,
       status: subject.status,
-      hours: subject.hours,
       unit: subject.unit,
       yearLevel: subject.year_level,
       semester: subject.semester,
@@ -58,7 +57,6 @@ const EditSubjectForm = ({
   };
 
   const onSubmit = async (data) => {
-    console.log(data);
     try {
       const response = await dispatch(updateSubject(data)).unwrap();
       if (response) {
@@ -137,15 +135,6 @@ const EditSubjectForm = ({
                 </div>
               </div>
             </label>
-
-            <InputField
-              name="hours"
-              label="Hours"
-              required
-              type="number"
-              register={register}
-              errors={errors}
-            />
 
             <InputField
               name="unit"

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { GiTeacher } from "react-icons/gi";
 import { MdErrorOutline } from "react-icons/md";
 import { FaTrash, FaRegEdit } from "react-icons/fa";
@@ -63,6 +63,10 @@ const Faculties = () => {
     setEditFacultyMember(!editFacultyMember);
   };
 
+  useEffect(() => {
+    dispatch(fetchFaculties());
+  }, [dispatch]);
+
   return (
     <div className="w-full ml-[320px] overflow-hidden">
       <div className="px-8 py-10">
@@ -89,7 +93,7 @@ const Faculties = () => {
               <table className="min-w-full border shadow-sm   ">
                 <thead>
                   <tr className="whitespace-nowrap shadow-sm border shadow-blue-200">
-                    <th className="px-4 py-2 text-left font-bold">NUMBER</th>
+                    <th className="px-4 py-2 text-left font-bold">#</th>
                     <th className="px-4 py-2 text-left font-bold">
                       FACULTY ID
                     </th>
@@ -136,13 +140,18 @@ const Faculties = () => {
                       <td className="px-4 py-2">
                         {facultyMember.program_name}
                       </td>
-                      <td className="px-4 py-2">
-                        {facultyMember.sections ? (
-                          <span className="bg-green-200 h-[35px] px-2 text-green-700  rounded-md  flex items-center justify-center ">
-                            {facultyMember.sections}
-                          </span>
+                      <td className="px-4 py-2 flex gap-2">
+                        {facultyMember.sections.length > 0 ? (
+                          facultyMember.sections.map((section, index) => (
+                            <span
+                              key={index}
+                              className="bg-green-200 h-[35px] px-2 text-green-800  rounded-md  flex items-center justify-center "
+                            >
+                              {section}
+                            </span>
+                          ))
                         ) : (
-                          <span className="bg-orange-200 h-[35px] px-2 text-orange-500  rounded-md  flex items-center justify-center ">
+                          <span className="bg-orange-200 h-[35px] px-2 text-orange-500  rounded-md  w-full flex items-center justify-center ">
                             Pending
                           </span>
                         )}

@@ -14,11 +14,16 @@ require_once "../config.php";
 $sql = "
     SELECT 
         s.student_id, s.first_name, s.last_name, s.gender, s.email, s.date_of_birth, s.address, 
-        s.phone_number, d.department_id, d.department_name
+        s.phone_number, s.enrollment_status, s.year_level, s.semester, d.department_id,
+        d.department_name, p.program_name, p.program_id, ss.section_name, ss.section_id
     FROM 
         students s
-    JOIN 
-        departments d ON s.department_id = d.department_id
+    LEFT JOIN 
+        departments d ON  d.department_id = s.department_id 
+    LEFT JOIN 
+        programs p ON p.program_id = s.program_id 
+    LEFT JOIN 
+        sections ss ON ss.section_id = s.section_id 
     ORDER BY 
         s.first_name ASC
 ";

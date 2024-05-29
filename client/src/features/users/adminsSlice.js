@@ -52,7 +52,6 @@ export const resetAdminPassword = createAsyncThunk(
         "http://localhost/student-sphere/server/Admins/resetPassword.php",
         formData
       );
-      toast.success(response.data.message);
       return response.data;
     } catch (error) {
       toast.error(error.response.data.error);

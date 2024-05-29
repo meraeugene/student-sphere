@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { FiMinus } from "react-icons/fi";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { registerStudent } from "../../features/students/studentsSlice";
 import { generateStudentID } from "../../utils/generateStudentId";
 import { useState } from "react";
@@ -9,8 +9,6 @@ import InputField from "../../components/InputField";
 
 const StudentRegistrationForm = ({ toggleAddStudentState, onStudentAdded }) => {
   const dispatch = useDispatch();
-
-  const { departmentNames } = useSelector((state) => state.departments);
 
   // Generate faculty ID once when the component mounts
   const [studentId, setStudentId] = useState(generateStudentID);
@@ -152,40 +150,6 @@ const StudentRegistrationForm = ({ toggleAddStudentState, onStudentAdded }) => {
               errors={errors}
               pattern={/^\d+$/}
             />
-
-            <label className="inter">
-              <div className="flex flex-col gap-2">
-                <div className="flex gap-1">
-                  <h1 className="font-semibold">Department</h1>
-                  <span className="text-red-500">*</span>
-                </div>
-                <div className="w-full">
-                  <select
-                    name="departmentId"
-                    {...register("departmentId", {
-                      required: "Department Name is required",
-                    })}
-                    className={`${
-                      errors.departmentId ? "border-[2px] border-red-500" : ""
-                    } h-[60px] border border-[#E2E8F0] outline-[#0C1E33] rounded-md px-4 w-full`}
-                  >
-                    <option value="" hidden>
-                      Select Department
-                    </option>
-                    {departmentNames.map((department, index) => (
-                      <option key={index} value={department.department_id}>
-                        {department.department_name}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.departmentId && (
-                    <div className="text-red-500 font-semibold mt-2">
-                      {errors.departmentId.message}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </label>
 
             <div className="flex flex-col gap-4 ">
               <button

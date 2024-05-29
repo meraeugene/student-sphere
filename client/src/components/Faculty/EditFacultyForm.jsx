@@ -23,6 +23,10 @@ const EditFacultyForm = ({
     setFilteredPrograms(initialFilteredPrograms);
   }, [facultyMember.department_id, programs]);
 
+  useEffect(() => {
+    setValue("programId", facultyMember.program_id);
+  }, [setValue, facultyMember.program_id, filteredPrograms]);
+
   const {
     register,
     handleSubmit,
@@ -44,9 +48,14 @@ const EditFacultyForm = ({
     },
   });
 
-  useEffect(() => {
-    setValue("programId", facultyMember.program_id);
-  }, [setValue, facultyMember.program_id, filteredPrograms]);
+  const handleDepartmentChange = (event) => {
+    // Convert text to number to filter out
+    const selectedDepartment = Number(event.target.value);
+    const filtered = programs.filter(
+      (program) => program.department_id === selectedDepartment
+    );
+    setFilteredPrograms(filtered);
+  };
 
   const onSubmit = async (data) => {
     try {
@@ -61,15 +70,6 @@ const EditFacultyForm = ({
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const handleDepartmentChange = (event) => {
-    // Convert text to number to filter out
-    const selectedDepartment = Number(event.target.value);
-    const filtered = programs.filter(
-      (program) => program.department_id === selectedDepartment
-    );
-    setFilteredPrograms(filtered);
   };
 
   return (
