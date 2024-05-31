@@ -32,8 +32,8 @@ export const deleteProgram = createAsyncThunk(
   }
 );
 
-export const registerProgram = createAsyncThunk(
-  "programs/registerProgram",
+export const addProgram = createAsyncThunk(
+  "programs/addProgram",
   async (programData, { rejectWithValue }) => {
     try {
       const formData = new FormData();
@@ -43,7 +43,7 @@ export const registerProgram = createAsyncThunk(
       });
 
       const response = await axios.post(
-        "http://localhost/student-sphere/server/Programs/registerProgram.php",
+        "http://localhost/student-sphere/server/Programs/addProgram.php",
         formData
       );
       toast.success(response.data.message);
@@ -107,7 +107,7 @@ const programsSlice = createSlice({
         state.status = "loading";
       })
       .addCase(fetchPrograms.fulfilled, (state, action) => {
-        state.status = "succeeded";
+        state.status = "loading";
         state.programs = action.payload;
       })
       .addCase(fetchPrograms.rejected, (state, action) => {
@@ -119,14 +119,14 @@ const programsSlice = createSlice({
           (program) => program.program_name !== action.meta.arg
         );
       })
-      .addCase(registerProgram.pending, (state) => {
+      .addCase(addProgram.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(registerProgram.fulfilled, (state, action) => {
+      .addCase(addProgram.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.programs.push(action.payload);
       })
-      .addCase(registerProgram.rejected, (state, action) => {
+      .addCase(addProgram.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })

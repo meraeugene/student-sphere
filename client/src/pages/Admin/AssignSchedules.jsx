@@ -37,8 +37,6 @@ const AssignSchedules = () => {
     }
   };
 
-  console.log(facultyMembers);
-
   return (
     <div className="w-full ml-[320px] overflow-auto ">
       <div className="px-8 py-10 pb-16 ">

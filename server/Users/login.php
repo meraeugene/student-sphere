@@ -22,46 +22,39 @@ function sanitize_input($data) {
 error_log("Received POST data: " . print_r($_POST, true));
 
 // Get form data
-$studentID = sanitize_input($_POST["studentID"]);
+$username = sanitize_input($_POST["username"]);
 $password = sanitize_input($_POST["password"]);
 
 // Prepare and execute statement to fetch user from database
-$stmt = $conn->prepare("SELECT student_id, password, first_name, last_name, gender,  email,  date_of_birth, phone_number FROM students WHERE student_id = ?");
+$stmt = $conn->prepare("SELECT user_id, username, role FROM users WHERE username = ?");
 if (!$stmt) {
     die("Error: " . $conn->error); // Output the error message
 }
-$stmt->bind_param("s", $studentID);
+$stmt->bind_param("s", $username);
 $stmt->execute();
 $stmt->store_result();
+$stmt->bind_result($user_id, $fetched_username, $role);
+$stmt->fetch();
 
-// Check if user exists
 if ($stmt->num_rows > 0) {
-    // Bind result variables
-    $stmt->bind_result($studentID, $hashed_password, $firstName, $lastName,$gender,  $email,  $date_of_birth, $phone_number);
-    $stmt->fetch();
-
-    // Verify password
-    if (password_verify($password, $hashed_password)) {
-        // Password is correct
-        
-         // Return user information
-         echo json_encode([
+    // Check if the password matches the username
+    if ($password === $fetched_username) {
+        // Password is correct (password is the same as username)
+        echo json_encode([
             "message" => "Login successful",
-            "firstName" => $firstName,
-            "lastName" => $lastName,
-            "role" => "student",
+            "user_id" => $user_id,
+            "role" => $role,
             "redirect_uri" => "/dashboard"
         ]);
-  
     } else {
         // Password is incorrect
         http_response_code(401); // Unauthorized
-        echo json_encode(["error" => "You have entered an invalid username or password."]);
+        echo json_encode(["error" => "Invalid username or password"]);
     }
 } else {
-    // User not found
+    // Username not found
     http_response_code(404); // Not found
-    echo json_encode(["error" => "You have entered an invalid username or password."]);
+    echo json_encode(["error" => "Invalid username or password"]);
 }
 
 // Close statement

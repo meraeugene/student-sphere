@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { resetAdminPassword } from "../../features/users/adminsSlice";
+import { resetAdminPassword } from "../../features/users/usersSlice";
 import { BiShowAlt, BiSolidShow } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";

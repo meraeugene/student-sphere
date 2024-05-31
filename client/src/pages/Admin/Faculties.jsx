@@ -11,6 +11,7 @@ import {
 } from "../../features/faculties/facultiesSlice";
 import EditFacultyForm from "../../components/Faculty/EditFacultyForm";
 import { capitalizeFirstLetter } from "../../utils/capitalizeFirstLetter";
+import Loader from "../../components/Loader";
 import { useSearchParams } from "react-router-dom";
 
 const Faculties = () => {
@@ -24,7 +25,9 @@ const Faculties = () => {
   const departmentName = searchParams.get("departmentName");
 
   const dispatch = useDispatch();
-  const facultyMembers = useSelector((state) => state.faculties.faculties);
+  const { faculties: facultyMembers, status } = useSelector(
+    (state) => state.faculties
+  );
 
   const deleteFacultyMemberHandler = async (facultyId) => {
     if (window.confirm("Are you sure you want to delete this user?")) {
@@ -87,16 +90,30 @@ const Faculties = () => {
           </button>
         </div>
 
-        {facultyMembers.length > 0 ? (
+        {status === "loading" && <Loader />}
+
+        {status === "failed" && (
+          <div className="w-full flex  bg-red-100 rounded-md items-center  border play-regular text-lg px-4 py-3 font-bold gap-2 text-red-800 mt-10">
+            <MdErrorOutline color="red" />
+            <h1>Failed to fetch departments</h1>
+          </div>
+        )}
+
+        {facultyMembers.length === 0 && (
+          <div className="w-full flex  bg-red-100 rounded-md items-center  border play-regular text-lg px-4 py-3 font-bold gap-2 text-red-800">
+            <MdErrorOutline color="red" />
+            <h1>No Faculty Members</h1>
+          </div>
+        )}
+
+        {status === "succeeded" && facultyMembers.length > 0 && (
           <div className="faculty-members-table__container my-10">
             <div className="mb-8 overflow-auto">
               <table className="min-w-full border shadow-sm   ">
                 <thead>
                   <tr className="whitespace-nowrap shadow-sm border shadow-blue-200">
                     <th className="px-4 py-2 text-left font-bold">#</th>
-                    <th className="px-4 py-2 text-left font-bold">
-                      FACULTY ID
-                    </th>
+                    <th className="px-4 py-2 text-left font-bold">USERNAME</th>
                     <th className="px-4 py-2 text-left font-bold">
                       FIRST NAME
                     </th>
@@ -123,7 +140,7 @@ const Faculties = () => {
                       className="whitespace-nowrap border  hover:bg-gray-50  "
                     >
                       <td className="px-4 py-2 ">{index + 1}</td>
-                      <td className="px-4 py-2 ">{facultyMember.faculty_id}</td>
+                      <td className="px-4 py-2 ">{facultyMember.username}</td>
                       <td className="px-4 py-2">
                         {facultyMember?.first_name &&
                           capitalizeFirstLetter(facultyMember.first_name)}
@@ -141,8 +158,8 @@ const Faculties = () => {
                         {facultyMember.program_name}
                       </td>
                       <td className="px-4 py-2 flex gap-2">
-                        {facultyMember.sections.length > 0 ? (
-                          facultyMember.sections.map((section, index) => (
+                        {facultyMember?.sections?.length > 0 ? (
+                          facultyMember?.sections?.map((section, index) => (
                             <span
                               key={index}
                               className="bg-green-200 h-[35px] px-2 text-green-800  rounded-md  flex items-center justify-center "
@@ -199,14 +216,14 @@ const Faculties = () => {
                           <FaTrash color="red" />
                         </button>
 
-                        {facultyMember.sections && (
+                        {facultyMember?.sections?.length > 0 && (
                           <button
                             className="btn-sm text-sm bg-[#af2833]  border-none text-white poppins-regular rounded h-[35px] px-2 outline-none hover:opacity-90 "
                             onClick={() =>
                               removeSectionHandler(facultyMember.faculty_id)
                             }
                           >
-                            REMOVE SECTION
+                            REMOVE SECTIONS
                           </button>
                         )}
                       </td>
@@ -215,11 +232,6 @@ const Faculties = () => {
                 </tbody>
               </table>
             </div>
-          </div>
-        ) : (
-          <div className="w-full flex  bg-red-100 rounded-md items-center  border play-regular text-lg px-4 py-3 font-bold gap-2 text-red-800">
-            <MdErrorOutline color="red" />
-            <h1>No Faculty Members</h1>
           </div>
         )}
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { capitalizeFirstLetter } from "../../utils/capitalizeFirstLetter";
 import { fetchDepartmentNames } from "../../features/departments/departmentsSlice";
@@ -9,13 +9,36 @@ import {
 import { fetchSubjects } from "../../features/subjects/subjectsSlice";
 import { fetchFaculties } from "../../features/faculties/facultiesSlice";
 import { fetchSections } from "../../features/sections/sectionsSlice";
-
+import axios from "axios";
 const AdminDashboard = () => {
   const { userInfo } = useSelector((state) => state.auth);
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const capitalizedFirstName = capitalizeFirstLetter(userInfo.firstName);
-  const capitalizedLastName = capitalizeFirstLetter(userInfo.lastName);
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost/student-sphere/server/Users/getUserProfile.php?user_id=${userInfo.user_id}`
+        );
+        setProfile(response.data);
+        setLoading(false); // Set loading to false after data is fetched
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+        setLoading(false); // Set loading to false in case of error
+      }
+    };
+
+    fetchUserProfile();
+  }, [userInfo.user_id]);
+
+  // Check if profile is null before accessing its properties
+  const firstName = profile ? capitalizeFirstLetter(profile.first_name) : "";
+  const lastName = profile ? capitalizeFirstLetter(profile.last_name) : "";
+
+  // Render the rest of the component once profile is fetched
   const currentDate = new Date().toLocaleDateString("en-US", {
     day: "numeric",
     month: "short",
@@ -23,26 +46,21 @@ const AdminDashboard = () => {
     weekday: "long",
   });
 
-  const dispatch = useDispatch();
-
   useEffect(() => {
     dispatch(fetchDepartmentNames());
-    dispatch(fetchPrograms());
     dispatch(fetchProgramNames());
-    dispatch(fetchSubjects());
-    dispatch(fetchFaculties());
-    dispatch(fetchSections());
-  }, [dispatch]);
+    dispatch(fetchPrograms());
+  }, []);
 
   return (
-    <main className=" w-full  flex  ml-[320px] h-screen  ">
-      <div className="left__container basis-[80%] ">
-        <div className="welcome__container py-6 px-8 ">
+    <main className="w-full flex ml-[320px] h-screen">
+      <div className="left__container basis-[80%]">
+        <div className="welcome__container py-6 px-8">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3 ">
+            <div className="flex items-center gap-3">
               <img src="/images/hello.png" alt="" />
               <h1 className="text-2xl poppins-regular">
-                Welcome, {capitalizedFirstName} {capitalizedLastName}!{" "}
+                Welcome, {firstName} {lastName}!
               </h1>
             </div>
             <h1 className="poppins-regular text-[#495D72] text-sm">

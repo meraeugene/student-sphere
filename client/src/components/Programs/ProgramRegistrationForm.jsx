@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { FiMinus } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
-import { registerProgram } from "../../features/programs/programsSlice";
+import { addProgram } from "../../features/programs/programsSlice";
 import InputField from "../InputField";
 
 const ProgramRegistrationForm = ({ toggleAddProgramState, onProgramAdded }) => {
@@ -18,7 +18,7 @@ const ProgramRegistrationForm = ({ toggleAddProgramState, onProgramAdded }) => {
 
   const onSubmit = async (data) => {
     try {
-      await dispatch(registerProgram(data)).unwrap();
+      await dispatch(addProgram(data)).unwrap();
       reset();
       onProgramAdded();
     } catch (error) {
@@ -62,37 +62,6 @@ const ProgramRegistrationForm = ({ toggleAddProgramState, onProgramAdded }) => {
               register={register}
               errors={errors}
             />
-
-            <label htmlFor="semester" className="inter  ">
-              <div className="flex flex-col gap-2">
-                <div className="flex gap-1">
-                  <h1 className="font-semibold">Semester</h1>
-                  <span className="text-red-500">*</span>
-                </div>
-                <div className="w-full">
-                  <select
-                    name="semester"
-                    {...register("semester", {
-                      required: "Semester  is required",
-                    })}
-                    className={`${
-                      errors.semester ? "border-[2px] border-red-500" : ""
-                    } h-[60px] border border-[#E2E8F0] outline-[#0C1E33] rounded-md px-4 w-full `}
-                  >
-                    <option value="" hidden>
-                      Select Semester
-                    </option>
-                    <option value="1st Semester">1st Semester</option>
-                    <option value="2nd Semester">2nd Semester</option>
-                  </select>
-                  {errors.semester && (
-                    <div className="text-red-500 font-semibold mt-2">
-                      {errors.semester.message}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </label>
 
             <label htmlFor="departmentName" className="inter  ">
               <div className="flex flex-col gap-2">

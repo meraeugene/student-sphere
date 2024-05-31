@@ -12,34 +12,41 @@ require_once "../config.php";
 
 // Function to sanitize user input
 function sanitize_input($data) {
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data);
-    return $data;
+    return htmlspecialchars(stripslashes(trim($data)));
 }
 
 // Log the $_POST array
 error_log("Received POST data: " . print_r($_POST, true));
 
-// Check if student ID is provided
+// Check if faculty ID is provided
 if (!isset($_POST["facultyId"])) {
     http_response_code(400); 
     echo json_encode(["error" => "Faculty ID is not provided"]);
     exit;
 }
 
-// Get student ID from POST data
+// Get faculty ID from POST data
 $facultyId = sanitize_input($_POST["facultyId"]);
 
-// Prepare and bind statement to delete admin
-$stmt = $conn->prepare("DELETE FROM faculty_subjects WHERE faculty_id = ?");
-$stmt->bind_param("i", $facultyId );
+// Prepare and bind statement to delete faculty section
+$sql = "DELETE FROM faculty_subjects WHERE faculty_id = ?";
+$stmt = $conn->prepare($sql);
+
+if ($stmt === false) {
+    $error = $conn->error;
+    http_response_code(500); // Internal Server Error
+    echo json_encode(["error" => "Failed to prepare the SQL statement: $error"]);
+    error_log("SQL error: $error");
+    exit;
+}
+
+$stmt->bind_param("i", $facultyId);
 
 // Execute the statement
 if ($stmt->execute()) {
     echo json_encode(["message" => "Faculty member section removed successfully"]);
 } else {
-    http_response_code(404); 
+    http_response_code(500); // Internal Server Error
     echo json_encode(["error" => "Error removing faculty member section: " . $stmt->error]);
 }
 

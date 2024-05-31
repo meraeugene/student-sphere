@@ -16,17 +16,6 @@ const EditFacultyForm = ({
 
   const [filteredPrograms, setFilteredPrograms] = useState([]);
 
-  useEffect(() => {
-    const initialFilteredPrograms = programs.filter(
-      (program) => program.department_id === facultyMember.department_id
-    );
-    setFilteredPrograms(initialFilteredPrograms);
-  }, [facultyMember.department_id, programs]);
-
-  useEffect(() => {
-    setValue("programId", facultyMember.program_id);
-  }, [setValue, facultyMember.program_id, filteredPrograms]);
-
   const {
     register,
     handleSubmit,
@@ -35,7 +24,7 @@ const EditFacultyForm = ({
     formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: {
-      facultyId: facultyMember.faculty_id,
+      username: facultyMember.username,
       firstName: facultyMember.first_name,
       lastName: facultyMember.last_name,
       gender: facultyMember.gender,
@@ -47,6 +36,17 @@ const EditFacultyForm = ({
       programId: facultyMember.program_id,
     },
   });
+
+  useEffect(() => {
+    const initialFilteredPrograms = programs.filter(
+      (program) => program.department_id === facultyMember.department_id
+    );
+    setFilteredPrograms(initialFilteredPrograms);
+  }, [facultyMember.department_id, programs]);
+
+  useEffect(() => {
+    setValue("programId", facultyMember.program_id);
+  }, [setValue, facultyMember.program_id, filteredPrograms]);
 
   const handleDepartmentChange = (event) => {
     // Convert text to number to filter out
@@ -94,11 +94,10 @@ const EditFacultyForm = ({
             className="flex flex-col gap-6 mt-10  "
           >
             <InputField
-              name="facultyId"
-              label="Faculty ID"
-              placeholder="2022304365"
-              value={facultyMember.faculty_id}
-              readOnly
+              name="username"
+              label="Username"
+              value={facultyMember.username}
+              notEdittable
               register={register}
               errors={errors}
             />

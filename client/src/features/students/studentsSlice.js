@@ -23,7 +23,7 @@ export const registerStudent = createAsyncThunk(
       });
 
       const response = await axios.post(
-        "http://localhost/student-sphere/server/Students/registerStudent.php",
+        "http://localhost/student-sphere/server/Users/register.php",
         formData
       );
 

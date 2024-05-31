@@ -11,11 +11,8 @@ const EditStudentForm = ({
   onStudentAdded,
 }) => {
   const dispatch = useDispatch();
-  const { departmentNames } = useSelector((state) => state.departments);
-  const { programs } = useSelector((state) => state.programs);
   const { sections } = useSelector((state) => state.sections);
 
-  const [filteredPrograms, setFilteredPrograms] = useState([]);
   const [filteredSections, setFilteredSections] = useState([]);
 
   const {
@@ -44,24 +41,6 @@ const EditStudentForm = ({
   });
 
   useEffect(() => {
-    setValue("programId", student.program_id);
-    setValue("sectionId", student.section_id);
-  }, [
-    setValue,
-    student.program_id,
-    student.section_id,
-    filteredPrograms,
-    filteredSections,
-  ]);
-
-  useEffect(() => {
-    const initialFilteredPrograms = programs.filter(
-      (program) => program.department_id === student.department_id
-    );
-    setFilteredPrograms(initialFilteredPrograms);
-  }, [student.department_id, programs]);
-
-  useEffect(() => {
     if (student) {
       const programName = student.program_name;
       const yearLevel = student.year_level;
@@ -76,18 +55,8 @@ const EditStudentForm = ({
     }
   }, [student, sections]);
 
-  const handleDepartmentChange = (event) => {
-    // Convert text to number to filter out
-    const selectedDepartment = Number(event.target.value);
-    const filtered = programs.filter(
-      (program) => program.department_id === selectedDepartment
-    );
-    setFilteredPrograms(filtered);
-  };
-
   const onSubmit = async (data) => {
     try {
-      console.log(data);
       const response = await dispatch(updateStudent(data)).unwrap();
       // Dispatch an action to update the course data in the Redux store
       if (response) {
@@ -125,7 +94,7 @@ const EditStudentForm = ({
               label="Student ID"
               placeholder="2022304365"
               value={student.student_id}
-              readOnly
+              notEdittable
               register={register}
               errors={errors}
             />
@@ -134,7 +103,6 @@ const EditStudentForm = ({
               name="firstName"
               label="First Name"
               placeholder="First Name"
-              required
               pattern={/^[a-zA-Z\s]+$/}
               register={register}
               errors={errors}
@@ -144,7 +112,6 @@ const EditStudentForm = ({
               name="lastName"
               label="Last Name"
               placeholder="Last Name"
-              required
               pattern={/^[a-zA-Z\s]+$/}
               register={register}
               errors={errors}
@@ -181,7 +148,6 @@ const EditStudentForm = ({
               name="email"
               label="Email Address"
               placeholder="Email Address"
-              required
               pattern={/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/}
               register={register}
               errors={errors}
@@ -191,7 +157,6 @@ const EditStudentForm = ({
               name="birthday"
               label="Date of Birth"
               type="date"
-              required
               register={register}
               errors={errors}
             />
@@ -200,7 +165,6 @@ const EditStudentForm = ({
               name="address"
               label="Address"
               placeholder="Address"
-              required
               register={register}
               errors={errors}
             />
@@ -209,7 +173,6 @@ const EditStudentForm = ({
               name="phoneNumber"
               label="Phone Number"
               placeholder="0918391841"
-              required
               register={register}
               errors={errors}
             />
@@ -218,171 +181,75 @@ const EditStudentForm = ({
               name="enrollmentStatus"
               label="Enrollment Status"
               notEdittable
-              required
               register={register}
               errors={errors}
             />
 
-            {student.enrollment_status === "Enrolled" && (
-              <>
-                <label className="inter">
-                  <div className="flex flex-col gap-2">
-                    <h1 className="font-semibold">Department</h1>
-                    <div className="w-full">
-                      <select
-                        {...register("departmentId", {
-                          required: "Department Name is required",
-                        })}
-                        className={`${
-                          errors.departmentId
-                            ? "border-[2px] border-red-500"
-                            : ""
-                        } h-[60px] border border-[#E2E8F0] outline-[#0C1E33] rounded-md px-4 w-full`}
-                        onChange={handleDepartmentChange}
-                      >
-                        <option value="" hidden>
-                          Select Department
-                        </option>
-                        {departmentNames.map((department, index) => (
-                          <option key={index} value={department.department_id}>
-                            {department.department_name}
-                          </option>
-                        ))}
-                      </select>
-                      {errors.departmentId && (
-                        <div className="text-red-500 font-semibold mt-2">
-                          {errors.departmentId.message}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </label>
+            <InputField
+              name="departmentId"
+              label="Department"
+              value={student.department_name}
+              notEdittable
+              register={register}
+              errors={errors}
+            />
 
-                <label className="inter">
-                  <div className="flex flex-col gap-2">
-                    <h1 className="font-semibold">Program</h1>
-                    <div className="w-full">
-                      <select
-                        {...register("programId", {
-                          required: "Program Name is required",
-                        })}
-                        className={`${
-                          errors.programId ? "border-[2px] border-red-500" : ""
-                        } h-[60px] border border-[#E2E8F0] outline-[#0C1E33] rounded-md px-4 w-full`}
-                      >
-                        <option value="" hidden>
-                          Select Program
-                        </option>
-                        {filteredPrograms.length > 0 ? (
-                          filteredPrograms.map((program, index) => (
-                            <option key={index} value={program.program_id}>
-                              {program.program_name}
-                            </option>
-                          ))
-                        ) : (
-                          <option value="" disabled>
-                            No Program Available
-                          </option>
-                        )}
-                      </select>
-                      {errors.programId && (
-                        <div className="text-red-500 font-semibold mt-2">
-                          {errors.programId.message}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </label>
+            <InputField
+              name="programId"
+              label="Program"
+              value={student.program_name}
+              notEdittable
+              register={register}
+              errors={errors}
+            />
 
-                <label className="inter">
-                  <div className="flex flex-col gap-2">
-                    <h1 className="font-semibold">Year Level</h1>
-                    <div className="w-full">
-                      <select
-                        name="yearLevel"
-                        {...register("yearLevel", {
-                          required: "Year Level is required",
-                        })}
-                        className={`${
-                          errors.yearLevel ? "border-[2px] border-red-500" : ""
-                        } h-[60px] border border-[#E2E8F0] outline-[#0C1E33] rounded-md px-4 w-full`}
-                      >
-                        <option value="" hidden>
-                          Select Year Level
-                        </option>
-                        <option value="1st Year">1st Year</option>
-                        <option value="2nd Year">2nd Year</option>
-                        <option value="3rd Year">3rd Year</option>
-                        <option value="4th Year">4th Year</option>
-                      </select>
-                      {errors.yearLevel && (
-                        <div className="text-red-500 font-semibold mt-2">
-                          {errors.yearLevel.message}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </label>
+            <InputField
+              name="yearLevel"
+              label="Year Level"
+              value={student.year_level}
+              notEdittable
+              register={register}
+              errors={errors}
+            />
 
-                <label htmlFor="semester" className="inter  ">
-                  <div className="flex flex-col gap-2">
-                    <h1 className="font-semibold">Semester</h1>
-                    <div className="w-full">
-                      <select
-                        name="semester"
-                        {...register("semester", {
-                          required: "Semester is required",
-                        })}
-                        className={`${
-                          errors.semester ? "border-[2px] border-red-500" : ""
-                        } h-[60px] border border-[#E2E8F0] outline-[#0C1E33] rounded-md px-4 w-full `}
-                      >
-                        <option value="" hidden>
-                          Select Semester
-                        </option>
-                        <option value="1st Semester">1st Semester</option>
-                        <option value="2nd Semester">2nd Semester</option>
-                      </select>
-                      {errors.semester && (
-                        <div className="text-red-500 font-semibold mt-2">
-                          {errors.semester.message}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </label>
+            <InputField
+              name="semester"
+              label="Semester"
+              value={student.semester}
+              notEdittable
+              register={register}
+              errors={errors}
+            />
 
-                <label className="inter">
-                  <div className="flex flex-col gap-2">
-                    <h1 className="font-semibold">Section</h1>
-                    <div className="w-full">
-                      <select
-                        {...register("sectionId", {
-                          required: "Section Name is required",
-                        })}
-                        className={`${
-                          errors.sectionId ? "border-[2px] border-red-500" : ""
-                        } h-[60px] border border-[#E2E8F0] outline-[#0C1E33] rounded-md px-4 w-full`}
-                      >
-                        <option value="" hidden>
-                          Select Section
-                        </option>
-                        {filteredSections.map((section, index) => (
-                          <option key={index} value={section.section_id}>
-                            {section.section_name}
-                          </option>
-                        ))}
-                      </select>
-                      {errors.sectionId && (
-                        <div className="text-red-500 font-semibold mt-2">
-                          {errors.sectionId.message}
-                        </div>
-                      )}
+            <label className="inter">
+              <div className="flex flex-col gap-2">
+                <h1 className="font-semibold">Section</h1>
+                <div className="w-full">
+                  <select
+                    {...register("sectionId", {
+                      required: "Section Name is required",
+                    })}
+                    className={`${
+                      errors.sectionId ? "border-[2px] border-red-500" : ""
+                    } h-[60px] border border-[#E2E8F0] outline-[#0C1E33] rounded-md px-4 w-full`}
+                  >
+                    <option value="" hidden>
+                      Select Section
+                    </option>
+                    {filteredSections.map((section, index) => (
+                      <option key={index} value={section.section_id}>
+                        {section.section_name}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.sectionId && (
+                    <div className="text-red-500 font-semibold mt-2">
+                      {errors.sectionId.message}
                     </div>
-                  </div>
-                </label>
-              </>
-            )}
+                  )}
+                </div>
+              </div>
+            </label>
 
             <div className="flex flex-col gap-4 ">
               <button

@@ -38,7 +38,7 @@ $stmt = $conn->prepare("
     UPDATE programs 
     SET program_name = ? , school_year = ?, department_id = ? 
     WHERE program_id = ?");
-$stmt->bind_param("sssi", $programName, $schoolYear, $semester, $departmentId, $programId);
+$stmt->bind_param("sssi", $programName, $schoolYear, $departmentId, $programId);
 
 // Execute the statement
 if ($stmt->execute()) {

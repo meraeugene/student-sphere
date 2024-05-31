@@ -32,7 +32,7 @@ const SubjectRegistrationForm = ({ toggleAddSubjectState, onSubjectAdded }) => {
   const onSubmit = async (data) => {
     try {
       await dispatch(registerSubject(data)).unwrap();
-      reset();
+      // reset();
       onSubjectAdded();
     } catch (error) {
       console.log(error);

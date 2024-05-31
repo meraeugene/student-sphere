@@ -22,7 +22,6 @@ const EditProgramForm = ({
     defaultValues: {
       programName: program.program_name,
       schoolYear: program.school_year,
-      semester: program.semester,
       departmentId: program.department_id,
     },
   });
@@ -82,34 +81,6 @@ const EditProgramForm = ({
               register={register}
               errors={errors}
             />
-
-            <label htmlFor="semester" className="inter  ">
-              <div className="flex flex-col gap-2">
-                <h1 className="font-semibold">Semester</h1>
-                <div className="w-full">
-                  <select
-                    name="semester"
-                    {...register("semester", {
-                      required: "Semester  is required",
-                    })}
-                    className={`${
-                      errors.semester ? "border-[2px] border-red-500" : ""
-                    } h-[60px] border border-[#E2E8F0] outline-[#0C1E33] rounded-md px-4 w-full `}
-                  >
-                    <option value="" hidden>
-                      Select Semester
-                    </option>
-                    <option value="1st Semester">1st Semester</option>
-                    <option value="2nd Semester">2nd Semester</option>
-                  </select>
-                  {errors.semester && (
-                    <div className="text-red-500 font-semibold mt-2">
-                      {errors.semester.message}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </label>
 
             <label htmlFor="departmentName" className="inter  ">
               <div className="flex flex-col gap-2">

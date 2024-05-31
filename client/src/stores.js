@@ -2,7 +2,7 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import authSliceReducer from "./features/authentication/authSlice";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import adminsReducer from "./features/users/adminsSlice";
+import usersReducer from "./features/users/usersSlice";
 import departmentsReducer from "./features/departments/departmentsSlice";
 import facultiesReducer from "./features/faculties/facultiesSlice";
 import studentsReducer from "./features/students/studentsSlice";
@@ -12,7 +12,7 @@ import sectionsReducer from "./features/sections/sectionsSlice";
 
 const rootReducer = combineReducers({
   auth: authSliceReducer,
-  admins: adminsReducer,
+  users: usersReducer,
   departments: departmentsReducer,
   faculties: facultiesReducer,
   students: studentsReducer,

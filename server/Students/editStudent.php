@@ -12,10 +12,7 @@ require_once "../config.php";
 
 // Function to sanitize user input
 function sanitize_input($data) {
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data);
-    return $data;
+    return htmlspecialchars(stripslashes(trim($data)));
 }
 
 // Log the $_POST array
@@ -44,19 +41,28 @@ if (empty($studentId)) {
     exit();
 }
 
- 
 // Prepare and bind statement
-$stmt = $conn->prepare("UPDATE students SET first_name = ?, last_name = ?, email = ?, 
-phone_number = ?, gender = ?, date_of_birth = ?, address = ?, enrollment_status = ?, 
-year_level = ?, semester = ?, department_id = ?, program_id = ?, section_id = ?
-WHERE student_id = ?");
-$stmt->bind_param("ssssssssssiiii",  $firstName, $lastName, $email, $phoneNumber, $gender, $birthday, $address, $enrollmentStatus, $yearLevel, $semester, $departmentId, $programId,  $sectionId, $studentId);
+$stmt = $conn->prepare("
+    UPDATE students s
+    JOIN user_info ui ON s.user_id = ui.user_id
+    SET ui.first_name = ?, ui.last_name = ?, ui.email = ?, ui.phone_number = ?, ui.gender = ?, ui.date_of_birth = ?, ui.address = ?, 
+        s.enrollment_status = ?, s.year_level = ?, s.semester = ?, s.department_id = ?, s.program_id = ?, s.section_id = ?
+    WHERE s.student_id = ?
+");
 
+if ($stmt === false) {
+    http_response_code(500); // Internal Server Error
+    echo json_encode(["error" => "Failed to prepare the SQL statement: " . $conn->error]);
+    error_log("SQL error: " . $conn->error);
+    exit();
+}
+
+$stmt->bind_param("ssssssssssiiii", $firstName, $lastName, $email, $phoneNumber, $gender, $birthday, $address, $enrollmentStatus, $yearLevel, $semester, $departmentId, $programId, $sectionId, $studentId);
 
 // Execute the statement
 if ($stmt->execute()) {
     if ($stmt->affected_rows > 0) {
-        echo json_encode(["message" => "Student updated Successfully"]);
+        echo json_encode(["message" => "Student updated successfully"]);
     } else {
         http_response_code(404); // Not Found
         echo json_encode(["error" => "Student not found or no changes made"]);

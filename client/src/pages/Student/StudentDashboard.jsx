@@ -1,12 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { capitalizeFirstLetter } from "../../utils/capitalizeFirstLetter";
+import axios from "axios";
 
 const StudentDashboard = () => {
   const { userInfo } = useSelector((state) => state.auth);
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const capitalizedFirstName = capitalizeFirstLetter(userInfo.firstName);
-  const capitalizedLastName = capitalizeFirstLetter(userInfo.lastName);
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost/student-sphere/server/Users/getUserProfile.php?user_id=${userInfo.user_id}`
+        );
+        setProfile(response.data);
+        setLoading(false); // Set loading to false after data is fetched
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+        setLoading(false); // Set loading to false in case of error
+      }
+    };
+
+    fetchUserProfile();
+  }, [userInfo.user_id]);
+
+  // Check if profile is null before accessing its properties
+  const firstName = profile ? capitalizeFirstLetter(profile.first_name) : "";
+  const lastName = profile ? capitalizeFirstLetter(profile.last_name) : "";
 
   const currentDate = new Date().toLocaleDateString("en-US", {
     day: "numeric",
@@ -23,7 +44,7 @@ const StudentDashboard = () => {
             <div className="flex items-center gap-3 ">
               <img src="/images/hello.png" alt="" />
               <h1 className="text-2xl poppins-regular">
-                Welcome, {capitalizedFirstName} {capitalizedLastName}!{" "}
+                Welcome, {firstName} {lastName}!
               </h1>
             </div>
             <h1 className="poppins-regular text-[#495D72] text-sm">

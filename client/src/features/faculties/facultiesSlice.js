@@ -23,7 +23,7 @@ export const registerFaculty = createAsyncThunk(
       });
 
       const response = await axios.post(
-        "http://localhost/student-sphere/server/Faculties/registerFaculty.php",
+        "http://localhost/student-sphere/server/Users/register.php",
         formData
       );
       toast.success(response.data.message);
@@ -108,7 +108,7 @@ export const removeSection = createAsyncThunk(
       const formData = new FormData();
       formData.append("facultyId", facultyId);
       const response = await axios.post(
-        "http://localhost/student-sphere/server/Faculties/removeSection.php",
+        "http://localhost/student-sphere/server/Faculties/removeFacultySections.php",
         formData
       );
       dispatch(fetchFaculties());

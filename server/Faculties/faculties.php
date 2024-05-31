@@ -17,15 +17,18 @@ if (!$conn) {
     exit;
 }
 
-// Fetch faculties with their associated sections
+// Fetch faculties with their associated sections and filter by role "faculty"
 $sql = "
     SELECT 
-        f.faculty_id, f.first_name, f.last_name, f.email, f.phone_number, 
-        f.gender, f.date_of_birth, f.address, d.department_name, d.department_id, 
+        f.faculty_id,
+        ui.first_name, ui.last_name, ui.email, ui.phone_number, 
+        ui.gender, ui.date_of_birth, ui.address,
+        d.department_name, d.department_id, 
         p.program_name, p.program_id,
         fs.subject_code,
         fs.school_year,
-        s.section_name
+        s.section_name,
+        u.username
     FROM 
         faculties f
     LEFT JOIN 
@@ -38,8 +41,14 @@ $sql = "
         departments d ON f.department_id = d.department_id
     LEFT JOIN 
         programs p ON f.program_id = p.program_id
+    LEFT JOIN 
+        user_info ui ON f.user_id = ui.user_id
+    LEFT JOIN 
+        users u ON f.user_id = u.user_id
+    WHERE 
+        u.role = 'faculty'
     ORDER BY 
-        f.first_name ASC
+        ui.first_name ASC
 ";
 
 $stmt = $conn->prepare($sql);
@@ -74,6 +83,7 @@ while ($row = $result->fetch_assoc()) {
     if (!isset($faculties[$faculty_id])) {
         $faculties[$faculty_id] = [
             'faculty_id' => $row['faculty_id'],
+            'username' => $row['username'],
             'first_name' => $row['first_name'],
             'last_name' => $row['last_name'],
             'email' => $row['email'],

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const initialState = {
   departments: [],
@@ -7,6 +8,29 @@ const initialState = {
   status: "idle",
   error: null,
 };
+
+export const addDepartment = createAsyncThunk(
+  "departments/addDepartment",
+  async (data, { rejectWithValue }) => {
+    try {
+      const formData = new FormData();
+
+      Object.entries(data).forEach(([key, value]) => {
+        formData.append(key, value);
+      });
+
+      const response = await axios.post(
+        "http://localhost/student-sphere/server/Departments/addDepartment.php",
+        formData
+      );
+      toast.success(response.data.message);
+      return response.data;
+    } catch (error) {
+      toast.error(error.response.data.error);
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 
 export const fetchDepartments = createAsyncThunk(
   "departments/fetchDepartments",
@@ -48,6 +72,17 @@ const departmentsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(addDepartment.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(addDepartment.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.departments.push(action.payload);
+      })
+      .addCase(addDepartment.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
       .addCase(fetchDepartments.pending, (state) => {
         state.status = "loading";
       })

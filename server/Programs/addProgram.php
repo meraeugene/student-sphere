@@ -28,7 +28,7 @@ $schoolYear = sanitize_input($_POST["schoolYear"]);
 $departmentId = sanitize_input($_POST["departmentId"]);
 
 // Prepare and bind statement
-$stmt = $conn->prepare("INSERT INTO programs (program_name, school_year, semester, department_id) VALUES (?,?,?)");
+$stmt = $conn->prepare("INSERT INTO programs (program_name, school_year, department_id) VALUES (?,?,?)");
 $stmt->bind_param("ssi", $programName, $schoolYear, $departmentId);
 
 // Execute the statement

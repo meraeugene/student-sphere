@@ -18,33 +18,90 @@ function sanitize_input($data) {
     return $data;
 }
 
-// Log the $_POST array
-error_log("Received POST data: " . print_r($_POST, true));
+// Log the input data
+error_log("Received input data: " . print_r($_POST, true));
 
-// Check if student ID is provided
+// Check if faculty ID is provided
 if (!isset($_POST["facultyId"])) {
     http_response_code(400); 
     echo json_encode(["error" => "Faculty ID is not provided"]);
     exit;
 }
 
-// Get student ID from POST data
+// Get faculty ID from POST data
 $facultyId = sanitize_input($_POST["facultyId"]);
 
-// Prepare and bind statement to delete admin
-$stmt = $conn->prepare("DELETE FROM faculties WHERE faculty_id = ?");
-$stmt->bind_param("i", $facultyId );
+// Fetch the user_id associated with the faculty_id
+$stmt = $conn->prepare("SELECT user_id FROM faculties WHERE faculty_id = ?");
+if (!$stmt) {
+    http_response_code(500);
+    echo json_encode(["error" => "Database query preparation failed: " . $conn->error]);
+    exit;
+}
+$stmt->bind_param("i", $facultyId);
+$stmt->execute();
+$stmt->store_result();
 
-// Execute the statement
-if ($stmt->execute()) {
-    echo json_encode(["message" => "Faculty member deleted successfully"]);
-} else {
-    http_response_code(404); 
-    echo json_encode(["error" => "Error deleting faculty member: " . $stmt->error]);
+if ($stmt->num_rows == 0) {
+    http_response_code(404); // Not Found
+    echo json_encode(["error" => "Faculty member not found"]);
+    $stmt->close();
+    $conn->close();
+    exit;
 }
 
-// Close statement
+$stmt->bind_result($user_id);
+$stmt->fetch();
 $stmt->close();
+
+// Start a transaction
+$conn->begin_transaction();
+
+try {
+    // Delete from faculties table
+    $stmt = $conn->prepare("DELETE FROM faculties WHERE faculty_id = ?");
+    if (!$stmt) {
+        throw new Exception("Database query preparation failed: " . $conn->error);
+    }
+    $stmt->bind_param("i", $facultyId);
+    if (!$stmt->execute()) {
+        throw new Exception("Failed to execute delete query: " . $stmt->error);
+    }
+    $stmt->close();
+
+    // Delete from user_info table
+    $stmt = $conn->prepare("DELETE FROM user_info WHERE user_id = ?");
+    if (!$stmt) {
+        throw new Exception("Database query preparation failed: " . $conn->error);
+    }
+    $stmt->bind_param("i", $user_id);
+    if (!$stmt->execute()) {
+        throw new Exception("Failed to execute delete query: " . $stmt->error);
+    }
+    $stmt->close();
+
+    // Delete from users table
+    $stmt = $conn->prepare("DELETE FROM users WHERE user_id = ?");
+    if (!$stmt) {
+        throw new Exception("Database query preparation failed: " . $conn->error);
+    }
+    $stmt->bind_param("i", $user_id);
+    if (!$stmt->execute()) {
+        throw new Exception("Failed to execute delete query: " . $stmt->error);
+    }
+    $stmt->close();
+
+    // Commit the transaction
+    $conn->commit();
+
+    echo json_encode(["message" => "Faculty member deleted successfully"]);
+} catch (Exception $e) {
+    // Rollback the transaction on error
+    $conn->rollback();
+
+    http_response_code(500); // Internal Server Error
+    echo json_encode(["error" => $e->getMessage()]);
+}
 
 // Close connection
 $conn->close();
