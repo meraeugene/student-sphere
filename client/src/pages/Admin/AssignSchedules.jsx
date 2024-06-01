@@ -1,26 +1,69 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import InputField from "../../components/InputField";
+import AssignScheduleRegisterForm from "../../components/AssignSchedules/AssignScheduleRegisterForm";
 
 const AssignSchedules = () => {
   const facultyMembers = useSelector((state) => state.faculties.faculties);
 
   const [selectedFaculty, setSelectedFaculty] = useState(null);
   const [facultySearchQuery, setFacultySearchQuery] = useState("");
+  const [assignSchedule, setAssignSchedule] = useState(false);
+  const [availableSections, setAvailableSections] = useState([]);
+  const [selectedSection, setSelectedSection] = useState(null);
+  const [formData, setFormData] = useState(null);
 
   const handleFacultyCheckboxChange = (facultyId) => {
-    setSelectedFaculty((prevSelected) =>
-      prevSelected === facultyId ? null : facultyId
+    // Find the selected faculty member by their ID
+    const faculty = facultyMembers.find(
+      (member) => member.faculty_id === facultyId
     );
+    setAvailableSections(faculty.sections);
+
+    if (faculty) {
+      setSelectedFaculty(facultyId);
+
+      // Update the form data with faculty details
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        facultyId,
+        facultyName: `${faculty.first_name} ${faculty.last_name}`,
+        departmentName: faculty.department_name,
+        departmentId: faculty.department_id,
+        programName: faculty.program_name,
+        programId: faculty.program_id,
+        subject: faculty.subject_code,
+      }));
+    }
   };
 
-  // Filter faculty members based on the search query
-  const filteredFacultyMembers = facultyMembers.filter((facultyMember) =>
-    `${facultyMember.first_name} ${facultyMember.last_name}`
-      .toLowerCase()
-      .includes(facultySearchQuery.toLowerCase())
-  );
+  const handleSectionSelect = (section) => {
+    setSelectedSection(section); // Store selected section ID and name
+
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      sectionName: section.section_name, // Set the selected section name
+    }));
+  };
+
+  // Filter faculty members based on the search query and include only those with sections
+  const filteredFacultyMembers = facultyMembers.filter((facultyMember) => {
+    const fullName =
+      `${facultyMember.first_name} ${facultyMember.last_name}`.toLowerCase();
+    const matchesQuery = fullName.includes(facultySearchQuery.toLowerCase());
+    return facultyMember.sections.length > 0 && matchesQuery;
+  });
+
+  const handleAssignSchedule = () => {
+    setAssignSchedule(!assignSchedule);
+  };
+
+  // const dispatch = useDispatch();
+
+  // const handleSchedulesAdded = () => {
+  //   dispatch(fetchSchedules());
+  // };
 
   const {
     register,
@@ -29,12 +72,21 @@ const AssignSchedules = () => {
     formState: { errors, isSubmitting },
   } = useForm();
 
-  const onSubmit = async (data) => {
-    try {
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-    }
+  // Function to handle form submission
+  const onSubmit = (data) => {
+    // Update the formData state with the new data from the form submission
+    setFormData((prevFormData) => ({
+      // Retain the previous form data
+      ...prevFormData,
+      // Merge the new data into the form data
+      ...data,
+    }));
+
+    // Toggle the state to handle schedule assignment
+    handleAssignSchedule();
+
+    reset();
+    setSelectedFaculty(null);
   };
 
   return (
@@ -97,16 +149,18 @@ const AssignSchedules = () => {
                         <div className="poppins-regular flex items-center gap-2">
                           <span className="poppins-medium">Sections:</span>{" "}
                           <div className="flex items-center gap-2">
-                            {facultyMember.sections.length > 0
-                              ? facultyMember.sections.map((section, index) => (
-                                  <span
-                                    className="border shadow-sm py-[1px] px-2 rounded-sm"
-                                    key={index}
-                                  >
-                                    {section}
-                                  </span>
-                                ))
-                              : "N/A"}
+                            {facultyMember.sections.length > 0 ? (
+                              facultyMember.sections.map((section, index) => (
+                                <span
+                                  className="border shadow-sm py-[1px] px-2 rounded-sm"
+                                  key={index}
+                                >
+                                  {section.section_name}
+                                </span>
+                              ))
+                            ) : (
+                              <option>Please select a faculty first</option>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -137,6 +191,50 @@ const AssignSchedules = () => {
               onSubmit={handleSubmit(onSubmit)}
               className="flex flex-col gap-6  mt-10"
             >
+              <label htmlFor="section" className="inter  ">
+                <div className="flex flex-col gap-2">
+                  <h1 className="font-semibold">Section</h1>
+                  <div className="w-full">
+                    <select
+                      {...register("sectionId", {
+                        required: "Section is required",
+                      })}
+                      className={`${
+                        errors.sectionId ? "border-[2px] border-red-500" : ""
+                      } h-[60px] border border-[#E2E8F0] outline-[#0C1E33] rounded-md px-4 w-full `}
+                      onChange={(e) =>
+                        handleSectionSelect(
+                          availableSections.find(
+                            (section) =>
+                              section.section_id === Number(e.target.value)
+                          )
+                        )
+                      }
+                    >
+                      {!selectedFaculty && ( // Conditionally render if no faculty is selected
+                        <option value="">Please select a faculty first</option>
+                      )}
+                      <option hidden value="">
+                        Select Section
+                      </option>
+                      {availableSections.map((section, index) => {
+                        return (
+                          <option key={index} value={section.section_id}>
+                            {section.section_name}
+                          </option>
+                        );
+                      })}
+                    </select>
+
+                    {errors.sectionId && (
+                      <div className="text-red-500 font-semibold mt-2">
+                        {errors.sectionId.message}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </label>
+
               <label htmlFor="semester" className="inter  ">
                 <div className="flex flex-col gap-2">
                   <h1 className="font-semibold">Day</h1>
@@ -172,6 +270,15 @@ const AssignSchedules = () => {
                 name="timeSlot"
                 label="Time Slot"
                 placeholder="7:30 AM - 10:30 AM"
+                register={register}
+                errors={errors}
+                required
+              />
+
+              <InputField
+                name="schoolYear"
+                label="School Year"
+                placeholder="School Year"
                 register={register}
                 errors={errors}
                 required
@@ -214,6 +321,14 @@ const AssignSchedules = () => {
             </form>
           </div>
         </div>
+
+        {assignSchedule && (
+          <AssignScheduleRegisterForm
+            toggleAssignScheduleState={handleAssignSchedule}
+            formData={formData}
+            // schedulesAdded={handleSchedulesAdded}
+          />
+        )}
       </div>
     </div>
   );

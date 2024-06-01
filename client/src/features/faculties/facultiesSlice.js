@@ -101,6 +101,29 @@ export const assignSubjectsToFaculty = createAsyncThunk(
   }
 );
 
+export const assignSchedulesToFaculty = createAsyncThunk(
+  "faculties/assignSchedulesToFaculty",
+  async (data, { rejectWithValue }) => {
+    try {
+      const formData = new FormData();
+
+      Object.entries(data).forEach(([key, value]) => {
+        formData.append(key, value);
+      });
+
+      const response = await axios.post(
+        "http://localhost/student-sphere/server/FacultySchedules/assignSchedules.php",
+        formData
+      );
+      toast.success(response.data.message);
+      return response.data;
+    } catch (error) {
+      toast.error(error.response.data.error);
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const removeSection = createAsyncThunk(
   "faculties/removeSection",
   async (facultyId, { dispatch }) => {
@@ -179,6 +202,16 @@ const facultiesSlice = createSlice({
         state.status = "succeeded";
       })
       .addCase(assignSubjectsToFaculty.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
+      .addCase(assignSchedulesToFaculty.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(assignSchedulesToFaculty.fulfilled, (state, action) => {
+        state.status = "succeeded";
+      })
+      .addCase(assignSchedulesToFaculty.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })

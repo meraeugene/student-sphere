@@ -116,14 +116,6 @@ const AssignSubjectsRegisterForm = ({
             className="flex flex-col gap-4 mt-10"
           >
             <InputField
-              name="facultyId"
-              label="Faculty Id"
-              notEdittable
-              value={selectedFaculty}
-              register={register}
-              errors={errors}
-            />
-            <InputField
               name="facultyName"
               label="Faculty Name"
               placeholder="Faculty Name"

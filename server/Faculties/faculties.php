@@ -27,7 +27,7 @@ $sql = "
         p.program_name, p.program_id,
         fs.subject_code,
         fs.school_year,
-        s.section_name,
+        s.section_name, s.section_id,
         u.username
     FROM 
         faculties f
@@ -101,7 +101,11 @@ while ($row = $result->fetch_assoc()) {
         ];
     }
     if (!is_null($row['section_name'])) {
-        $faculties[$faculty_id]['sections'][] = $row['section_name'];
+        $section = [
+            'section_name' => $row['section_name'],
+            'section_id' => $row['section_id'] // Include only section ID
+        ];
+        $faculties[$faculty_id]['sections'][] = $section;
     }
 }
 

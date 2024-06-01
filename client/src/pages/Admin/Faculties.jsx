@@ -39,6 +39,8 @@ const Faculties = () => {
     }
   };
 
+  console.log(facultyMembers);
+
   const removeSectionHandler = async (facultyId) => {
     if (
       window.confirm(
@@ -164,7 +166,7 @@ const Faculties = () => {
                               key={index}
                               className="bg-green-200 h-[35px] px-2 text-green-800  rounded-md  flex items-center justify-center "
                             >
-                              {section}
+                              {section.section_name}
                             </span>
                           ))
                         ) : (

@@ -149,7 +149,7 @@ const Subjects = () => {
                 <tbody>
                   {filteredSubjects.map((subject, index) => (
                     <tr
-                      key={index}
+                      key={index + 1}
                       className="whitespace-nowrap border  hover:bg-gray-50  "
                     >
                       <td className="px-4 py-2 ">{index + 1}</td>

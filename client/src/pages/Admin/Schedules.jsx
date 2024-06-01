@@ -39,6 +39,12 @@ const Schedules = () => {
                     1st Semester
                   </td>
                 </tr>
+                <tr className="border border-b">
+                  <td className="px-4 py-1 font-bold">SECTION</td>
+                  <td className="px-4 py-1" colSpan="6">
+                    IT2R5
+                  </td>
+                </tr>
                 <tr className="whitespace-nowrap  border">
                   <th className="px-4 py-2 text-left font-bold">TIME</th>
                   <th className="px-4 py-2 text-left font-bold">MONDAY</th>
