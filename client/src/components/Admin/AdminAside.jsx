@@ -106,17 +106,6 @@ const AdminAside = () => {
             <img src="/images/section.svg" alt="subjects" />
             <h1 className="text-base poppins-regular font-base">Sections</h1>
           </NavLink>
-
-          {/* SCHEDULES */}
-          <NavLink
-            to="/admin/schedules"
-            className={`flex items-center gap-3 cursor-pointer px-4 py-2 ${
-              location.pathname === "/admin/schedules" ? activeClass : ""
-            }`}
-          >
-            <img src="/images/sched.svg" alt="subjects" />
-            <h1 className="text-base poppins-regular font-base">Schedules</h1>
-          </NavLink>
         </div>
       </div>
 
@@ -135,19 +124,6 @@ const AdminAside = () => {
               Assign Subjects
             </h1>
           </NavLink>
-
-          {/* ASSIGN SCHEDULES */}
-          <NavLink
-            to="/admin/assign-schedules"
-            className={`flex items-center gap-3 cursor-pointer px-4 py-2 ${
-              location.pathname === "/admin/assign-schedules" ? activeClass : ""
-            }`}
-          >
-            <img src="/images/sched.svg" alt="subjects" />
-            <h1 className="text-base poppins-regular font-base">
-              Assign Schedules
-            </h1>
-          </NavLink>
         </div>
       </div>
 
@@ -155,7 +131,7 @@ const AdminAside = () => {
         <h1 className="text-sm poppins-regular mb-6">SETTINGS & PRIVACY</h1>
         <div className="flex flex-col gap-4  ">
           <NavLink
-            to="/admin/profile-management"
+            to="/profile-management"
             className={`flex items-center gap-3 cursor-pointer px-4 py-2 ${
               location.pathname === "/admin/profile-management"
                 ? activeClass
@@ -168,7 +144,7 @@ const AdminAside = () => {
             </h1>
           </NavLink>
           <NavLink
-            to="/admin/change-password"
+            to="/change-password"
             className={`flex items-center gap-3 cursor-pointer px-4 py-2 ${
               location.pathname === "/admin/change-password" ? activeClass : ""
             }`}

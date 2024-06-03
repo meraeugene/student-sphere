@@ -26,20 +26,20 @@ $username = sanitize_input($_POST["username"]);
 $password = sanitize_input($_POST["password"]);
 
 // Prepare and execute statement to fetch user from database
-$stmt = $conn->prepare("SELECT user_id, username, role FROM users WHERE username = ?");
+$stmt = $conn->prepare("SELECT user_id, username, password, role FROM users WHERE username = ?");
 if (!$stmt) {
     die("Error: " . $conn->error); // Output the error message
 }
 $stmt->bind_param("s", $username);
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($user_id, $fetched_username, $role);
+$stmt->bind_result($user_id, $fetched_username, $hashed_password, $role);
 $stmt->fetch();
 
 if ($stmt->num_rows > 0) {
-    // Check if the password matches the username
-    if ($password === $fetched_username) {
-        // Password is correct (password is the same as username)
+    // Check if the password matches the hashed password stored in the database
+    if (password_verify($password, $hashed_password)) {
+        // Password is correct
         echo json_encode([
             "message" => "Login successful",
             "user_id" => $user_id,

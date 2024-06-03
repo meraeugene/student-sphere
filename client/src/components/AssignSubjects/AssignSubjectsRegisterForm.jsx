@@ -84,6 +84,8 @@ const AssignSubjectsRegisterForm = ({
       semester,
     };
 
+    console.log(formData);
+
     try {
       await dispatch(assignSubjectsToFaculty(formData)).unwrap();
       reset();
@@ -184,6 +186,49 @@ const AssignSubjectsRegisterForm = ({
               errors={false}
             />
 
+            <label htmlFor="semester" className="inter  ">
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-1">
+                  <h1 className="font-semibold">Day</h1>
+                  <span className="text-red-500">*</span>
+                </div>
+                <div className="w-full">
+                  <select
+                    {...register("dayOfWeek", {
+                      required: "Day is required",
+                    })}
+                    className={`${
+                      errors.dayOfWeek ? "border-[2px] border-red-500" : ""
+                    } h-[60px] border border-[#E2E8F0] outline-[#0C1E33] rounded-md px-4 w-full `}
+                  >
+                    <option value="" hidden>
+                      Select Day
+                    </option>
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                    <option value="Saturday">Saturday</option>
+                  </select>
+                  {errors.dayOfWeek && (
+                    <div className="text-red-500 font-semibold mt-2">
+                      {errors.dayOfWeek.message}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </label>
+
+            <InputField
+              name="timeSlot"
+              label="Time Slot"
+              placeholder="7:30 AM - 10:30 AM"
+              register={register}
+              errors={errors}
+              required
+            />
+
             <InputField
               name="schoolYear"
               label="School Year"
@@ -192,7 +237,6 @@ const AssignSubjectsRegisterForm = ({
               errors={errors}
               required
             />
-
             <div className="flex flex-col gap-4 mt-4 ">
               <button
                 disabled={isSubmitting}

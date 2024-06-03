@@ -24,8 +24,11 @@ error_log("Received POST data: " . print_r($_POST, true));
 // Get input data
 $facultyId = sanitize_input($_POST["facultyId"]);
 $subjectCode = sanitize_input($_POST["subjectCode"]);
-$sectionIdsString = sanitize_input($_POST["sectionIds"]); // This is expected to be a comma-separated string
+// This is expected to be a comma-separated string
+$sectionIdsString = sanitize_input($_POST["sectionIds"]); 
 $schoolYear = sanitize_input($_POST["schoolYear"]);
+$dayOfWeek = sanitize_input($_POST["dayOfWeek"]);
+$timeSlot = sanitize_input($_POST["timeSlot"]);
 
 // Validate input data
 if (empty($facultyId) || empty($subjectCode) || empty($sectionIdsString) || empty($schoolYear)) {
@@ -61,8 +64,8 @@ try {
     }
 
     foreach ($sectionIds as $sectionId) {
-        $stmt = $conn->prepare("INSERT INTO faculty_subjects (faculty_id, section_id, subject_code, school_year) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("iiss", $facultyId, $sectionId, $subjectCode, $schoolYear);
+        $stmt = $conn->prepare("INSERT INTO faculty_subjects (faculty_id, section_id, subject_code, school_year, day_of_week, time_slot) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("iissss", $facultyId, $sectionId, $subjectCode, $schoolYear, $dayOfWeek, $timeSlot);
         if (!$stmt->execute()) {
             throw new Exception("Failed to assign section. Section might be already assigned.");
         }

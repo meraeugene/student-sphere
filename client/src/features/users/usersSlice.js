@@ -49,7 +49,7 @@ export const resetAdminPassword = createAsyncThunk(
       });
 
       const response = await axios.post(
-        "http://localhost/student-sphere/server/Admins/resetPassword.php",
+        "http://localhost/student-sphere/server/Users/resetPassword.php",
         formData
       );
       return response.data;

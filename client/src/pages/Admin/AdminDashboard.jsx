@@ -10,6 +10,7 @@ import { fetchSubjects } from "../../features/subjects/subjectsSlice";
 import { fetchFaculties } from "../../features/faculties/facultiesSlice";
 import { fetchSections } from "../../features/sections/sectionsSlice";
 import axios from "axios";
+
 const AdminDashboard = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const [profile, setProfile] = useState(null);
@@ -50,6 +51,9 @@ const AdminDashboard = () => {
     dispatch(fetchDepartmentNames());
     dispatch(fetchProgramNames());
     dispatch(fetchPrograms());
+    dispatch(fetchSubjects());
+    dispatch(fetchFaculties());
+    dispatch(fetchSections());
   }, []);
 
   return (

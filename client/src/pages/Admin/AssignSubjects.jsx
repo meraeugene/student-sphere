@@ -81,8 +81,7 @@ const AssignSubjects = () => {
               </h1>
             </div>
             <p className="poppins-regular mt-2 text-gray-700">
-              Select a faculty member and assign subject from the available
-              list.
+              Assign a faculty member to a subject with a section and time slot.
             </p>
           </div>
 

@@ -1,9 +1,10 @@
 import { useForm } from "react-hook-form";
-import { resetAdminPassword } from "../../features/users/usersSlice";
+import { resetAdminPassword } from "../features/users/usersSlice";
 import { BiShowAlt, BiSolidShow } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
-import { logout } from "../../features/authentication/authSlice";
+import { logout } from "../features/authentication/authSlice";
+import { toast } from "react-toastify";
 
 const ChangePassword = () => {
   const {
@@ -36,10 +37,15 @@ const ChangePassword = () => {
         break;
     }
   };
+
   const onSubmit = async (data) => {
+    if (data.newPassword !== data.confirmPassword) {
+      toast.error("New Password and Confirm Password do not match");
+      return;
+    }
     try {
       await dispatch(
-        resetAdminPassword({ ...data, username: userInfo.username })
+        resetAdminPassword({ ...data, user_id: userInfo.user_id })
       ).unwrap();
       dispatch(logout());
     } catch (error) {
@@ -48,47 +54,42 @@ const ChangePassword = () => {
   };
 
   return (
-    <div className="w-full ml-[320px] overflow-auto ">
-      <div className="px-8 py-10 pb-16 ">
+    <div className="w-full ml-[320px] overflow-auto">
+      <div className="px-8 py-10 pb-16">
         <div className="flex items-center gap-3 mb-10">
           <img src="/images/resetpassblack.svg" alt="change profile" />
-          <h1 className="text-2xl poppins-medium uppercase ">
+          <h1 className="text-2xl poppins-medium uppercase">
             Password and Security
           </h1>
         </div>
 
-        {/* PERSONAL INFORMATION CONTAINER */}
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col gap-6 w-1/2  "
+          className="flex flex-col gap-6 w-1/2"
         >
-          <h1 className="text-2xl poppins-medium uppercase ">Password Reset</h1>
-          <label htmlFor="currentPassword" className="inter  ">
+          <h1 className="text-2xl poppins-medium uppercase">Password Reset</h1>
+          <label htmlFor="currentPassword" className="inter">
             <div className="w-full flex flex-col gap-2">
               <h1 className="font-semibold">Current Password</h1>
-              <div>
-                <div className="relative">
-                  <input
-                    type={showCurrentPassword ? "text" : "password"}
-                    className={`${
-                      errors.currentPassword
-                        ? "border-[2px] border-red-500"
-                        : ""
-                    } h-[60px] border border-[#E2E8F0] outline-[#0C1E33 rounded-md px-4 w-full `}
-                    {...register("currentPassword", {
-                      required: "Current Password is required",
-                    })}
-                  />
-                  <div
-                    className="absolute top-1/2 transform -translate-y-1/2 right-3"
-                    onClick={() => togglePasswordVisibility("currentPassword")}
-                  >
-                    {showCurrentPassword ? (
-                      <BiShowAlt fontSize={24} className="cursor-pointer" />
-                    ) : (
-                      <BiSolidShow fontSize={24} className="cursor-pointer" />
-                    )}
-                  </div>
+              <div className="relative">
+                <input
+                  type={showCurrentPassword ? "text" : "password"}
+                  className={`${
+                    errors.currentPassword ? "border-[2px] border-red-500" : ""
+                  } h-[60px] border border-[#E2E8F0] outline-[#0C1E33 rounded-md px-4 w-full`}
+                  {...register("currentPassword", {
+                    required: "Current Password is required",
+                  })}
+                />
+                <div
+                  className="absolute top-1/2 transform -translate-y-1/2 right-3"
+                  onClick={() => togglePasswordVisibility("currentPassword")}
+                >
+                  {showCurrentPassword ? (
+                    <BiShowAlt fontSize={24} className="cursor-pointer" />
+                  ) : (
+                    <BiSolidShow fontSize={24} className="cursor-pointer" />
+                  )}
                 </div>
                 {errors.currentPassword && (
                   <div className="text-red-500 font-semibold mt-2">
@@ -99,30 +100,28 @@ const ChangePassword = () => {
             </div>
           </label>
 
-          <label htmlFor="newPassword" className="inter  ">
+          <label htmlFor="newPassword" className="inter">
             <div className="w-full flex flex-col gap-2">
               <h1 className="font-semibold">New Password</h1>
-              <div>
-                <div className="relative">
-                  <input
-                    type={showNewPassword ? "text" : "password"}
-                    className={`${
-                      errors.newPassword ? "border-[2px] border-red-500" : ""
-                    } h-[60px] border border-[#E2E8F0] outline-[#0C1E33 rounded-md px-4 w-full `}
-                    {...register("newPassword", {
-                      required: "New Password is required",
-                    })}
-                  />
-                  <div
-                    className="absolute top-1/2 transform -translate-y-1/2 right-3"
-                    onClick={() => togglePasswordVisibility("newPassword")}
-                  >
-                    {showNewPassword ? (
-                      <BiShowAlt fontSize={24} className="cursor-pointer" />
-                    ) : (
-                      <BiSolidShow fontSize={24} className="cursor-pointer" />
-                    )}
-                  </div>
+              <div className="relative">
+                <input
+                  type={showNewPassword ? "text" : "password"}
+                  className={`${
+                    errors.newPassword ? "border-[2px] border-red-500" : ""
+                  } h-[60px] border border-[#E2E8F0] outline-[#0C1E33 rounded-md px-4 w-full`}
+                  {...register("newPassword", {
+                    required: "New Password is required",
+                  })}
+                />
+                <div
+                  className="absolute top-1/2 transform -translate-y-1/2 right-3"
+                  onClick={() => togglePasswordVisibility("newPassword")}
+                >
+                  {showNewPassword ? (
+                    <BiShowAlt fontSize={24} className="cursor-pointer" />
+                  ) : (
+                    <BiSolidShow fontSize={24} className="cursor-pointer" />
+                  )}
                 </div>
                 {errors.newPassword && (
                   <div className="text-red-500 font-semibold mt-2">
@@ -133,32 +132,28 @@ const ChangePassword = () => {
             </div>
           </label>
 
-          <label htmlFor="confirmPassword" className="inter  ">
+          <label htmlFor="confirmPassword" className="inter">
             <div className="w-full flex flex-col gap-2">
               <h1 className="font-semibold">Confirm Password</h1>
-              <div>
-                <div className="relative">
-                  <input
-                    type={showConfirmPassword ? "text" : "password"}
-                    className={`${
-                      errors.confirmPassword
-                        ? "border-[2px] border-red-500"
-                        : ""
-                    } h-[60px] border border-[#E2E8F0] outline-[#0C1E33 rounded-md px-4 w-full `}
-                    {...register("confirmPassword", {
-                      required: "Confirm Password is required",
-                    })}
-                  />
-                  <div
-                    className="absolute top-1/2 transform -translate-y-1/2 right-3"
-                    onClick={() => togglePasswordVisibility("confirmPassword")}
-                  >
-                    {showConfirmPassword ? (
-                      <BiShowAlt fontSize={24} className="cursor-pointer" />
-                    ) : (
-                      <BiSolidShow fontSize={24} className="cursor-pointer" />
-                    )}
-                  </div>
+              <div className="relative">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  className={`${
+                    errors.confirmPassword ? "border-[2px] border-red-500" : ""
+                  } h-[60px] border border-[#E2E8F0] outline-[#0C1E33 rounded-md px-4 w-full`}
+                  {...register("confirmPassword", {
+                    required: "Confirm Password is required",
+                  })}
+                />
+                <div
+                  className="absolute top-1/2 transform -translate-y-1/2 right-3"
+                  onClick={() => togglePasswordVisibility("confirmPassword")}
+                >
+                  {showConfirmPassword ? (
+                    <BiShowAlt fontSize={24} className="cursor-pointer" />
+                  ) : (
+                    <BiSolidShow fontSize={24} className="cursor-pointer" />
+                  )}
                 </div>
                 {errors.confirmPassword && (
                   <div className="text-red-500 font-semibold mt-2">
@@ -169,7 +164,7 @@ const ChangePassword = () => {
             </div>
           </label>
 
-          <div className="flex flex-col gap-4 ">
+          <div className="flex flex-col gap-4">
             <button
               disabled={isSubmitting}
               type="submit"

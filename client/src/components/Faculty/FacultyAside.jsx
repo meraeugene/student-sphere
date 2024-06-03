@@ -86,15 +86,33 @@ const FacultyAside = () => {
         </div>
       </div>
 
-      <div className="settings__container px-6 border-b border-gray-700 py-8 ">
-        <h1 className="text-sm poppins-regular ">SETTINGS</h1>
-        <div className="flex flex-col gap-6 mt-6 px-3">
-          <div className="flex items-center gap-3">
-            <img src="/images/settings.png" alt="settings" />
+      <div className="users__container  border-b border-gray-700 px-6 py-8  ">
+        <h1 className="text-sm poppins-regular mb-6">SETTINGS & PRIVACY</h1>
+        <div className="flex flex-col gap-4  ">
+          <NavLink
+            to="/profile-management"
+            className={`flex items-center gap-3 cursor-pointer px-4 py-2 ${
+              location.pathname === "/admin/profile-management"
+                ? activeClass
+                : ""
+            }`}
+          >
+            <img src="/images/changeprofilewhite.svg" alt="settings" />
             <h1 className=" text-base  poppins-regular font-base">
-              Account Settings
+              Personal Details
             </h1>
-          </div>
+          </NavLink>
+          <NavLink
+            to="/change-password"
+            className={`flex items-center gap-3 cursor-pointer px-4 py-2 ${
+              location.pathname === "/admin/change-password" ? activeClass : ""
+            }`}
+          >
+            <img src="/images/resetpass.svg" alt="settings" />
+            <h1 className=" text-base  poppins-regular font-base">
+              Password and Security
+            </h1>
+          </NavLink>
         </div>
       </div>
 

@@ -39,8 +39,6 @@ const Faculties = () => {
     }
   };
 
-  console.log(facultyMembers);
-
   const removeSectionHandler = async (facultyId) => {
     if (
       window.confirm(
@@ -225,7 +223,7 @@ const Faculties = () => {
                               removeSectionHandler(facultyMember.faculty_id)
                             }
                           >
-                            REMOVE SECTIONS
+                            REMOVE SUBJECTS
                           </button>
                         )}
                       </td>
