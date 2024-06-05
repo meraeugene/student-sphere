@@ -17,7 +17,6 @@ const FacultyRegistrationForm = ({
   const [filteredPrograms, setFilteredPrograms] = useState([]);
   const [facultyId, setFacultyId] = useState(generateFacultyID);
 
-  // Use react hoook form
   const {
     register,
     handleSubmit,
@@ -27,10 +26,12 @@ const FacultyRegistrationForm = ({
 
   const onSubmit = async (data) => {
     try {
-      console.log(data);
-      await dispatch(registerFaculty(data)).unwrap();
-      // reset();
-      setFacultyId(generateFacultyID());
+      // Generate the auto-generated username dynamically
+      const facultyId = generateFacultyID();
+      const userData = { ...data, username: facultyId };
+
+      await dispatch(registerFaculty(userData)).unwrap();
+      reset();
       onFacultyAdded();
     } catch (error) {
       console.log(error);
@@ -38,7 +39,6 @@ const FacultyRegistrationForm = ({
   };
 
   const handleDepartmentChange = (event) => {
-    // Convert text to number to filter out
     const selectedDepartment = Number(event.target.value);
     const filtered = programs.filter(
       (program) => program.department_id === selectedDepartment

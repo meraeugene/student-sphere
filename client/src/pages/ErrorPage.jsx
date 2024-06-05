@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 const ErrorPage = () => {
   return (
     <div className="ml-[330px] flex items-center justify-center flex-col w-full mt-[200px] gap-6 ">
-      {" "}
       <h1 className="text-9xl font-extrabold">404</h1>
       <h1 className="font-bold  text-lg">
         Ooops! This page could not be found

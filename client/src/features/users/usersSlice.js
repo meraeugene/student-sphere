@@ -3,20 +3,12 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const initialState = {
-  adminUsers: [],
   status: "idle",
   error: null,
 };
 
-export const fetchAdmins = createAsyncThunk("admins/fetchAdmins", async () => {
-  const response = await axios.get(
-    "http://localhost/student-sphere/server/Admins/admins.php"
-  );
-  return response.data;
-});
-
 export const registerAdmin = createAsyncThunk(
-  "faculties/registerAdmin",
+  "users/registerAdmin",
   async (data, { rejectWithValue }) => {
     try {
       const formData = new FormData();
@@ -38,8 +30,8 @@ export const registerAdmin = createAsyncThunk(
   }
 );
 
-export const resetAdminPassword = createAsyncThunk(
-  "admins/resetAdminPassword",
+export const resetPassword = createAsyncThunk(
+  "users/resetPassword",
   async (data, { rejectWithValue }) => {
     try {
       const formData = new FormData();
@@ -61,22 +53,11 @@ export const resetAdminPassword = createAsyncThunk(
 );
 
 const usersSlice = createSlice({
-  name: "admins",
+  name: "users",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchAdmins.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(fetchAdmins.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.adminUsers = action.payload;
-      })
-      .addCase(fetchAdmins.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message;
-      })
       .addCase(registerAdmin.pending, (state) => {
         state.status = "loading";
       })
@@ -88,13 +69,13 @@ const usersSlice = createSlice({
         state.status = "failed";
         state.error = action.payload;
       })
-      .addCase(resetAdminPassword.pending, (state) => {
+      .addCase(resetPassword.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(resetAdminPassword.fulfilled, (state, action) => {
+      .addCase(resetPassword.fulfilled, (state, action) => {
         state.status = "succeeded";
       })
-      .addCase(resetAdminPassword.rejected, (state, action) => {
+      .addCase(resetPassword.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       });

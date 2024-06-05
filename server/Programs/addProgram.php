@@ -18,10 +18,6 @@ function sanitize_input($data) {
     return $data;
 }
 
-// Log the $_POST array
-error_log("Received POST data: " . print_r($_POST, true));
-
-
 // Get form data
 $programName = sanitize_input($_POST["programName"]);
 $schoolYear = sanitize_input($_POST["schoolYear"]);

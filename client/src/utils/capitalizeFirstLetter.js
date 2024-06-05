@@ -1,4 +1,3 @@
-// src/utils/capitalizeFirstLetter.js
 export const capitalizeFirstLetter = (string) => {
   if (typeof string !== "string" || string.length === 0) {
     return "";

@@ -39,11 +39,40 @@ $stmt->fetch();
 if ($stmt->num_rows > 0) {
     // Check if the password matches the hashed password stored in the database
     if (password_verify($password, $hashed_password)) {
+        // Initialize variables for faculty_id and student_id
+        $faculty_id = null;
+        $student_id = null;
+
+        // Fetch the appropriate ID based on the user's role
+        if ($role == 'faculty') {
+            $id_stmt = $conn->prepare("SELECT faculty_id FROM faculties WHERE user_id = ?");
+            if (!$id_stmt) {
+                die("Error: " . $conn->error); // Output the error message
+            }
+            $id_stmt->bind_param("i", $user_id);
+            $id_stmt->execute();
+            $id_stmt->bind_result($faculty_id);
+            $id_stmt->fetch();
+            $id_stmt->close();
+        } elseif ($role == 'student') {
+            $id_stmt = $conn->prepare("SELECT student_id FROM students WHERE user_id = ?");
+            if (!$id_stmt) {
+                die("Error: " . $conn->error); // Output the error message
+            }
+            $id_stmt->bind_param("i", $user_id);
+            $id_stmt->execute();
+            $id_stmt->bind_result($student_id);
+            $id_stmt->fetch();
+            $id_stmt->close();
+        }
+
         // Password is correct
         echo json_encode([
             "message" => "Login successful",
             "user_id" => $user_id,
             "role" => $role,
+            "faculty_id" => $faculty_id,
+            "student_id" => $student_id,
             "redirect_uri" => "/dashboard"
         ]);
     } else {

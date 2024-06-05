@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import { MdErrorOutline } from "react-icons/md";
 import { useState } from "react";
 import StudentRegistrationForm from "../../components/Student/StudentRegistrationForm";
@@ -20,10 +19,6 @@ const Students = () => {
 
   const dispatch = useDispatch();
   const studentsData = useSelector((state) => state.students.students);
-
-  useEffect(() => {
-    dispatch(fetchStudents());
-  }, [dispatch]);
 
   const deleteStudentHandler = async (studentId) => {
     if (window.confirm("Are you sure you want to delete this student?")) {
@@ -62,7 +57,7 @@ const Students = () => {
           onClick={toggleAddStudentState}
           className="bg-[#164e8e] text-white h-[40px] rounded-md px-4 inter flex items-center justify-center gap-3 hover:bg-[#133e6e] transition-colors duration-300"
         >
-          Add Students
+          Add Student
           <img src="/images/add.svg" alt="add user" />
         </button>
       </div>

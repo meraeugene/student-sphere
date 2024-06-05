@@ -6,8 +6,8 @@ import {
   deleteProgram,
   fetchPrograms,
 } from "../../features/programs/programsSlice";
-import ProgramRegistrationForm from "../../components/Programs/ProgramRegistrationForm";
-import EditProgramForm from "../../components/Programs/EditProgramForm";
+import ProgramRegistrationForm from "../../components/Admin/Programs/ProgramRegistrationForm";
+import EditProgramForm from "../../components/Admin/Programs/EditProgramForm";
 
 const Programs = () => {
   const dispatch = useDispatch();

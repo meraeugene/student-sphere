@@ -105,7 +105,9 @@ while ($row = $result->fetch_assoc()) {
             'section_name' => $row['section_name'],
             'section_id' => $row['section_id'] // Include only section ID
         ];
-        $faculties[$faculty_id]['sections'][] = $section;
+        if (!in_array($section, $faculties[$faculty_id]['sections'])) {
+            $faculties[$faculty_id]['sections'][] = $section;
+        }
     }
 }
 

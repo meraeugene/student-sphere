@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { capitalizeFirstLetter } from "../../utils/capitalizeFirstLetter";
-import { fetchDepartmentNames } from "../../features/departments/departmentsSlice";
+import {
+  fetchDepartmentNames,
+  fetchDepartments,
+} from "../../features/departments/departmentsSlice";
 import {
   fetchProgramNames,
   fetchPrograms,
@@ -9,12 +12,12 @@ import {
 import { fetchSubjects } from "../../features/subjects/subjectsSlice";
 import { fetchFaculties } from "../../features/faculties/facultiesSlice";
 import { fetchSections } from "../../features/sections/sectionsSlice";
+import { fetchStudents } from "../../features/students/studentsSlice";
 import axios from "axios";
 
 const AdminDashboard = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   const dispatch = useDispatch();
 
@@ -25,10 +28,8 @@ const AdminDashboard = () => {
           `http://localhost/student-sphere/server/Users/getUserProfile.php?user_id=${userInfo.user_id}`
         );
         setProfile(response.data);
-        setLoading(false); // Set loading to false after data is fetched
       } catch (error) {
         console.error("Error fetching user profile:", error);
-        setLoading(false); // Set loading to false in case of error
       }
     };
 
@@ -50,10 +51,12 @@ const AdminDashboard = () => {
   useEffect(() => {
     dispatch(fetchDepartmentNames());
     dispatch(fetchProgramNames());
+    dispatch(fetchDepartments());
     dispatch(fetchPrograms());
     dispatch(fetchSubjects());
     dispatch(fetchFaculties());
     dispatch(fetchSections());
+    dispatch(fetchStudents());
   }, []);
 
   return (

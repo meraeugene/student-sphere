@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { GiTeacher } from "react-icons/gi";
 import { MdErrorOutline } from "react-icons/md";
 import { FaTrash, FaRegEdit } from "react-icons/fa";
@@ -12,17 +12,11 @@ import {
 import EditFacultyForm from "../../components/Faculty/EditFacultyForm";
 import { capitalizeFirstLetter } from "../../utils/capitalizeFirstLetter";
 import Loader from "../../components/Loader";
-import { useSearchParams } from "react-router-dom";
 
 const Faculties = () => {
   const [addFacultyMember, setAddFacultyMember] = useState(false);
   const [editFacultyMember, setEditFacultyMember] = useState(false);
   const [facultyMemberToEdit, setFacultyMemberToEdit] = useState({});
-  const [searchParams, setSearchParams] = useSearchParams({
-    departmentName: "",
-  });
-
-  const departmentName = searchParams.get("departmentName");
 
   const dispatch = useDispatch();
   const { faculties: facultyMembers, status } = useSelector(
@@ -66,10 +60,6 @@ const Faculties = () => {
     setEditFacultyMember(!editFacultyMember);
   };
 
-  useEffect(() => {
-    dispatch(fetchFaculties());
-  }, [dispatch]);
-
   return (
     <div className="w-full ml-[320px] overflow-hidden">
       <div className="px-8 py-10">
@@ -85,7 +75,7 @@ const Faculties = () => {
             onClick={toggleAddFacultyMemberState}
             className="bg-[#164e8e] text-white h-[40px] rounded-md px-4 inter flex items-center justify-center gap-3 hover:bg-[#133e6e] transition-colors duration-300"
           >
-            Add Faculty Staff
+            Add Faculty
             <img src="/images/add.svg" alt="add user" />
           </button>
         </div>
@@ -208,10 +198,15 @@ const Faculties = () => {
                           <FaRegEdit color="green" />
                         </button>
                         <button
-                          className="btn-sm rounded border border-gray-400 h-[35px] px-2 hover:bg-gray-200"
+                          className={`btn-sm rounded border border-gray-400 h-[35px] px-2 hover:bg-gray-200 ${
+                            facultyMember?.sections?.length > 0
+                              ? "cursor-not-allowed"
+                              : ""
+                          }`}
                           onClick={() =>
                             deleteFacultyMemberHandler(facultyMember.faculty_id)
                           }
+                          disabled={facultyMember?.sections?.length > 0}
                         >
                           <FaTrash color="red" />
                         </button>

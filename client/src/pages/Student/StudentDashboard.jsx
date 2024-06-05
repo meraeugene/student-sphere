@@ -6,7 +6,6 @@ import axios from "axios";
 const StudentDashboard = () => {
   const { userInfo } = useSelector((state) => state.auth);
   const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -15,10 +14,8 @@ const StudentDashboard = () => {
           `http://localhost/student-sphere/server/Users/getUserProfile.php?user_id=${userInfo.user_id}`
         );
         setProfile(response.data);
-        setLoading(false); // Set loading to false after data is fetched
       } catch (error) {
         console.error("Error fetching user profile:", error);
-        setLoading(false); // Set loading to false in case of error
       }
     };
 

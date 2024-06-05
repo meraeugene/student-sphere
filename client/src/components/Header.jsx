@@ -20,9 +20,9 @@ const Header = () => {
         <img src="/images/message.png" alt="message" />
         <img src="/images/notif.png" alt="notif" />
         <img
-          src="/images/profile.jpg"
+          src="/images/profile.png"
           alt="profile"
-          className="w-[35px] h-[35px] rounded-full"
+          className="w-[25px] h-[25px] rounded-full"
         />
       </div>
     </header>

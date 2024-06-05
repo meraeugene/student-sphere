@@ -67,7 +67,7 @@ try {
         $stmt = $conn->prepare("INSERT INTO faculty_subjects (faculty_id, section_id, subject_code, school_year, day_of_week, time_slot) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt->bind_param("iissss", $facultyId, $sectionId, $subjectCode, $schoolYear, $dayOfWeek, $timeSlot);
         if (!$stmt->execute()) {
-            throw new Exception("Failed to assign section. Section might be already assigned.");
+            throw new Exception("Failed to assign section. The section might already be assigned, or the day and time are already taken.");
         }
         $stmt->close();
     }

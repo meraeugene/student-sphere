@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
-import AssignSubjectsRegisterForm from "../../components/AssignSubjects/AssignSubjectsRegisterForm";
+import AssignSubjectsRegisterForm from "../../components/Admin/AssignSubjects/AssignSubjectsRegisterForm";
 import { toast } from "react-toastify";
 import { fetchFaculties } from "../../features/faculties/facultiesSlice";
 
@@ -81,7 +81,8 @@ const AssignSubjects = () => {
               </h1>
             </div>
             <p className="poppins-regular mt-2 text-gray-700">
-              Assign a faculty member to a subject with a section and time slot.
+              Assign a faculty member to a subject with a section, day and time
+              slot.
             </p>
           </div>
 

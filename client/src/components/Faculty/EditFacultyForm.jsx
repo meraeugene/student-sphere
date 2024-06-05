@@ -49,7 +49,6 @@ const EditFacultyForm = ({
   }, [setValue, facultyMember.program_id, filteredPrograms]);
 
   const handleDepartmentChange = (event) => {
-    // Convert text to number to filter out
     const selectedDepartment = Number(event.target.value);
     const filtered = programs.filter(
       (program) => program.department_id === selectedDepartment
@@ -60,11 +59,10 @@ const EditFacultyForm = ({
   const onSubmit = async (data) => {
     try {
       const response = await dispatch(updateFaculty(data)).unwrap();
-      // Dispatch an action to update the course data in the Redux store
       if (response) {
         dispatch({ type: "faculties/updateFaculty", payload: response });
         reset();
-        onFacultyMemberAdded(); // Callback to re-fetch courses after updating
+        onFacultyMemberAdded();
         toggleEditFacultyMemberState();
       }
     } catch (error) {

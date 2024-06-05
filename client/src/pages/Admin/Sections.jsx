@@ -6,8 +6,8 @@ import {
   deleteSection,
   fetchSections,
 } from "../../features/sections/sectionsSlice";
-import SectionRegistrationForm from "../../components/Sections/SectionRegistrationForm";
-import EditSectionForm from "../../components/Sections/EditSectionForm.jsx";
+import SectionRegistrationForm from "../../components/Admin/Sections/SectionRegistrationForm";
+import EditSectionForm from "../../components/Admin/Sections/EditSectionForm.jsx";
 
 const Sections = () => {
   const dispatch = useDispatch();
@@ -91,16 +91,11 @@ const Sections = () => {
     <div className="w-full  ml-[320px]  ">
       <div className="px-8 py-10 ">
         <div className="flex items-center justify-between ">
-          <div>
-            <div className="flex items-center gap-3">
-              <img src="/images/section-black.svg" alt="courses" />
-              <h1 className="text-2xl poppins-medium uppercase ">
-                Section Management
-              </h1>
-            </div>
-            <p className="poppins-regular mt-2 text-gray-700">
-              Select a department first before using the program filter.
-            </p>
+          <div className="flex items-center gap-3">
+            <img src="/images/section-black.svg" alt="courses" />
+            <h1 className="text-2xl poppins-medium uppercase ">
+              Section Management
+            </h1>
           </div>
 
           <button

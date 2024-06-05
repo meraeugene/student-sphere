@@ -36,53 +36,16 @@ const FacultyAside = () => {
       <div className="users__container  border-b border-gray-700 px-6 py-8  ">
         <h1 className="text-sm poppins-regular mb-6">ACADEMICS</h1>
         <div className="flex flex-col gap-4  ">
-          {/* STUDENTS */}
-          <NavLink
-            to="/admin/students"
-            className={`flex items-center gap-3 cursor-pointer px-4 py-2 ${
-              location.pathname === "/admin/students" ? activeClass : ""
-            }`}
-          >
-            <img src="/images/users.svg" alt="students" />
-            <h1 className="text-base poppins-regular font-base">Students</h1>
-          </NavLink>
-          {/* SUBJECTS */}
-          <NavLink
-            to="/admin/subjects"
-            className={`flex items-center gap-3 cursor-pointer px-4 py-2 ${
-              location.pathname === "/admin/subjects" ? activeClass : ""
-            }`}
-          >
-            <img src="/images/subjects.svg" alt="subjects" />
-            <h1 className="text-base poppins-regular font-base">Subjects</h1>
-          </NavLink>
           {/* GRADES */}
           <NavLink
-            to="/admin/grades"
+            to="/faculty/grades"
             className={`flex items-center gap-3 cursor-pointer px-4 py-2 ${
-              location.pathname === "/admin/grades" ? activeClass : ""
+              location.pathname === "/faculty/grades" ? activeClass : ""
             }`}
           >
             <img src="/images/grades.svg" alt="grades" />
             <h1 className="text-base poppins-regular font-base">Grades</h1>
           </NavLink>
-        </div>
-      </div>
-
-      <div className="administrative__container px-6 border-b border-gray-700 py-8 ">
-        <h1 className="text-sm poppins-regular ">ADMINISTRATIVE</h1>
-        <div className="flex flex-col gap-6 mt-6 px-3">
-          <div className="flex items-center gap-3">
-            <img src="/images/finance.png" alt="finance" />
-            <h1 className=" text-base  poppins-regular font-base">Finance</h1>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <img src="/images/announce.png" alt="announce" />
-            <h1 className=" text-base  poppins-regular font-base">
-              Announcements
-            </h1>
-          </div>
         </div>
       </div>
 
@@ -92,9 +55,7 @@ const FacultyAside = () => {
           <NavLink
             to="/profile-management"
             className={`flex items-center gap-3 cursor-pointer px-4 py-2 ${
-              location.pathname === "/admin/profile-management"
-                ? activeClass
-                : ""
+              location.pathname === "/profile-management" ? activeClass : ""
             }`}
           >
             <img src="/images/changeprofilewhite.svg" alt="settings" />
@@ -105,7 +66,7 @@ const FacultyAside = () => {
           <NavLink
             to="/change-password"
             className={`flex items-center gap-3 cursor-pointer px-4 py-2 ${
-              location.pathname === "/admin/change-password" ? activeClass : ""
+              location.pathname === "/change-password" ? activeClass : ""
             }`}
           >
             <img src="/images/resetpass.svg" alt="settings" />

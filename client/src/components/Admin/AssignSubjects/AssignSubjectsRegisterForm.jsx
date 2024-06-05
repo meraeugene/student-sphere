@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import InputField from "../InputField";
+import InputField from "../../InputField";
 import { useForm } from "react-hook-form";
 import { FiMinus } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
-import { customStyles } from "../../utils/customStyles";
-import { assignSubjectsToFaculty } from "../../features/faculties/facultiesSlice";
+import { customStyles } from "../../../utils/customStyles";
+import { assignSubjectsToFaculty } from "../../../features/faculties/facultiesSlice";
 import { useNavigate } from "react-router-dom";
 
 const AssignSubjectsRegisterForm = ({
@@ -84,8 +84,6 @@ const AssignSubjectsRegisterForm = ({
       semester,
     };
 
-    console.log(formData);
-
     try {
       await dispatch(assignSubjectsToFaculty(formData)).unwrap();
       reset();
@@ -146,6 +144,15 @@ const AssignSubjectsRegisterForm = ({
               notEdittable
             />
 
+            <InputField
+              name="semester"
+              label="Semester"
+              notEdittable
+              value={semester}
+              register={register}
+              errors={false}
+            />
+
             <label htmlFor="sectionIds" className="inter">
               <div className="flex flex-col gap-2">
                 <div className="flex gap-1">
@@ -176,15 +183,6 @@ const AssignSubjectsRegisterForm = ({
                 </div>
               </div>
             </label>
-
-            <InputField
-              name="semester"
-              label="Semester"
-              notEdittable
-              value={semester}
-              register={register}
-              errors={false}
-            />
 
             <label htmlFor="semester" className="inter  ">
               <div className="flex flex-col gap-2">

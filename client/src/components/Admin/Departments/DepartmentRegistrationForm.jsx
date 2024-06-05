@@ -1,8 +1,8 @@
 import { useForm } from "react-hook-form";
 import { FiMinus } from "react-icons/fi";
 import { useDispatch } from "react-redux";
-import InputField from "../../components/InputField";
-import { addDepartment } from "../../features/departments/departmentsSlice";
+import InputField from "../../InputField";
+import { addDepartment } from "../../../features/departments/departmentsSlice";
 
 const DepartmentRegistrationForm = ({
   toggleAddFacultyMemberState,
@@ -10,7 +10,6 @@ const DepartmentRegistrationForm = ({
 }) => {
   const dispatch = useDispatch();
 
-  // Use react hoook form
   const {
     register,
     handleSubmit,

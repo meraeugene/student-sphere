@@ -16,6 +16,7 @@ import { persistor, store } from "./stores.js";
 import { PersistGate } from "redux-persist/integration/react";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 import AdminRoute from "./components/AdminRoute.jsx";
+import FacultyRoute from "./components/FacultyRoute.jsx";
 import Departments from "./pages/Admin/Departments.jsx";
 import Faculties from "./pages/Admin/Faculties.jsx";
 import Students from "./pages/Admin/Students.jsx";
@@ -25,6 +26,7 @@ import AssignSujects from "./pages/Admin/AssignSubjects.jsx";
 import Sections from "./pages/Admin/Sections.jsx";
 import ProfileManagement from "./pages/ProfileManagement.jsx";
 import ChangePassword from "./pages/ChangePassword.jsx";
+import Grades from "./pages/Faculty/Grades.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -32,6 +34,7 @@ const router = createBrowserRouter(
       <Route path="/*" element={<ErrorPage />} />
       <Route index={true} path="/" element={<Login />} />
 
+      {/* AUTHENTICATED ROUTES */}
       <Route element={<PrivateRoute />}>
         <Route exact path="/dashboard" element={<Dashboard />} />
         <Route
@@ -42,6 +45,7 @@ const router = createBrowserRouter(
         <Route exact path="/change-password" element={<ChangePassword />} />
       </Route>
 
+      {/* ADMIN ROUTES */}
       <Route element={<AdminRoute />}>
         <Route exact path="/admin/departments" element={<Departments />} />
         <Route exact path="/admin/faculties" element={<Faculties />} />
@@ -54,6 +58,11 @@ const router = createBrowserRouter(
           element={<AssignSujects />}
         />
         <Route exact path="/admin/sections" element={<Sections />} />
+      </Route>
+
+      {/* FACULTY ROUTES */}
+      <Route element={<FacultyRoute />}>
+        <Route exact path="/faculty/grades" element={<Grades />} />
       </Route>
     </Route>
   )

@@ -10,10 +10,8 @@ import InputField from "../../components/InputField";
 const StudentRegistrationForm = ({ toggleAddStudentState, onStudentAdded }) => {
   const dispatch = useDispatch();
 
-  // Generate faculty ID once when the component mounts
   const [studentId, setStudentId] = useState(generateStudentID);
 
-  // Use react hoook form
   const {
     register,
     handleSubmit,

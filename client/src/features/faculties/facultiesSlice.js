@@ -15,6 +15,7 @@ export const fetchFaculties = createAsyncThunk(
 export const registerFaculty = createAsyncThunk(
   "faculties/registerFaculty",
   async (facultyData, { rejectWithValue }) => {
+    console.log(facultyData);
     try {
       const formData = new FormData();
 

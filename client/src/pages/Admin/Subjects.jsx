@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import SubjectRegistrationForm from "../../components/Subjects/SubjectRegistrationForm";
-import EditSubjectForm from "../../components/Subjects/EditSubjectForm";
+import SubjectRegistrationForm from "../../components/Admin/Subjects/SubjectRegistrationForm";
+import EditSubjectForm from "../../components/Admin/Subjects/EditSubjectForm";
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteSubject,

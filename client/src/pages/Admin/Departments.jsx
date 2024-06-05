@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { MdErrorOutline } from "react-icons/md";
 import { FaUser } from "react-icons/fa6";
 import { MdLocationPin } from "react-icons/md";
@@ -6,17 +6,13 @@ import { GiTeacher } from "react-icons/gi";
 import { FaUsers } from "react-icons/fa";
 import { fetchDepartments } from "../../features/departments/departmentsSlice";
 import { useDispatch, useSelector } from "react-redux";
-import DepartmentRegistrationForm from "../../components/Departments/DepartmentRegistrationForm";
+import DepartmentRegistrationForm from "../../components/Admin/Departments/DepartmentRegistrationForm";
 import Loader from "../../components/Loader";
 
 const Departments = () => {
   const dispatch = useDispatch();
   const [addDepartment, setAddDepartment] = useState(false);
   const { departments, status } = useSelector((state) => state.departments);
-
-  useEffect(() => {
-    dispatch(fetchDepartments());
-  }, [dispatch]);
 
   const toggleAddDepartmentState = () => {
     setAddDepartment(!addDepartment);

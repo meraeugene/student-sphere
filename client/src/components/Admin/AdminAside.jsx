@@ -133,9 +133,7 @@ const AdminAside = () => {
           <NavLink
             to="/profile-management"
             className={`flex items-center gap-3 cursor-pointer px-4 py-2 ${
-              location.pathname === "/admin/profile-management"
-                ? activeClass
-                : ""
+              location.pathname === "/profile-management" ? activeClass : ""
             }`}
           >
             <img src="/images/changeprofilewhite.svg" alt="settings" />
@@ -146,7 +144,7 @@ const AdminAside = () => {
           <NavLink
             to="/change-password"
             className={`flex items-center gap-3 cursor-pointer px-4 py-2 ${
-              location.pathname === "/admin/change-password" ? activeClass : ""
+              location.pathname === "/change-password" ? activeClass : ""
             }`}
           >
             <img src="/images/resetpass.svg" alt="settings" />

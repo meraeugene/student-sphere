@@ -19,7 +19,6 @@ const EditStudentForm = ({
     register,
     handleSubmit,
     reset,
-    setValue,
     formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: {
@@ -58,11 +57,10 @@ const EditStudentForm = ({
   const onSubmit = async (data) => {
     try {
       const response = await dispatch(updateStudent(data)).unwrap();
-      // Dispatch an action to update the course data in the Redux store
       if (response) {
         dispatch({ type: "students/updateStudent", payload: response });
-        // reset();
-        onStudentAdded(); // Callback to re-fetch courses after updating
+        reset();
+        onStudentAdded();
         toggleEditStudentState();
       }
     } catch (error) {
