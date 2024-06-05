@@ -15,7 +15,6 @@ export const fetchFaculties = createAsyncThunk(
 export const registerFaculty = createAsyncThunk(
   "faculties/registerFaculty",
   async (facultyData, { rejectWithValue }) => {
-    console.log(facultyData);
     try {
       const formData = new FormData();
 
@@ -47,7 +46,7 @@ export const updateFaculty = createAsyncThunk(
       });
 
       const response = await axios.post(
-        "http://localhost/student-sphere/server/Faculties/editFaculty.php",
+        "http://localhost/student-sphere/server/Faculties/update_faculty.php",
         formData
       );
       toast.success(response.data.message);
@@ -66,7 +65,7 @@ export const deleteFaculty = createAsyncThunk(
       const formData = new FormData();
       formData.append("facultyId", facultyId);
       const response = await axios.post(
-        "http://localhost/student-sphere/server/Faculties/deleteFaculty.php",
+        "http://localhost/student-sphere/server/Faculties/delete_faculty.php",
         formData
       );
       dispatch(fetchFaculties());
@@ -90,30 +89,7 @@ export const assignSubjectsToFaculty = createAsyncThunk(
       });
 
       const response = await axios.post(
-        "http://localhost/student-sphere/server/FacultySubjects/assignSubjects.php",
-        formData
-      );
-      toast.success(response.data.message);
-      return response.data;
-    } catch (error) {
-      toast.error(error.response.data.error);
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
-
-export const assignSchedulesToFaculty = createAsyncThunk(
-  "faculties/assignSchedulesToFaculty",
-  async (data, { rejectWithValue }) => {
-    try {
-      const formData = new FormData();
-
-      Object.entries(data).forEach(([key, value]) => {
-        formData.append(key, value);
-      });
-
-      const response = await axios.post(
-        "http://localhost/student-sphere/server/FacultySchedules/assignSchedules.php",
+        "http://localhost/student-sphere/server/FacultySubjects/assign_subjects.php",
         formData
       );
       toast.success(response.data.message);
@@ -132,7 +108,7 @@ export const removeSection = createAsyncThunk(
       const formData = new FormData();
       formData.append("facultyId", facultyId);
       const response = await axios.post(
-        "http://localhost/student-sphere/server/Faculties/removeFacultySections.php",
+        "http://localhost/student-sphere/server/Faculties/remove_faculty_sections.php",
         formData
       );
       dispatch(fetchFaculties());
@@ -165,66 +141,6 @@ const facultiesSlice = createSlice({
       .addCase(fetchFaculties.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
-      })
-      .addCase(deleteFaculty.fulfilled, (state, action) => {
-        state.faculties = state.faculties.filter(
-          (faculty) => faculty.faculty_id !== action.meta.arg
-        );
-      })
-      .addCase(registerFaculty.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(registerFaculty.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.faculties.push(action.payload);
-      })
-      .addCase(registerFaculty.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
-      })
-      .addCase(updateFaculty.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(updateFaculty.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        const updatedFaculty = action.payload;
-        state.faculties = state.faculties.map((faculty) =>
-          faculty.username === updateFaculty.username ? updatedFaculty : faculty
-        );
-      })
-      .addCase(updateFaculty.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
-      })
-      .addCase(assignSubjectsToFaculty.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(assignSubjectsToFaculty.fulfilled, (state, action) => {
-        state.status = "succeeded";
-      })
-      .addCase(assignSubjectsToFaculty.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
-      })
-      .addCase(assignSchedulesToFaculty.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(assignSchedulesToFaculty.fulfilled, (state, action) => {
-        state.status = "succeeded";
-      })
-      .addCase(assignSchedulesToFaculty.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
-      })
-      .addCase(removeSection.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(removeSection.fulfilled, (state, action) => {
-        state.status = "succeeded";
-      })
-      .addCase(removeSection.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
       });
   },
 });

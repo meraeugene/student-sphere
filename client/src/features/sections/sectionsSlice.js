@@ -12,26 +12,6 @@ export const fetchSections = createAsyncThunk(
   }
 );
 
-export const deleteSection = createAsyncThunk(
-  "sections/deleteSection",
-  async (sectionId, { dispatch }) => {
-    try {
-      const formData = new FormData();
-      formData.append("sectionId", sectionId);
-      const response = await axios.post(
-        "http://localhost/student-sphere/server/Sections/deleteSection.php",
-        formData
-      );
-      dispatch(fetchSections());
-      toast.success(response.data.message);
-      return response.data;
-    } catch (error) {
-      toast.error(error.response.data.error);
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
-
 export const registerSection = createAsyncThunk(
   "sections/registerSection",
   async (sectionData, { rejectWithValue }) => {
@@ -43,7 +23,7 @@ export const registerSection = createAsyncThunk(
       });
 
       const response = await axios.post(
-        "http://localhost/student-sphere/server/Sections/registerSection.php",
+        "http://localhost/student-sphere/server/Sections/add_section.php",
         formData
       );
       toast.success(response.data.message);
@@ -66,9 +46,29 @@ export const updateSection = createAsyncThunk(
       });
 
       const response = await axios.post(
-        "http://localhost/student-sphere/server/Sections/editSection.php",
+        "http://localhost/student-sphere/server/Sections/update_section.php",
         formData
       );
+      toast.success(response.data.message);
+      return response.data;
+    } catch (error) {
+      toast.error(error.response.data.error);
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const deleteSection = createAsyncThunk(
+  "sections/deleteSection",
+  async (sectionId, { dispatch }) => {
+    try {
+      const formData = new FormData();
+      formData.append("sectionId", sectionId);
+      const response = await axios.post(
+        "http://localhost/student-sphere/server/Sections/delete_section.php",
+        formData
+      );
+      dispatch(fetchSections());
       toast.success(response.data.message);
       return response.data;
     } catch (error) {
@@ -98,38 +98,6 @@ const sectionsSlice = createSlice({
       .addCase(fetchSections.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
-      })
-      .addCase(deleteSection.fulfilled, (state, action) => {
-        state.sections = state.sections.filter(
-          (section) => section.section_id !== action.meta.arg
-        );
-      })
-      .addCase(registerSection.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(registerSection.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.sections.push(action.payload);
-      })
-      .addCase(registerSection.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
-      })
-      .addCase(updateSection.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(updateSection.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        const updatedSection = action.payload;
-        state.sections = state.sections.map((section) =>
-          section.section_id === updatedSection.section_id
-            ? updatedSection
-            : section
-        );
-      })
-      .addCase(updateSection.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
       });
   },
 });

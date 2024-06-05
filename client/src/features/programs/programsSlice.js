@@ -12,26 +12,6 @@ export const fetchPrograms = createAsyncThunk(
   }
 );
 
-export const deleteProgram = createAsyncThunk(
-  "programs/deleteProgram",
-  async (programName, { dispatch }) => {
-    try {
-      const formData = new FormData();
-      formData.append("programName", programName);
-      const response = await axios.post(
-        "http://localhost/student-sphere/server/Programs/deleteProgram.php",
-        formData
-      );
-      dispatch(fetchPrograms());
-      toast.success(response.data.message);
-      return response.data;
-    } catch (error) {
-      toast.error(error.response.data.error);
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
-
 export const addProgram = createAsyncThunk(
   "programs/addProgram",
   async (programData, { rejectWithValue }) => {
@@ -43,7 +23,7 @@ export const addProgram = createAsyncThunk(
       });
 
       const response = await axios.post(
-        "http://localhost/student-sphere/server/Programs/addProgram.php",
+        "http://localhost/student-sphere/server/Programs/add_program.php",
         formData
       );
       toast.success(response.data.message);
@@ -66,9 +46,29 @@ export const updateProgram = createAsyncThunk(
       });
 
       const response = await axios.post(
-        "http://localhost/student-sphere/server/Programs/editProgram.php",
+        "http://localhost/student-sphere/server/Programs/update_program.php",
         formData
       );
+      toast.success(response.data.message);
+      return response.data;
+    } catch (error) {
+      toast.error(error.response.data.error);
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const deleteProgram = createAsyncThunk(
+  "programs/deleteProgram",
+  async (programName, { dispatch }) => {
+    try {
+      const formData = new FormData();
+      formData.append("programName", programName);
+      const response = await axios.post(
+        "http://localhost/student-sphere/server/Programs/delete_program.php",
+        formData
+      );
+      dispatch(fetchPrograms());
       toast.success(response.data.message);
       return response.data;
     } catch (error) {
@@ -113,38 +113,6 @@ const programsSlice = createSlice({
       .addCase(fetchPrograms.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
-      })
-      .addCase(deleteProgram.fulfilled, (state, action) => {
-        state.programs = state.programs.filter(
-          (program) => program.program_name !== action.meta.arg
-        );
-      })
-      .addCase(addProgram.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(addProgram.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.programs.push(action.payload);
-      })
-      .addCase(addProgram.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
-      })
-      .addCase(updateProgram.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(updateProgram.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        const updatedProgram = action.payload;
-        state.programs = state.programs.map((program) =>
-          program.program_name === updatedProgram.program_name
-            ? updatedProgram
-            : program
-        );
-      })
-      .addCase(updateProgram.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
       })
       .addCase(fetchProgramNames.pending, (state) => {
         state.status = "loading";

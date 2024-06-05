@@ -68,7 +68,6 @@ const EditProgramForm = ({
               name="programName"
               label="Program Name"
               placeholder="Program Name"
-              required
               register={register}
               errors={errors}
             />
@@ -77,7 +76,6 @@ const EditProgramForm = ({
               name="schoolYear"
               label="School Year"
               placeholder="School Year"
-              required
               register={register}
               errors={errors}
             />

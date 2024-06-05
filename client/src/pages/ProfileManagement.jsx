@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import InputField from "../components/InputField";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
@@ -28,7 +28,7 @@ const ProfileManagement = () => {
     const fetchUserProfile = async () => {
       try {
         const response = await axios.get(
-          `http://localhost/student-sphere/server/Users/getUserProfile.php?user_id=${userInfo.user_id}`
+          `http://localhost/student-sphere/server/Users/get_user_profile.php?user_id=${userInfo.user_id}`
         );
         const profileData = response.data;
 
@@ -52,7 +52,7 @@ const ProfileManagement = () => {
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
-        "http://localhost/student-sphere/server/Users/updateUserProfile.php",
+        "http://localhost/student-sphere/server/Users/update_user_profile.php",
         { ...data, user_id: userInfo.user_id }
       );
       toast.success(response.data.message);

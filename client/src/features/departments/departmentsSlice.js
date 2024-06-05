@@ -20,7 +20,7 @@ export const addDepartment = createAsyncThunk(
       });
 
       const response = await axios.post(
-        "http://localhost/student-sphere/server/Departments/addDepartment.php",
+        "http://localhost/student-sphere/server/Departments/add_department.php",
         formData
       );
       toast.success(response.data.message);
@@ -72,17 +72,6 @@ const departmentsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(addDepartment.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(addDepartment.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.departments.push(action.payload);
-      })
-      .addCase(addDepartment.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
-      })
       .addCase(fetchDepartments.pending, (state) => {
         state.status = "loading";
       })

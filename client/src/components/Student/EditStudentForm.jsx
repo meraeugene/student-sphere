@@ -22,7 +22,7 @@ const EditStudentForm = ({
     formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: {
-      studentId: student.student_id,
+      username: student.username,
       firstName: student.first_name,
       lastName: student.last_name,
       gender: student.gender,
@@ -56,7 +56,12 @@ const EditStudentForm = ({
 
   const onSubmit = async (data) => {
     try {
-      const response = await dispatch(updateStudent(data)).unwrap();
+      const response = await dispatch(
+        updateStudent({
+          ...data,
+          studentId: student.student_id,
+        })
+      ).unwrap();
       if (response) {
         dispatch({ type: "students/updateStudent", payload: response });
         reset();
@@ -88,10 +93,10 @@ const EditStudentForm = ({
             className="flex flex-col gap-6 mt-10  "
           >
             <InputField
-              name="studentId"
-              label="Student ID"
+              name="Username"
+              label="Username"
               placeholder="2022304365"
-              value={student.student_id}
+              value={student.username}
               notEdittable
               register={register}
               errors={errors}

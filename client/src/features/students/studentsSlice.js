@@ -47,7 +47,7 @@ export const updateStudent = createAsyncThunk(
       });
 
       const response = await axios.post(
-        "http://localhost/student-sphere/server/Students/editStudent.php",
+        "http://localhost/student-sphere/server/Students/update_student.php",
         formData
       );
       toast.success(response.data.message);
@@ -66,7 +66,7 @@ export const deleteStudent = createAsyncThunk(
       const formData = new FormData();
       formData.append("studentId", studentId);
       const response = await axios.post(
-        "http://localhost/student-sphere/server/Students/deleteStudent.php",
+        "http://localhost/student-sphere/server/Students/delete_student.php",
         formData
       );
       dispatch(fetchStudents());
@@ -99,38 +99,6 @@ const studentsSlice = createSlice({
       .addCase(fetchStudents.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
-      })
-      .addCase(deleteStudent.fulfilled, (state, action) => {
-        state.students = state.students.filter(
-          (student) => student.student_id !== action.meta.arg
-        );
-      })
-      .addCase(registerStudent.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(registerStudent.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.students.push(action.payload);
-      })
-      .addCase(registerStudent.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
-      })
-      .addCase(updateStudent.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(updateStudent.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        const updatedStudent = action.payload;
-        state.students = state.students.map((student) =>
-          student.student_id === updateStudent.student_id
-            ? updateStudent
-            : student
-        );
-      })
-      .addCase(updateStudent.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
       });
   },
 });

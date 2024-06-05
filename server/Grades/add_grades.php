@@ -64,18 +64,7 @@ if ($stmt_check->num_rows > 0) {
         exit;
     }
 
-    // Update the existing record with provided data
-    $stmt_update = $conn->prepare("UPDATE grades SET midterm_grade = COALESCE(?, midterm_grade), final_grade = COALESCE(?, final_grade), remarks = COALESCE(?, remarks) WHERE grade_id = ?");
-    $stmt_update->bind_param("sssi", $midtermGrade, $finalGrade, $remarks, $grade_id);
-
-    if ($stmt_update->execute()) {
-        echo json_encode(["message" => "Grades updated successfully"]);
-    } else {
-        http_response_code(500); 
-        echo json_encode(["error" => "Error updating grades: " . $stmt_update->error]);
-    }
-
-    $stmt_update->close();
+    
 } else {
     // Grade for this student and subject does not exist, insert new record
     $stmt_insert = $conn->prepare("INSERT INTO grades (student_id, subject_code, midterm_grade, final_grade, remarks) VALUES (?, ?, ?, ?, ?)");

@@ -104,7 +104,6 @@ const EditFacultyForm = ({
               name="firstName"
               label="First Name"
               placeholder="First Name"
-              required
               pattern={/^[a-zA-Z\s]+$/}
               register={register}
               errors={errors}
@@ -114,7 +113,6 @@ const EditFacultyForm = ({
               name="lastName"
               label="Last Name"
               placeholder="Last Name"
-              required
               pattern={/^[a-zA-Z\s]+$/}
               register={register}
               errors={errors}
@@ -151,7 +149,6 @@ const EditFacultyForm = ({
               name="email"
               label="Email Address"
               placeholder="Email Address"
-              required
               pattern={/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/}
               register={register}
               errors={errors}
@@ -161,7 +158,6 @@ const EditFacultyForm = ({
               name="birthday"
               label="Date of Birth"
               type="date"
-              required
               register={register}
               errors={errors}
             />
@@ -170,7 +166,6 @@ const EditFacultyForm = ({
               name="address"
               label="Address"
               placeholder="Address"
-              required
               register={register}
               errors={errors}
             />
@@ -179,7 +174,6 @@ const EditFacultyForm = ({
               name="phoneNumber"
               label="Phone Number"
               placeholder="0918391841"
-              required
               register={register}
               errors={errors}
             />

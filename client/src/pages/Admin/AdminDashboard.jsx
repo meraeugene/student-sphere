@@ -25,7 +25,7 @@ const AdminDashboard = () => {
     const fetchUserProfile = async () => {
       try {
         const response = await axios.get(
-          `http://localhost/student-sphere/server/Users/getUserProfile.php?user_id=${userInfo.user_id}`
+          `http://localhost/student-sphere/server/Users/get_user_profile.php?user_id=${userInfo.user_id}`
         );
         setProfile(response.data);
       } catch (error) {

@@ -92,7 +92,6 @@ const EditSubjectForm = ({
               name="subjectCode"
               label="Subject Code "
               notEdittable={true}
-              required
               register={register}
               errors={errors}
               readOnly
@@ -102,7 +101,6 @@ const EditSubjectForm = ({
               name="subjectName"
               label="Subject Name"
               placeholder="Subject Name"
-              required
               register={register}
               errors={errors}
             />

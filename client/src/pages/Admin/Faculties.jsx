@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { GiTeacher } from "react-icons/gi";
 import { MdErrorOutline } from "react-icons/md";
 import { FaTrash, FaRegEdit } from "react-icons/fa";
@@ -60,6 +60,10 @@ const Faculties = () => {
     setEditFacultyMember(!editFacultyMember);
   };
 
+  useEffect(() => {
+    dispatch(fetchFaculties());
+  }, []);
+
   return (
     <div className="w-full ml-[320px] overflow-hidden">
       <div className="px-8 py-10">
@@ -80,15 +84,6 @@ const Faculties = () => {
           </button>
         </div>
 
-        {status === "loading" && <Loader />}
-
-        {status === "failed" && (
-          <div className="w-full flex  bg-red-100 rounded-md items-center  border play-regular text-lg px-4 py-3 font-bold gap-2 text-red-800 mt-10">
-            <MdErrorOutline color="red" />
-            <h1>Failed to fetch departments</h1>
-          </div>
-        )}
-
         {facultyMembers.length === 0 && (
           <div className="w-full flex  bg-red-100 rounded-md items-center  border play-regular text-lg px-4 py-3 font-bold gap-2 text-red-800">
             <MdErrorOutline color="red" />
@@ -96,7 +91,7 @@ const Faculties = () => {
           </div>
         )}
 
-        {status === "succeeded" && facultyMembers.length > 0 && (
+        {facultyMembers.length > 0 && (
           <div className="faculty-members-table__container my-10">
             <div className="mb-8 overflow-auto">
               <table className="min-w-full border shadow-sm   ">
@@ -109,14 +104,13 @@ const Faculties = () => {
                     </th>
                     <th className="px-4 py-2 text-left font-bold">LAST NAME</th>
                     <th className="px-4 py-2 text-left font-bold">EMAIL</th>
-
                     <th className="px-4 py-2 text-left font-bold">GENDER</th>
                     <th className="px-4 py-2 text-left font-bold">
                       DEPARTMENT
                     </th>
                     <th className="px-4 py-2 text-left font-bold">PROGRAM</th>
                     <th className="px-4 py-2 text-left font-bold">SECTIONS</th>
-                    <th className="px-4 py-2 text-left font-bold">SUBJECT</th>
+                    <th className="px-4 py-2 text-left font-bold">SUBJECTS</th>
                     <th className="px-4 py-2 text-left font-bold">
                       SCHOOL YEAR
                     </th>
@@ -127,10 +121,10 @@ const Faculties = () => {
                   {facultyMembers.map((facultyMember, index) => (
                     <tr
                       key={index + 1}
-                      className="whitespace-nowrap border  hover:bg-gray-50  "
+                      className="whitespace-nowrap border hover:bg-gray-50"
                     >
-                      <td className="px-4 py-2 ">{index + 1}</td>
-                      <td className="px-4 py-2 ">{facultyMember.username}</td>
+                      <td className="px-4 py-2">{index + 1}</td>
+                      <td className="px-4 py-2">{facultyMember.username}</td>
                       <td className="px-4 py-2">
                         {facultyMember?.first_name &&
                           capitalizeFirstLetter(facultyMember.first_name)}
@@ -147,44 +141,57 @@ const Faculties = () => {
                       <td className="px-4 py-2">
                         {facultyMember.program_name}
                       </td>
-                      <td className="px-4 py-2 flex gap-2">
-                        {facultyMember?.sections?.length > 0 ? (
-                          facultyMember?.sections?.map((section, index) => (
-                            <span
-                              key={index}
-                              className="bg-green-200 h-[35px] px-2 text-green-800  rounded-md  flex items-center justify-center "
-                            >
-                              {section.section_name}
-                            </span>
-                          ))
-                        ) : (
-                          <span className="bg-orange-200 h-[35px] px-2 text-orange-500  rounded-md  w-full flex items-center justify-center ">
-                            Pending
-                          </span>
-                        )}
-                      </td>
+
                       <td className="px-4 py-2">
-                        {facultyMember.subject_code ? (
-                          <span className="bg-green-200 h-[35px] px-2 text-green-700  rounded-md  flex items-center justify-center ">
-                            {facultyMember.subject_code}
+                        {facultyMember.sections.length > 0 ? (
+                          <span className="flex items-center gap-4">
+                            {facultyMember.sections.map((section, index) => (
+                              <span
+                                key={index}
+                                className="bg-green-200 h-[35px] flex items-center px-2 text-green-800 rounded-md "
+                              >
+                                {section.section_name}
+                              </span>
+                            ))}
                           </span>
                         ) : (
-                          <span className="bg-orange-200 h-[35px] px-2 text-orange-500  rounded-md  flex items-center justify-center ">
+                          <span className="bg-orange-200 h-[35px] px-4 py-2 text-orange-500 rounded-md ">
                             Pending
                           </span>
                         )}
                       </td>
+
+                      <td className="px-4 py-2 ">
+                        {facultyMember.subjects.length > 0 ? (
+                          <span className="flex items-center gap-4">
+                            {facultyMember.subjects.map((subject, index) => (
+                              <span
+                                key={index}
+                                className="bg-blue-200 h-[35px] flex items-center px-2 text-blue-800 rounded-md "
+                              >
+                                {subject.subject_code}
+                              </span>
+                            ))}
+                          </span>
+                        ) : (
+                          <span className="bg-orange-200 h-[35px] px-4 py-2 text-orange-500 rounded-md ">
+                            Pending
+                          </span>
+                        )}
+                      </td>
+
                       <td className="px-4 py-2">
                         {facultyMember.school_year ? (
-                          <span className="bg-green-200 h-[35px] px-2 text-green-700  rounded-md  flex items-center justify-center ">
-                            {facultyMember.school_year}{" "}
+                          <span className="bg-green-200 h-[35px] px-2 text-green-700 rounded-md flex items-center justify-center">
+                            {facultyMember.school_year}
                           </span>
                         ) : (
-                          <span className="bg-orange-200 h-[35px] px-2 text-orange-500  rounded-md  flex items-center justify-center ">
+                          <span className="bg-orange-200 h-[35px] px-2 text-orange-500 rounded-md flex items-center justify-center">
                             Pending
                           </span>
                         )}
                       </td>
+
                       <td className="flex h-full items-center gap-2 px-4 py-2">
                         <button className="btn-sm rounded border border-gray-400 h-[35px] px-2 hover:bg-gray-200 text-sm">
                           Details
@@ -213,7 +220,7 @@ const Faculties = () => {
 
                         {facultyMember?.sections?.length > 0 && (
                           <button
-                            className="btn-sm text-sm bg-[#af2833]  border-none text-white poppins-regular rounded h-[35px] px-2 outline-none hover:opacity-90 "
+                            className="btn-sm text-sm bg-[#af2833] border-none text-white poppins-regular rounded h-[35px] px-2 outline-none hover:opacity-90"
                             onClick={() =>
                               removeSectionHandler(facultyMember.faculty_id)
                             }

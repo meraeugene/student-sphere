@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 
 const initialState = {
   grades: [],
+  studentGrades: [],
   status: "idle",
   error: null,
 };
@@ -13,6 +14,16 @@ export const fetchGrades = createAsyncThunk(
   async ({ facultyId }) => {
     const response = await axios.get(
       `http://localhost/student-sphere/server/Grades/grades.php?facultyId=${facultyId}`
+    );
+    return response.data;
+  }
+);
+
+export const fetchStudentGrades = createAsyncThunk(
+  "grades/fetchStudentGrades",
+  async ({ studentId }) => {
+    const response = await axios.get(
+      `http://localhost/student-sphere/server/Grades/student_grades.php?studentId=${studentId}`
     );
     return response.data;
   }
@@ -29,7 +40,30 @@ export const addGrades = createAsyncThunk(
       });
 
       const response = await axios.post(
-        "http://localhost/student-sphere/server/Grades/addGrades.php",
+        "http://localhost/student-sphere/server/Grades/add_grades.php",
+        formData
+      );
+      toast.success(response.data.message);
+      return response.data;
+    } catch (error) {
+      toast.error(error.response.data.error);
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const updateGrades = createAsyncThunk(
+  "grades/updateGrades",
+  async (data, { rejectWithValue }) => {
+    try {
+      const formData = new FormData();
+
+      Object.entries(data).forEach(([key, value]) => {
+        formData.append(key, value);
+      });
+
+      const response = await axios.post(
+        "http://localhost/student-sphere/server/Grades/update_grades.php",
         formData
       );
       toast.success(response.data.message);
@@ -58,15 +92,16 @@ const gradessSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       })
-      .addCase(addGrades.pending, (state) => {
+      .addCase(fetchStudentGrades.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(addGrades.fulfilled, (state, action) => {
+      .addCase(fetchStudentGrades.fulfilled, (state, action) => {
         state.status = "succeeded";
+        state.studentGrades = action.payload;
       })
-      .addCase(addGrades.rejected, (state, action) => {
+      .addCase(fetchStudentGrades.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.payload;
+        state.error = action.error.message;
       });
   },
 });

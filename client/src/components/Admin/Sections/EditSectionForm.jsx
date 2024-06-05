@@ -93,7 +93,6 @@ const EditSectionForm = ({
               name="sectionName"
               label="Section Name"
               placeholder="Section Name"
-              required
               register={register}
               errors={errors}
             />

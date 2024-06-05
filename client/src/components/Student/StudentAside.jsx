@@ -38,13 +38,17 @@ const AdminAside = () => {
         <div className="flex flex-col gap-4  ">
           {/* SUBJECTS */}
           <NavLink
-            to="/student/subjects"
+            to="/student/subjects-enrolled"
             className={`flex items-center gap-3 cursor-pointer px-4 py-2 ${
-              location.pathname === "/student/subjects" ? activeClass : ""
+              location.pathname === "/student/subjects-enrolled"
+                ? activeClass
+                : ""
             }`}
           >
             <img src="/images/subjects.svg" alt="subjects" />
-            <h1 className="text-base poppins-regular font-base">Subjects</h1>
+            <h1 className="text-base poppins-regular font-base">
+              Enrolled Subjects
+            </h1>
           </NavLink>
           {/* GRADES */}
           <NavLink

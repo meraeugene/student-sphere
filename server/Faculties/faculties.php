@@ -17,7 +17,7 @@ if (!$conn) {
     exit;
 }
 
-// Fetch faculties with their associated sections and filter by role "faculty"
+// Fetch faculties with their associated sections and subjects, filter by role "faculty"
 $sql = "
     SELECT 
         f.faculty_id,
@@ -28,6 +28,7 @@ $sql = "
         fs.subject_code,
         fs.school_year,
         s.section_name, s.section_id,
+        sub.subject_name,
         u.username
     FROM 
         faculties f
@@ -95,11 +96,12 @@ while ($row = $result->fetch_assoc()) {
             'department_id' => $row['department_id'],
             'program_name' => $row['program_name'],
             'program_id' => $row['program_id'],
-            'subject_code' => $row['subject_code'],
             'school_year' => $row['school_year'],
-            'sections' => []
+            'sections' => [],
+            'subjects' => [] // Initialize subjects array
         ];
     }
+
     if (!is_null($row['section_name'])) {
         $section = [
             'section_name' => $row['section_name'],
@@ -109,12 +111,22 @@ while ($row = $result->fetch_assoc()) {
             $faculties[$faculty_id]['sections'][] = $section;
         }
     }
+
+    if (!is_null($row['subject_code'])) {
+        $subject = [
+            'subject_code' => $row['subject_code'],
+            'subject_name' => $row['subject_name']
+        ];
+        if (!in_array($subject, $faculties[$faculty_id]['subjects'])) {
+            $faculties[$faculty_id]['subjects'][] = $subject;
+        }
+    }
 }
 
 // Reindex the array to remove gaps in keys
 $faculties = array_values($faculties);
 
-// Return faculties with their associated sections as JSON
+// Return faculties with their associated sections and subjects as JSON
 echo json_encode($faculties);
 
 // Close statement

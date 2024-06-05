@@ -12,23 +12,13 @@ export const fetchSubjects = createAsyncThunk(
   }
 );
 
-export const deleteSubject = createAsyncThunk(
-  "subjects/deleteSubject",
-  async (subjectCode, { dispatch }) => {
-    try {
-      const formData = new FormData();
-      formData.append("subjectCode", subjectCode);
-      const response = await axios.post(
-        "http://localhost/student-sphere/server/Subjects/deleteSubject.php",
-        formData
-      );
-      dispatch(fetchSubjects());
-      toast.success(response.data.message);
-      return response.data;
-    } catch (error) {
-      toast.error(error.response.data.error);
-      return rejectWithValue(error.response.data);
-    }
+export const fetchStudentSubjectsEnrolled = createAsyncThunk(
+  "grades/fetchStudentSubjectsEnrolled",
+  async ({ studentId }) => {
+    const response = await axios.get(
+      `http://localhost/student-sphere/server/Subjects/student_subjects_enrolled.php?studentId=${studentId}`
+    );
+    return response.data;
   }
 );
 
@@ -43,7 +33,7 @@ export const registerSubject = createAsyncThunk(
       });
 
       const response = await axios.post(
-        "http://localhost/student-sphere/server/Subjects/registerSubject.php",
+        "http://localhost/student-sphere/server/Subjects/add_subject.php",
         formData
       );
 
@@ -68,9 +58,29 @@ export const updateSubject = createAsyncThunk(
       });
 
       const response = await axios.post(
-        "http://localhost/student-sphere/server/Subjects/editSubject.php",
+        "http://localhost/student-sphere/server/Subjects/update_subject.php",
         formData
       );
+      toast.success(response.data.message);
+      return response.data;
+    } catch (error) {
+      toast.error(error.response.data.error);
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const deleteSubject = createAsyncThunk(
+  "subjects/deleteSubject",
+  async (subjectCode, { dispatch }) => {
+    try {
+      const formData = new FormData();
+      formData.append("subjectCode", subjectCode);
+      const response = await axios.post(
+        "http://localhost/student-sphere/server/Subjects/delete_subject.php",
+        formData
+      );
+      dispatch(fetchSubjects());
       toast.success(response.data.message);
       return response.data;
     } catch (error) {
@@ -84,6 +94,7 @@ const subjectsSlice = createSlice({
   name: "subjects",
   initialState: {
     subjects: [],
+    studentSubjectsEnrolled: [],
     status: "idle",
     error: null,
   },
@@ -101,37 +112,16 @@ const subjectsSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       })
-      .addCase(deleteSubject.fulfilled, (state, action) => {
-        state.subjects = state.subjects.filter(
-          (subject) => subject.subject_code !== action.meta.arg
-        );
-      })
-      .addCase(registerSubject.pending, (state) => {
+      .addCase(fetchStudentSubjectsEnrolled.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(registerSubject.fulfilled, (state, action) => {
+      .addCase(fetchStudentSubjectsEnrolled.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.subjects.push(action.payload);
+        state.studentSubjectsEnrolled = action.payload;
       })
-      .addCase(registerSubject.rejected, (state, action) => {
+      .addCase(fetchStudentSubjectsEnrolled.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.payload;
-      })
-      .addCase(updateSubject.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(updateSubject.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        const updatedSubject = action.payload;
-        state.subjects = state.subjects.map((subject) =>
-          subject.subject_code === updatedSubject.subject_code
-            ? updateSubject
-            : subject
-        );
-      })
-      .addCase(updateSubject.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
+        state.error = action.error.message;
       });
   },
 });

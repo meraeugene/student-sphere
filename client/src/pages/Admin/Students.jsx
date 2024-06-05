@@ -1,5 +1,5 @@
 import { MdErrorOutline } from "react-icons/md";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import StudentRegistrationForm from "../../components/Student/StudentRegistrationForm";
 import { FaRegEdit } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
@@ -42,6 +42,10 @@ const Students = () => {
     setStudentToEdit(studentData);
     setEditStudent(!editStudent);
   };
+
+  useEffect(() => {
+    dispatch(fetchStudents());
+  }, []);
 
   return (
     <div className="w-full  ml-[320px] px-8 overflow-auto  ">

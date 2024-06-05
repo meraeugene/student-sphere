@@ -1,47 +1,55 @@
-import React from "react";
 import { useForm } from "react-hook-form";
 import { FiMinus } from "react-icons/fi";
-import InputField from "../../components/InputField";
 import { useDispatch } from "react-redux";
-import { addGrades } from "../../features/grades/gradesSlice";
+import InputField from "../InputField";
+import { updateGrades } from "../../features/grades/gradesSlice";
 
-const GradeForm = ({
+const EditGradeForm = ({
   student,
-  toggleAddStudentGradeState,
+  toggleEditStudentGradeState,
   onStudentGradesAdded,
 }) => {
+  const dispatch = useDispatch();
+
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
-  } = useForm();
-
-  const dispatch = useDispatch();
+  } = useForm({
+    defaultValues: {
+      studentId: student.student_id,
+      subjectCode: student.subject_code,
+      midtermGrade: student.midterm_grade,
+      finalGrade: student.final_grade,
+      remarks: student.remarks,
+    },
+  });
 
   const onSubmit = async (data) => {
     try {
-      const formData = {
-        ...data,
-        studentId: student.student_id,
-        subjectCode: student.subject_code,
-      };
-
-      await dispatch(addGrades(formData)).unwrap();
-      toggleAddStudentGradeState();
-      onStudentGradesAdded();
+      const response = await dispatch(updateGrades(data)).unwrap();
+      if (response) {
+        dispatch({ type: "grades/updateGrades", payload: response });
+        reset();
+        onStudentGradesAdded();
+        toggleEditStudentGradeState();
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
   return (
-    <div className="overlay fixed inset-0 z-10 bg-[rgba(210,210,215,0.35)] backdrop-blur-[4px] transition-all duration-300 ">
-      <div className="fixed-container h-[90vh] z-20  w-full overflow-y-scroll bg-white opacity-100 transition-all duration-300 md:w-[70%] md:border md:border-r-0 md:border-t-0 md:border-l-[#d2d2d7] lg:w-1/2 rounded-md">
+    <div className="overlay fixed inset-0 z-10 bg-[rgba(210,210,215,0.35)] backdrop-blur-[4px] transition-all duration-300">
+      <div className="fixed-container z-20 w-full  h-[90vh] overflow-y-scroll bg-white opacity-100 transition-all duration-300 md:w-[70%] md:border md:border-r-0 md:border-t-0 md:border-l-[#d2d2d7] lg:w-1/2 rounded-md">
         <div className="p-10 add-user__container">
           <div className="flex items-center justify-between">
-            <h1 className="text-3xl play-regular uppercase ">Add Grade </h1>
+            <h1 className="text-3xl play-regular uppercase ">
+              Edit Student Grades
+            </h1>
             <button
-              onClick={toggleAddStudentGradeState}
+              onClick={toggleEditStudentGradeState}
               className="bg-[#164e8e] text-white h-[40px] rounded-md  px-4 inter flex items-center justify-center gap-3"
             >
               Close
@@ -176,16 +184,37 @@ const GradeForm = ({
               </div>
             </div>
 
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4  mt-3">
               <button
                 disabled={isSubmitting}
                 type="submit"
-                className="bg-[#0C1E33] text-white h-[55px] rounded-md mt-2 inter flex items-center justify-center gap-3"
+                className="bg-[#0C1E33] text-white h-[55px] rounded-md mt-  inter flex items-center justify-center gap-3"
               >
-                {isSubmitting ? (
-                  <span>Submitting...</span>
+                {isSubmitting === "loading" ? (
+                  <l-dot-pulse
+                    size="38"
+                    speed="1.3"
+                    color="white"
+                  ></l-dot-pulse>
                 ) : (
-                  <span>Submit Grade</span>
+                  <div className="flex items-center gap-3">
+                    <span>Update Faculty Member</span>
+                    <svg
+                      width="18"
+                      height="14"
+                      viewBox="0 0 18 14"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M1 7H17M17 7L11 1M17 7L11 13"
+                        stroke="white"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </div>
                 )}
               </button>
             </div>
@@ -196,4 +225,4 @@ const GradeForm = ({
   );
 };
 
-export default GradeForm;
+export default EditGradeForm;

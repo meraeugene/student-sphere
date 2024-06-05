@@ -18,7 +18,7 @@ export const registerAdmin = createAsyncThunk(
       });
 
       const response = await axios.post(
-        "http://localhost/student-sphere/server/Admins/registerAdmin.php",
+        "http://localhost/student-sphere/server/Admins/add_admin.php",
         formData
       );
       toast.success(response.data.message);
@@ -41,7 +41,7 @@ export const resetPassword = createAsyncThunk(
       });
 
       const response = await axios.post(
-        "http://localhost/student-sphere/server/Users/resetPassword.php",
+        "http://localhost/student-sphere/server/Users/reset_password.php",
         formData
       );
       return response.data;
@@ -56,30 +56,6 @@ const usersSlice = createSlice({
   name: "users",
   initialState,
   reducers: {},
-  extraReducers: (builder) => {
-    builder
-      .addCase(registerAdmin.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(registerAdmin.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.adminUsers.push(action.payload);
-      })
-      .addCase(registerAdmin.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
-      })
-      .addCase(resetPassword.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(resetPassword.fulfilled, (state, action) => {
-        state.status = "succeeded";
-      })
-      .addCase(resetPassword.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.payload;
-      });
-  },
 });
 
 export default usersSlice.reducer;

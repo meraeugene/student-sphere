@@ -62,6 +62,7 @@ const SubjectRegistrationForm = ({ toggleAddSubjectState, onSubjectAdded }) => {
               required
               register={register}
               errors={errors}
+              placeholder="IT221"
             />
 
             <InputField
@@ -109,6 +110,7 @@ const SubjectRegistrationForm = ({ toggleAddSubjectState, onSubjectAdded }) => {
               label="Unit"
               required
               type="number"
+              placeholder="3"
               register={register}
               errors={errors}
             />
@@ -148,7 +150,10 @@ const SubjectRegistrationForm = ({ toggleAddSubjectState, onSubjectAdded }) => {
 
             <label htmlFor="semester" className="inter  ">
               <div className="flex flex-col gap-2">
-                <h1 className="font-semibold">Semester</h1>
+                <div className="flex gap-1">
+                  <h1 className="font-semibold">Semester</h1>
+                  <span className="text-red-500">*</span>
+                </div>
                 <div className="w-full">
                   <select
                     name="semester"
