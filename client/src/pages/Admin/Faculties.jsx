@@ -11,7 +11,6 @@ import {
 } from "../../features/faculties/facultiesSlice";
 import EditFacultyForm from "../../components/Faculty/EditFacultyForm";
 import { capitalizeFirstLetter } from "../../utils/capitalizeFirstLetter";
-import Loader from "../../components/Loader";
 
 const Faculties = () => {
   const [addFacultyMember, setAddFacultyMember] = useState(false);
