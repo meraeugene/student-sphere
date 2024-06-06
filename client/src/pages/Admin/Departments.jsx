@@ -44,10 +44,10 @@ const Departments = () => {
 
         <div className="departments__container my-10 ">
           {departments.length > 0 ? (
-            <div className=" grid grid-cols-2 gap-6 ">
+            <div className=" grid grid-cols-1 gap-6 ">
               {departments.map((department, index) => (
                 <div
-                  className={`p-6  shadow-blue-200 shadow-md border hover:shadow-lg  hover:shadow-blue-200 transition-all duration-300 ease-in-out rounded-md`}
+                  className={`p-6 w-[60%] shadow-blue-200 shadow-md border hover:shadow-lg  hover:shadow-blue-200 transition-all duration-300 ease-in-out rounded-md`}
                   key={index}
                 >
                   <div className="border-b border-gray-400 pb-3">

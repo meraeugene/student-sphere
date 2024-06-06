@@ -1,26 +1,33 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { GiTeacher } from "react-icons/gi";
 import { MdErrorOutline } from "react-icons/md";
 import { FaTrash, FaRegEdit } from "react-icons/fa";
-import FacultyRegistrationForm from "../../components/Faculty/FacultyRegistrationForm";
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteFaculty,
   fetchFaculties,
   removeSection,
 } from "../../features/faculties/facultiesSlice";
+import FacultyRegistrationForm from "../../components/Faculty/FacultyRegistrationForm";
 import EditFacultyForm from "../../components/Faculty/EditFacultyForm";
 import { capitalizeFirstLetter } from "../../utils/capitalizeFirstLetter";
 
 const Faculties = () => {
-  const [addFacultyMember, setAddFacultyMember] = useState(false);
-  const [editFacultyMember, setEditFacultyMember] = useState(false);
-  const [facultyMemberToEdit, setFacultyMemberToEdit] = useState({});
-
   const dispatch = useDispatch();
   const { faculties: facultyMembers, status } = useSelector(
     (state) => state.faculties
   );
+  const { departmentNames } = useSelector((state) => state.departments);
+  const { programs } = useSelector((state) => state.programs);
+
+  const [addFacultyMember, setAddFacultyMember] = useState(false);
+  const [editFacultyMember, setEditFacultyMember] = useState(false);
+  const [facultyMemberToEdit, setFacultyMemberToEdit] = useState({});
+  const [filters, setFilters] = useState({
+    department: "",
+    program: "",
+  });
+  const [filteredPrograms, setFilteredPrograms] = useState([]);
 
   const deleteFacultyMemberHandler = async (facultyId) => {
     if (window.confirm("Are you sure you want to delete this user?")) {
@@ -59,9 +66,47 @@ const Faculties = () => {
     setEditFacultyMember(!editFacultyMember);
   };
 
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [name]: value,
+    }));
+
+    if (name === "department") {
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        program: "", // Clear the program filter when department changes
+      }));
+
+      const selectedDepartment = departmentNames.find(
+        (department) => department.department_name === value
+      );
+
+      if (selectedDepartment) {
+        const filtered = programs.filter(
+          (program) =>
+            program.department_id === selectedDepartment.department_id
+        );
+        setFilteredPrograms(filtered);
+      } else {
+        setFilteredPrograms([]);
+      }
+    }
+  };
+
   useEffect(() => {
     dispatch(fetchFaculties());
   }, []);
+
+  const filteredFacultyMembers = facultyMembers.filter((facultyMember) => {
+    return (
+      (filters.department
+        ? facultyMember.department_name === filters.department
+        : true) &&
+      (filters.program ? facultyMember.program_name === filters.program : true)
+    );
+  });
 
   return (
     <div className="w-full ml-[320px] overflow-hidden">
@@ -83,17 +128,49 @@ const Faculties = () => {
           </button>
         </div>
 
-        {facultyMembers.length === 0 && (
-          <div className="w-full flex  bg-red-100 rounded-md items-center  border play-regular text-lg px-4 py-3 font-bold gap-2 text-red-800">
+        <div className="flex justify-between mt-10">
+          <div></div>
+          <div className="flex gap-4 items-center ">
+            <select
+              name="department"
+              value={filters.department}
+              onChange={handleFilterChange}
+              className="border rounded-md p-2 shadow-sm hover:shadow-lg cursor-pointer outline-none transition-all duration-300 ease-in-out"
+            >
+              <option value="">All Departments</option>
+              {departmentNames.map((department, index) => (
+                <option key={index} value={department.department_name}>
+                  {department.department_name}
+                </option>
+              ))}
+            </select>
+            <select
+              name="program"
+              value={filters.program}
+              onChange={handleFilterChange}
+              className="border rounded-md p-2 shadow-sm hover:shadow-lg cursor-pointer outline-none transition-all duration-300 ease-in-out"
+            >
+              <option value="">All Programs</option>
+              {filteredPrograms.map((program, index) => (
+                <option key={index} value={program.program_name}>
+                  {program.program_name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {filteredFacultyMembers.length === 0 && (
+          <div className="w-full flex mt-10 bg-red-100 rounded-md items-center  border play-regular text-lg px-4 py-3 font-bold gap-2 text-red-800">
             <MdErrorOutline color="red" />
             <h1>No Faculty Members</h1>
           </div>
         )}
 
-        {facultyMembers.length > 0 && (
+        {filteredFacultyMembers.length > 0 && (
           <div className="faculty-members-table__container my-10">
             <div className="mb-8 overflow-auto">
-              <table className="min-w-full border shadow-sm   ">
+              <table className="min-w-full border shadow-sm">
                 <thead>
                   <tr className="whitespace-nowrap shadow-sm border shadow-blue-200">
                     <th className="px-4 py-2 text-left font-bold">#</th>
@@ -117,7 +194,7 @@ const Faculties = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {facultyMembers.map((facultyMember, index) => (
+                  {filteredFacultyMembers.map((facultyMember, index) => (
                     <tr
                       key={index + 1}
                       className="whitespace-nowrap border hover:bg-gray-50"

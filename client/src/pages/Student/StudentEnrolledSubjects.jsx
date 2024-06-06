@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchStudentSubjectsEnrolled } from "../../features/subjects/subjectsSlice";
+import { MdErrorOutline } from "react-icons/md";
 
 const StudentEnrolledSubjects = () => {
   const { userInfo } = useSelector((state) => state.auth);
