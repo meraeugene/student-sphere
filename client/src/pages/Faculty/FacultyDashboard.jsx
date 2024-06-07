@@ -86,9 +86,9 @@ const FacultyDashboard = () => {
           </div>
         </div>
 
-        <div className="flex mt-8 gap-10 min-h-[350px] poppins-regular">
+        <div className="flex mt-8 gap-10  poppins-regular ">
           <div className="flex flex-col w-full">
-            <div className="flex gap-8 h-full">
+            <div className="flex gap-8 h-full ">
               <ShortcutCard
                 image="/images/admin-dashboard/grades.svg"
                 title="Grades"
@@ -132,11 +132,11 @@ const FacultyDashboard = () => {
                       {dayTimeSlotSchedules[day]?.map(
                         ({ section, timeSlot }, index) => (
                           <li
-                            className="shadow-blue-200 shadow-sm border hover:shadow-lg  hover:shadow-blue-200 transition-all   duration-300 ease-in-out rounded-md p-2 px-4 text-center flex flex-col gap-1"
+                            className="shadow-blue-200 shadow-sm border hover:shadow-lg  hover:shadow-blue-200 transition-all   duration-300 ease-in-out rounded-md p-2  text-center flex flex-col gap-1"
                             key={index}
                           >
                             <p className="text-base">{section}</p>
-                            <p className="text-sm">{timeSlot}</p>
+                            <p className="text-md">{timeSlot}</p>
                           </li>
                         )
                       )}
