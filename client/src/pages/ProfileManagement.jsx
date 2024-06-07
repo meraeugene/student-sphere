@@ -8,9 +8,7 @@ import { updateProfilePicture } from "@/features/authentication/authSlice";
 
 const ProfileManagement = () => {
   const { userInfo } = useSelector((state) => state.auth);
-  const [profilePicture, setProfilePicture] = useState(
-    "https://raw.githubusercontent.com/meraeugene/student-sphere/main/client/public/images/profile.png"
-  );
+  const [profilePicture, setProfilePicture] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
 
   const dispatch = useDispatch();

@@ -39,6 +39,9 @@ if (isset($_FILES['profilePicture']) && $_FILES['profilePicture']['error'] == UP
     if (move_uploaded_file($_FILES['profilePicture']['tmp_name'], $target_file)) {
         $profile_picture = '/uploads/profile_pictures/' . $file_name; // Save the relative path
     }
+} else {
+    // If no file is uploaded, set the default profile picture URL
+    $profile_picture = 'https://raw.githubusercontent.com/meraeugene/student-sphere/main/client/public/images/profile.png';
 }
 
 // Prepare and execute statement to update user profile in the database

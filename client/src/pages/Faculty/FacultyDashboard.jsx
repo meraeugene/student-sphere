@@ -5,6 +5,9 @@ import axios from "axios";
 import { Calendar } from "@/components/ui/calendar";
 import ShortcutCard from "@/components/ShortcutCard";
 import { CiCalendar } from "react-icons/ci";
+import { BsBuildingFillCheck } from "react-icons/bs";
+import { LuBookCopy } from "react-icons/lu";
+import { IoTimeOutline } from "react-icons/io5";
 
 const FacultyDashboard = () => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -71,8 +74,8 @@ const FacultyDashboard = () => {
   });
 
   return (
-    <main className="w-full flex ml-[320px] h-screen bg-gray-50">
-      <div className="py-6 px-8 w-full">
+    <main className="w-full flex ml-[320px] h-full bg-gray-50">
+      <div className="pt-6 pb-14 px-8 w-full">
         <div className="welcome__container">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -109,53 +112,68 @@ const FacultyDashboard = () => {
                 link="/change-password"
               />
             </div>
-
-            <div className="mt-8">
-              <div className="flex items-center gap-3 mb-4">
-                <CiCalendar size={25} />
-                <h2 className="text-2xl ">Schedule</h2>
-              </div>
-
-              <div className="grid grid-cols-6 gap-6">
-                {[
-                  "Monday",
-                  "Tuesday",
-                  "Wednesday",
-                  "Thursday",
-                  "Friday",
-                  "Saturday",
-                ].map((day) => (
-                  <div key={day}>
-                    <h3 className="text-lg   mb-4 shadow-blue-200 shadow-sm border hover:shadow-lg  hover:shadow-blue-200 transition-all duration-300 ease-in-out rounded-md p-2 text-center">
-                      {day}
-                    </h3>
-                    <ul className="flex flex-col gap-4">
-                      {dayTimeSlotSchedules[day]?.map(
-                        ({ section, timeSlot, subjectCode }, index) => (
-                          <li
-                            className="shadow-blue-200 shadow-sm border hover:shadow-lg  hover:shadow-blue-200 transition-all   duration-300 ease-in-out rounded-md p-2  flex flex-col gap-1"
-                            key={index}
-                          >
-                            <p className="text-base">
-                              <span className="font-medium">Section:</span>{" "}
-                              {section}
-                            </p>
-                            <p className="text-md">
-                              <span className="font-medium">Subject Code:</span>{" "}
-                              {subjectCode}
-                            </p>
-                            <p className="text-md">{timeSlot}</p>
-                          </li>
-                        )
-                      )}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
+
           <div className="calendar shadow-blue-200 shadow-sm border hover:shadow-lg hover:shadow-blue-200 transition-all duration-300 ease-in-out rounded-md">
             <Calendar mode="single" selected={date} onSelect={setDate} />
+          </div>
+        </div>
+
+        <div className="mt-8 poppins-regular">
+          <div className="flex items-center gap-3 mb-4">
+            <CiCalendar size={25} />
+            <h2 className="text-2xl ">Schedule</h2>
+          </div>
+
+          <div className="grid grid-cols-6 gap-6">
+            {[
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday",
+            ].map((day) => (
+              <div key={day}>
+                <h3 className="text-lg   mb-4 shadow-blue-200 shadow-sm border hover:shadow-lg  hover:shadow-blue-200 transition-all duration-300 ease-in-out rounded-md p-2 text-center">
+                  {day}
+                </h3>
+                <ul className="flex flex-col gap-4">
+                  {dayTimeSlotSchedules[day]?.map(
+                    ({ section, timeSlot, subjectCode }, index) => (
+                      <li
+                        className="shadow-blue-200 shadow-sm border hover:shadow-lg  hover:shadow-blue-200 transition-all   duration-300 ease-in-out rounded-md   flex flex-col justify-around gap-4 p-4"
+                        key={index}
+                      >
+                        <div className="text-base ">
+                          <div className="flex items-center gap-2">
+                            <BsBuildingFillCheck />
+                            <h1 className="font-medium">Section</h1>
+                          </div>
+                          <h1>{section}</h1>
+                        </div>
+
+                        <div className="text-base ">
+                          <div className="flex items-center gap-2">
+                            <LuBookCopy />
+                            <h1 className="font-medium">Subject</h1>
+                          </div>
+                          <h1> {subjectCode}</h1>
+                        </div>
+
+                        <div className="text-base ">
+                          <div className="flex items-center gap-2">
+                            <IoTimeOutline />
+                            <h1 className="font-medium">Time</h1>
+                          </div>
+                          <h1> {timeSlot}</h1>
+                        </div>
+                      </li>
+                    )
+                  )}
+                </ul>
+              </div>
+            ))}
           </div>
         </div>
       </div>

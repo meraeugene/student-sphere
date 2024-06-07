@@ -8,8 +8,11 @@ import { capitalizeFirstLetter } from "../../utils/capitalizeFirstLetter";
 import useStudentsData from "../../hooks/useStudentsData";
 import useStudentModalStates from "../../hooks/useStudentModalStates";
 import { fetchStudents } from "@/features/students/studentsSlice";
+import { useDispatch } from "react-redux";
 
 const Students = () => {
+  const dispatch = useDispatch();
+
   const {
     students,
     filters,
