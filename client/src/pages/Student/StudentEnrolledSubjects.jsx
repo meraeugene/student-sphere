@@ -14,6 +14,8 @@ const StudentEnrolledSubjects = () => {
     dispatch(fetchStudentSubjectsEnrolled({ studentId: userInfo.student_id }));
   }, [dispatch, userInfo.faculty_id]);
 
+  console.log(studentSubjectsEnrolled);
+
   return (
     <div className="w-full ml-[320px] overflow-auto">
       <div className="px-8 py-10">

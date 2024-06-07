@@ -1,78 +1,33 @@
-import React, { useState, useEffect } from "react";
 import { FaTrash, FaRegEdit } from "react-icons/fa";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  deleteProgram,
-  fetchPrograms,
-} from "../../features/programs/programsSlice";
 import ProgramRegistrationForm from "../../components/Admin/Programs/ProgramRegistrationForm";
 import EditProgramForm from "../../components/Admin/Programs/EditProgramForm";
 import DeleteModal from "../../components/DeleteModal";
+import useProgramsData from "../../hooks/useProgramsData";
+import useProgramsModalStates from "../../hooks/useProgramsModalStates";
 
 const Programs = () => {
-  const dispatch = useDispatch();
-  const programs = useSelector((state) => state.programs.programs);
-  const { departmentNames } = useSelector((state) => state.departments);
+  const {
+    searchedPrograms,
+    departmentNames,
+    programSearchQuery,
+    setProgramSearchQuery,
+    handleDepartmentChange,
+  } = useProgramsData();
 
-  const [addProgram, setAddProgram] = useState(false);
-  const [editProgram, setEditProgram] = useState(false);
-  const [programToEdit, setProgramToEdit] = useState({});
-  const [selectedDepartment, setSelectedDepartment] = useState("");
-  const [programSearchQuery, setProgramSearchQuery] = useState("");
-
-  // State for delete confirmation modal
-  const [programToDelete, setProgramToDelete] = useState(null);
-  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-
-  const deleteProgramHandler = async (programName) => {
-    try {
-      await dispatch(deleteProgram(programName)).unwrap();
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  const showDeleteConfirmationModal = (programName) => {
-    setProgramToDelete(programName);
-    setShowDeleteConfirmation(true);
-  };
-
-  const hideDeleteConfirmationModal = () => {
-    setShowDeleteConfirmation(false);
-  };
-
-  useEffect(() => {
-    dispatch(fetchPrograms());
-  }, [dispatch]);
-
-  const toggleAddProgramState = () => {
-    setAddProgram(!addProgram);
-  };
-
-  const toggleEditProgramState = (program) => {
-    setProgramToEdit(program);
-    setEditProgram(!editProgram);
-  };
-
-  const handleProgramAdded = () => {
-    dispatch(fetchPrograms());
-  };
-
-  const handleDepartmentChange = (e) => {
-    setSelectedDepartment(e.target.value);
-  };
-
-  const filteredPrograms = selectedDepartment
-    ? programs.filter(
-        (program) => program.department_name === selectedDepartment
-      )
-    : programs;
-
-  const searchedPrograms = filteredPrograms.filter((program) =>
-    program.program_name
-      .toLowerCase()
-      .includes(programSearchQuery.toLowerCase())
-  );
+  const {
+    addProgram,
+    editProgram,
+    programToEdit,
+    selectedDepartment,
+    programToDelete,
+    showDeleteConfirmation,
+    toggleAddProgramState,
+    toggleEditProgramState,
+    handleProgramAdded,
+    deleteProgramHandler,
+    showDeleteConfirmationModal,
+    hideDeleteConfirmationModal,
+  } = useProgramsModalStates();
 
   return (
     <div className="w-full ml-[320px]">
@@ -94,7 +49,6 @@ const Programs = () => {
             <img src="/images/add.svg" alt="add user" />
           </button>
         </div>
-
         <div className="flex justify-between items-center mt-10">
           <div>
             <div className="search__container relative ">
@@ -124,7 +78,6 @@ const Programs = () => {
             ))}
           </select>
         </div>
-
         {searchedPrograms.length > 0 ? (
           <div className="faculty-members-table__container my-10">
             <div className="mb-8 overflow-auto">
@@ -181,7 +134,6 @@ const Programs = () => {
             No programs found. Please try again.
           </div>
         )}
-
         {showDeleteConfirmation && programToDelete && (
           <DeleteModal
             onCancel={hideDeleteConfirmationModal}
@@ -191,14 +143,12 @@ const Programs = () => {
             }}
           />
         )}
-
         {addProgram && (
           <ProgramRegistrationForm
             toggleAddProgramState={toggleAddProgramState}
             onProgramAdded={handleProgramAdded}
           />
         )}
-
         {editProgram && (
           <EditProgramForm
             program={programToEdit}

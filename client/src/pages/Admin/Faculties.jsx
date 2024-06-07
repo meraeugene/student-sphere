@@ -1,146 +1,46 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { GiTeacher } from "react-icons/gi";
 import { FaTrash, FaRegEdit } from "react-icons/fa";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  deleteFaculty,
-  fetchFaculties,
-  removeSubjects,
-} from "../../features/faculties/facultiesSlice";
-import FacultyRegistrationForm from "../../components/Faculty/FacultyRegistrationForm";
-import EditFacultyForm from "../../components/Faculty/EditFacultyForm";
 import { capitalizeFirstLetter } from "../../utils/capitalizeFirstLetter";
+import EditFacultyForm from "../../components/Faculty/EditFacultyForm";
+import FacultyRegistrationForm from "../../components/Faculty/FacultyRegistrationForm";
+import useFacultyModalStates from "../../hooks/useFacultyModalStates";
+import useFacultyData from "../../hooks/useFacultyData";
 import DeleteModal from "../../components/DeleteModal";
 import FacultyDetailsModal from "@/components/FacultyDetailsModal";
 
 const Faculties = () => {
-  const dispatch = useDispatch();
-  const { faculties: facultyMembers } = useSelector((state) => state.faculties);
-  const { departmentNames } = useSelector((state) => state.departments);
-  const { programs } = useSelector((state) => state.programs);
+  const {
+    departmentNames,
+    filteredFacultyMembers: searchedFacultyMembers,
+    filters,
+    filteredPrograms,
+    facultySearchQuery,
+    setFacultySearchQuery,
+    handleFilterChange,
+    handleFacultyAdded,
+  } = useFacultyData();
 
-  const [addFacultyMember, setAddFacultyMember] = useState(false);
-  const [editFacultyMember, setEditFacultyMember] = useState(false);
-  const [facultyMemberToEdit, setFacultyMemberToEdit] = useState({});
-  const [filters, setFilters] = useState({
-    department: "",
-    program: "",
-  });
-  const [filteredPrograms, setFilteredPrograms] = useState([]);
-  const [facultySearchQuery, setFacultySearchQuery] = useState("");
-
-  // State for delete confirmation modal
-  const [facultyIdToDelete, setFacultyIdToDelete] = useState(null);
-  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-  const [sectionIdToDelete, setSectionIdToDelete] = useState(null);
-  const [showSectionDeleteConfirmation, setShowSectionDeleteConfirmation] =
-    useState(false);
-
-  // State for profile details modal
-  const [showProfileDetailsModal, setShowProfileDetailsModal] = useState(false);
-  const [facultyMemberDetails, setFacultyMemberDetails] = useState(null);
-
-  const deleteFacultyMemberHandler = async (facultyId) => {
-    try {
-      await dispatch(deleteFaculty(facultyId)).unwrap();
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  // Function to show delete confirmation modal
-  const showDeleteConfirmationModal = (id, isFaculty) => {
-    if (isFaculty) {
-      setFacultyIdToDelete(id);
-      setShowDeleteConfirmation(true);
-    } else {
-      setSectionIdToDelete(id);
-      setShowSectionDeleteConfirmation(true);
-    }
-  };
-
-  const hideDeleteConfirmationModal = () => {
-    setShowDeleteConfirmation(false);
-  };
-
-  const removeSectionHandler = async (facultyId) => {
-    try {
-      await dispatch(removeSubjects(facultyId)).unwrap();
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  const handleFacultyAdded = () => {
-    dispatch(fetchFaculties());
-  };
-
-  const toggleAddFacultyMemberState = () => {
-    setAddFacultyMember(!addFacultyMember);
-  };
-
-  const toggleEditFacultyMemberState = (facultyMemberData) => {
-    setFacultyMemberToEdit(facultyMemberData);
-    setEditFacultyMember(!editFacultyMember);
-  };
-
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      [name]: value,
-    }));
-
-    if (name === "department") {
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        program: "", // Clear the program filter when department changes
-      }));
-
-      const selectedDepartment = departmentNames.find(
-        (department) => department.department_name === value
-      );
-
-      if (selectedDepartment) {
-        const filtered = programs.filter(
-          (program) =>
-            program.department_id === selectedDepartment.department_id
-        );
-        setFilteredPrograms(filtered);
-      } else {
-        setFilteredPrograms([]);
-      }
-    }
-  };
-
-  useEffect(() => {
-    dispatch(fetchFaculties());
-  }, []);
-
-  const filteredFacultyMembers = facultyMembers.filter((facultyMember) => {
-    return (
-      (filters.department
-        ? facultyMember.department_name === filters.department
-        : true) &&
-      (filters.program ? facultyMember.program_name === filters.program : true)
-    );
-  });
-
-  const searchedFacultyMembers = filteredFacultyMembers.filter(
-    (facultyMember) =>
-      `${facultyMember.first_name} ${facultyMember.last_name}`
-        .toLowerCase()
-        .includes(facultySearchQuery.toLowerCase())
-  );
-
-  const showProfileDetailsModalHandler = (facultyMemberData) => {
-    setFacultyMemberDetails(facultyMemberData);
-    setShowProfileDetailsModal(true);
-  };
-
-  const closeProfileDetailsModal = () => {
-    setShowProfileDetailsModal(false);
-  };
+  const {
+    addFacultyMember,
+    editFacultyMember,
+    facultyMemberToEdit,
+    facultyIdToDelete,
+    showDeleteConfirmation,
+    showProfileDetailsModal,
+    facultyMemberDetails,
+    toggleAddFacultyMemberState,
+    toggleEditFacultyMemberState,
+    showDeleteConfirmationModal,
+    hideDeleteConfirmationModal,
+    showProfileDetailsModalHandler,
+    closeProfileDetailsModal,
+    deleteFacultyMemberHandler,
+    removeSectionHandler,
+    showSectionDeleteConfirmation,
+    sectionIdToDelete,
+    setShowSectionDeleteConfirmation,
+  } = useFacultyModalStates();
 
   return (
     <div className="w-full ml-[320px] overflow-hidden">
@@ -367,49 +267,49 @@ const Faculties = () => {
             No faculty member found. Please try again.
           </div>
         )}
-
-        {showProfileDetailsModal && facultyMemberDetails && (
-          <FacultyDetailsModal
-            data={facultyMemberDetails}
-            close={closeProfileDetailsModal}
-          />
-        )}
-
-        {showDeleteConfirmation && facultyIdToDelete && (
-          <DeleteModal
-            onCancel={hideDeleteConfirmationModal}
-            onDelete={() => {
-              deleteFacultyMemberHandler(facultyIdToDelete);
-              hideDeleteConfirmationModal();
-            }}
-          />
-        )}
-
-        {showSectionDeleteConfirmation && sectionIdToDelete && (
-          <DeleteModal
-            onCancel={() => setShowSectionDeleteConfirmation(false)}
-            onDelete={() => {
-              removeSectionHandler(sectionIdToDelete);
-              setShowSectionDeleteConfirmation(false);
-            }}
-          />
-        )}
-
-        {addFacultyMember && (
-          <FacultyRegistrationForm
-            toggleAddFacultyMemberState={toggleAddFacultyMemberState}
-            onFacultyAdded={handleFacultyAdded}
-          />
-        )}
-
-        {editFacultyMember && (
-          <EditFacultyForm
-            facultyMember={facultyMemberToEdit}
-            toggleEditFacultyMemberState={toggleEditFacultyMemberState}
-            onFacultyMemberAdded={handleFacultyAdded}
-          />
-        )}
       </div>
+
+      {addFacultyMember && (
+        <FacultyRegistrationForm
+          toggleAddFacultyMemberState={toggleAddFacultyMemberState}
+          onFacultyAdded={handleFacultyAdded}
+        />
+      )}
+
+      {editFacultyMember && (
+        <EditFacultyForm
+          toggleEditFacultyMemberState={toggleEditFacultyMemberState}
+          facultyMember={facultyMemberToEdit}
+          onFacultyMemberAdded={handleFacultyAdded}
+        />
+      )}
+
+      {showDeleteConfirmation && (
+        <DeleteModal
+          onCancel={hideDeleteConfirmationModal}
+          onDelete={() => {
+            deleteFacultyMemberHandler(facultyIdToDelete);
+            hideDeleteConfirmationModal();
+          }}
+        />
+      )}
+
+      {showSectionDeleteConfirmation && (
+        <DeleteModal
+          onCancel={() => setShowSectionDeleteConfirmation(false)}
+          onDelete={() => {
+            removeSectionHandler(sectionIdToDelete);
+            setShowSectionDeleteConfirmation(false);
+          }}
+        />
+      )}
+
+      {showProfileDetailsModal && (
+        <FacultyDetailsModal
+          data={facultyMemberDetails}
+          close={closeProfileDetailsModal}
+        />
+      )}
     </div>
   );
 };

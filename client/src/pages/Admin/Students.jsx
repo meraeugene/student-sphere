@@ -1,129 +1,41 @@
-import { useEffect, useState } from "react";
+import React from "react";
+import { FaRegEdit, FaTrash, FaUsers } from "react-icons/fa";
 import StudentRegistrationForm from "../../components/Student/StudentRegistrationForm";
-import { FaRegEdit } from "react-icons/fa";
-import { FaTrash } from "react-icons/fa";
-import { FaUsers } from "react-icons/fa";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  deleteStudent,
-  fetchStudents,
-} from "../../features/students/studentsSlice";
-import { capitalizeFirstLetter } from "../../utils/capitalizeFirstLetter";
 import EditStudentForm from "../../components/Student/EditStudentForm";
 import DeleteModal from "../../components/DeleteModal";
 import StudentDetailsModal from "@/components/StudentDetailsModal";
+import { capitalizeFirstLetter } from "../../utils/capitalizeFirstLetter";
+import useStudentsData from "../../hooks/useStudentsData";
+import useStudentModalStates from "../../hooks/useStudentModalStates";
+import { fetchStudents } from "@/features/students/studentsSlice";
 
 const Students = () => {
-  const [addStudent, setAddStudent] = useState(false);
-  const [editStudent, setEditStudent] = useState(false);
-  const [studentToEdit, setStudentToEdit] = useState({});
+  const {
+    students,
+    filters,
+    filteredPrograms,
+    studentSearchQuery,
+    setStudentSearchQuery,
+    handleFilterChange,
+    departmentNames,
+  } = useStudentsData();
 
-  const dispatch = useDispatch();
-  const studentsData = useSelector((state) => state.students.students);
-  const { departmentNames } = useSelector((state) => state.departments);
-  const { programs } = useSelector((state) => state.programs);
-
-  const [filters, setFilters] = useState({
-    department: "",
-    program: "",
-  });
-  const [filteredPrograms, setFilteredPrograms] = useState([]);
-  const [studentSearchQuery, setStudentSearchQuery] = useState("");
-
-  // State for delete confirmation modal
-  const [studentIdToDelete, setStudentIdToDelete] = useState(null);
-  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-
-  // State for profile details modal
-  const [showProfileDetailsModal, setShowProfileDetailsModal] = useState(false);
-  const [studentDetails, setStudentDetails] = useState(null);
-
-  const deleteStudentHandler = async (studentId) => {
-    try {
-      await dispatch(deleteStudent(studentId)).unwrap();
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  const showDeleteConfirmationModal = (id) => {
-    setStudentIdToDelete(id);
-    setShowDeleteConfirmation(true);
-  };
-
-  const hideDeleteConfirmationModal = () => {
-    setShowDeleteConfirmation(false);
-  };
-
-  const toggleAddStudentState = () => {
-    setAddStudent(!addStudent);
-  };
-
-  const handleStudentAdded = () => {
-    dispatch(fetchStudents());
-  };
-
-  const toggleEditStudentState = (studentData) => {
-    setStudentToEdit(studentData);
-    setEditStudent(!editStudent);
-  };
-
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      [name]: value,
-    }));
-
-    if (name === "department") {
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        program: "", // Clear the program filter when department changes
-      }));
-
-      const selectedDepartment = departmentNames.find(
-        (department) => department.department_name === value
-      );
-
-      if (selectedDepartment) {
-        const filtered = programs.filter(
-          (program) =>
-            program.department_id === selectedDepartment.department_id
-        );
-        setFilteredPrograms(filtered);
-      } else {
-        setFilteredPrograms([]);
-      }
-    }
-  };
-
-  useEffect(() => {
-    dispatch(fetchStudents());
-  }, [dispatch]);
-
-  const filteredStudents = studentsData.filter((student) => {
-    return (
-      (filters.department
-        ? student.department_name === filters.department
-        : true) &&
-      (filters.program ? student.program_name === filters.program : true)
-    );
-  });
-
-  const searchedStudents = filteredStudents.filter((student) =>
-    `${student.first_name} ${student.last_name}`
-      .toLowerCase()
-      .includes(studentSearchQuery.toLowerCase())
-  );
-
-  const showProfileDetailsModalHandler = (studentData) => {
-    setStudentDetails(studentData);
-    setShowProfileDetailsModal(true);
-  };
-
-  const closeProfileDetailsModal = () => {
-    setShowProfileDetailsModal(false);
-  };
+  const {
+    addStudent,
+    editStudent,
+    studentToEdit,
+    studentIdToDelete,
+    showDeleteConfirmation,
+    showProfileDetailsModal,
+    studentDetails,
+    toggleAddStudentState,
+    toggleEditStudentState,
+    showDeleteConfirmationModal,
+    hideDeleteConfirmationModal,
+    showProfileDetailsModalHandler,
+    closeProfileDetailsModal,
+    deleteStudentHandler,
+  } = useStudentModalStates();
 
   return (
     <div className="w-full ml-[320px] px-8 overflow-auto">
@@ -134,7 +46,6 @@ const Students = () => {
             STUDENTS MANAGEMENT
           </h1>
         </div>
-
         <button
           onClick={toggleAddStudentState}
           className="bg-[#164e8e] text-white h-[40px] rounded-md px-4 inter flex items-center justify-center gap-3 hover:bg-[#133e6e] transition-colors duration-300"
@@ -187,7 +98,7 @@ const Students = () => {
         </div>
       </div>
 
-      {searchedStudents.length > 0 ? (
+      {students.length > 0 ? (
         <div className="students-table__container my-10">
           <div className="mb-8 overflow-auto">
             <table className="min-w-full border">
@@ -214,7 +125,7 @@ const Students = () => {
                 </tr>
               </thead>
               <tbody>
-                {searchedStudents.map((student, index) => {
+                {students.map((student, index) => {
                   return (
                     <tr
                       key={index}
@@ -291,7 +202,7 @@ const Students = () => {
           </div>
         </div>
       ) : (
-        <div className="text-lg text-gray-500 rounded-md poppins-regular mt-8  py-2 px-4 border">
+        <div className="text-lg text-gray-500 rounded-md poppins-regular mt-8 py-2 px-4 border">
           No students found. Please try again.
         </div>
       )}
@@ -316,7 +227,7 @@ const Students = () => {
       {addStudent && (
         <StudentRegistrationForm
           toggleAddStudentState={toggleAddStudentState}
-          onStudentAdded={handleStudentAdded}
+          onStudentAdded={() => dispatch(fetchStudents())}
         />
       )}
 
@@ -324,7 +235,7 @@ const Students = () => {
         <EditStudentForm
           student={studentToEdit}
           toggleEditStudentState={toggleEditStudentState}
-          onStudentAdded={handleStudentAdded}
+          onStudentAdded={() => dispatch(fetchStudents())}
         />
       )}
     </div>

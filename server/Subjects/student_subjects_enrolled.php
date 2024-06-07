@@ -31,15 +31,21 @@ if ($studentId <= 0) {
 $sql = "
     SELECT 
         sub.subject_code, sub.subject_name, sub.unit,
+        sec.section_name, sec.year_level AS section_year_level,
         GROUP_CONCAT(CONCAT(fs.day_of_week, ' ', fs.time_slot) ORDER BY fs.day_of_week, fs.time_slot SEPARATOR ', ') AS schedule,
-        GROUP_CONCAT(ui.first_name, ' ', ui.last_name ORDER BY fs.day_of_week, fs.time_slot SEPARATOR ', ') AS teacher,
+        (SELECT GROUP_CONCAT(DISTINCT CONCAT(ui.first_name, ' ', ui.last_name) ORDER BY fs.day_of_week, fs.time_slot SEPARATOR ', ')
+         FROM user_info ui
+         JOIN faculties f ON ui.user_id = f.user_id
+         JOIN faculty_subjects fs ON f.faculty_id = fs.faculty_id
+         WHERE fs.subject_code = sub.subject_code AND fs.section_id = sec.section_id
+        ) AS teacher,
         ui.email AS faculty_email
     FROM 
         students s
     JOIN 
-        sections ss ON s.section_id = ss.section_id
+        sections sec ON s.section_id = sec.section_id
     JOIN 
-        faculty_subjects fs ON ss.section_id = fs.section_id
+        faculty_subjects fs ON sec.section_id = fs.section_id
     JOIN 
         subjects sub ON fs.subject_code = sub.subject_code
     JOIN 
@@ -49,7 +55,7 @@ $sql = "
     WHERE 
         s.student_id = ?
     GROUP BY 
-        sub.subject_code, sub.subject_name
+        sub.subject_code, sub.subject_name, sec.section_name, sec.year_level
     ORDER BY 
         sub.subject_name ASC
 ";

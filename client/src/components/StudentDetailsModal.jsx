@@ -78,34 +78,34 @@ const StudentDetailsModal = ({ close, data }) => {
             </div>
 
             <div className="right__container">
-              <div className="details__container bg-white p-6 h-full rounded-[4px] flex flex-col  justify-around gap-4 shadow-lg">
+              <div className="details__container bg-white p-6 h-full rounded-[4px] flex flex-col  justify-around gap-5 shadow-lg">
                 <div className="department">
                   <div className="flex items-center gap-2">
                     <LuBuilding2 />
                     <h1 className="font-semibold">Department</h1>
                   </div>
-                  <h1>{data.department_name}</h1>
+                  <h1>{data.department_name ? data.department_name : "N/A"}</h1>
                 </div>
                 <div className="program">
                   <div className="flex items-center gap-2">
                     <GiBlackBook />
                     <h1 className="font-semibold">Program</h1>
                   </div>
-                  <h1>{data.program_name}</h1>
+                  <h1>{data.program_name ? data.program_name : "N/A"}</h1>
                 </div>
                 <div className="yearlevel">
                   <div className="flex items-center gap-2">
                     <GiBookmark />
                     <h1 className="font-semibold">Year Level</h1>
                   </div>
-                  <h1>{data.year_level}</h1>
+                  <h1>{data.year_level ? data.year_level : "N/A"}</h1>
                 </div>
                 <div className="sections">
                   <div className="flex items-center gap-2">
                     <BsBuildingFillCheck />
                     <h1 className="font-semibold">Section</h1>
                   </div>
-                  <h1>{data.section_name}</h1>
+                  <h1>{data.section_name ? data.section_name : "N/A"}</h1>
                 </div>
                 <div className="subjects">
                   <div className="flex items-center gap-2">

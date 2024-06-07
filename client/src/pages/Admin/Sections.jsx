@@ -1,109 +1,34 @@
-import React, { useState } from "react";
 import { FaTrash, FaRegEdit } from "react-icons/fa";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  deleteSection,
-  fetchSections,
-} from "../../features/sections/sectionsSlice";
 import SectionRegistrationForm from "../../components/Admin/Sections/SectionRegistrationForm";
 import EditSectionForm from "../../components/Admin/Sections/EditSectionForm.jsx";
 import DeleteModal from "../../components/DeleteModal";
+import useSectionModalStates from "@/hooks/useSectionModalStates";
+import useSectionData from "@/hooks/useSectionData";
 
 const Sections = () => {
-  const dispatch = useDispatch();
-  const sections = useSelector((state) => state.sections.sections);
-  const { departmentNames } = useSelector((state) => state.departments);
-  const { programs } = useSelector((state) => state.programs);
+  const {
+    addSection,
+    editSection,
+    sectionToEdit,
+    sectionToDelete,
+    showDeleteConfirmation,
+    toggleAddSectionState,
+    toggleEditSectionState,
+    handleSectionAdded,
+    deleteSectionHandler,
+    showDeleteConfirmationModal,
+    hideDeleteConfirmationModal,
+  } = useSectionModalStates();
 
-  const [addSection, setAddSection] = useState(false);
-  const [editSection, setEditSection] = useState(false);
-  const [sectionToEdit, setSectionToEdit] = useState({});
-  const [filters, setFilters] = useState({
-    yearLevel: "",
-    department: "",
-    program: "",
-  });
-  const [filteredPrograms, setFilteredPrograms] = useState([]);
-  const [sectionSearchQuery, setSectionSearchQuery] = useState("");
-
-  // State for delete confirmation modal
-  const [sectionToDelete, setSectionToDelete] = useState(null);
-  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-
-  const deleteSectionHandler = async (sectionId) => {
-    try {
-      await dispatch(deleteSection(sectionId)).unwrap();
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  const showDeleteConfirmationModal = (sectionId) => {
-    setSectionToDelete(sectionId);
-    setShowDeleteConfirmation(true);
-  };
-
-  const hideDeleteConfirmationModal = () => {
-    setShowDeleteConfirmation(false);
-  };
-
-  const toggleAddSectionState = () => {
-    setAddSection(!addSection);
-  };
-
-  const toggleEditSectionState = (section) => {
-    setSectionToEdit(section);
-    setEditSection(!editSection);
-  };
-
-  const handleSectionAdded = () => {
-    dispatch(fetchSections());
-  };
-
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      [name]: value,
-    }));
-
-    if (name === "department") {
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        program: "", // Clear the program filter when department changes
-      }));
-
-      const selectedDepartment = departmentNames.find(
-        (department) => department.department_name === value
-      );
-
-      if (selectedDepartment) {
-        const filtered = programs.filter(
-          (program) =>
-            program.department_id === selectedDepartment.department_id
-        );
-        setFilteredPrograms(filtered);
-      } else {
-        setFilteredPrograms([]);
-      }
-    }
-  };
-
-  const filteredSections = sections.filter((section) => {
-    return (
-      (filters.yearLevel ? section.year_level === filters.yearLevel : true) &&
-      (filters.department
-        ? section.department_name === filters.department
-        : true) &&
-      (filters.program ? section.program_name === filters.program : true)
-    );
-  });
-
-  const searchedSections = filteredSections.filter((section) =>
-    section.section_name
-      .toLowerCase()
-      .includes(sectionSearchQuery.toLowerCase())
-  );
+  const {
+    departmentNames,
+    searchedSections,
+    setSectionSearchQuery,
+    sectionSearchQuery,
+    handleFilterChange,
+    filters,
+    filteredPrograms,
+  } = useSectionData();
 
   return (
     <div className="w-full  ml-[320px]  ">

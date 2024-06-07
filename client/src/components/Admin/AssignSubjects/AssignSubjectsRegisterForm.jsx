@@ -86,9 +86,8 @@ const AssignSubjectsRegisterForm = ({
 
     try {
       await dispatch(assignSubjectsToFaculty(formData)).unwrap();
-      reset();
-      assignedFacultySubjectsAdded();
-      navigate("/admin/faculties");
+      // reset();
+      // assignedFacultySubjectsAdded();
     } catch (error) {
       console.log(error);
     }

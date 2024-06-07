@@ -1,81 +1,38 @@
-import React, { useEffect, useState } from "react";
 import SubjectRegistrationForm from "../../components/Admin/Subjects/SubjectRegistrationForm";
 import EditSubjectForm from "../../components/Admin/Subjects/EditSubjectForm";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  deleteSubject,
-  fetchSubjects,
-} from "../../features/subjects/subjectsSlice";
 import { FaRegEdit } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
 import DeleteModal from "../../components/DeleteModal";
+import useSubjectData from "@/hooks/useSubjectData";
+import useSubjectModalStates from "@/hooks/useSubjectModalStates";
 
 const Subjects = () => {
-  const dispatch = useDispatch();
-  const subjects = useSelector((state) => state.subjects.subjects);
+  const {
+    searchedSubjects,
+    setProgramFilter,
+    setSemesterFilter,
+    setYearLevelFilter,
+    setSubjectSearchQuery,
+    subjectSearchQuery,
+    yearLevelFilter,
+    semesterFilter,
+    programFilter,
+    subjects,
+  } = useSubjectData();
 
-  const [addSubject, setAddSubject] = useState(false);
-  const [editSubject, setEditSubject] = useState(false);
-  const [subjectToEdit, setSubjectToEdit] = useState({});
-  const [yearLevelFilter, setYearLevelFilter] = useState("");
-  const [semesterFilter, setSemesterFilter] = useState("");
-  const [programFilter, setProgramFilter] = useState("");
-  const [subjectSearchQuery, setSubjectSearchQuery] = useState("");
-
-  // State for delete confirmation modal
-  const [subjectToDelete, setSubjectToDelete] = useState(null);
-  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-
-  const deleteSubjectHandler = async (subjectCode) => {
-    try {
-      await dispatch(deleteSubject(subjectCode)).unwrap();
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  const showDeleteConfirmationModal = (subjectCode) => {
-    setSubjectToDelete(subjectCode);
-    setShowDeleteConfirmation(true);
-  };
-
-  const hideDeleteConfirmationModal = () => {
-    setShowDeleteConfirmation(false);
-  };
-
-  useEffect(() => {
-    dispatch(fetchSubjects());
-  }, [dispatch]);
-
-  const toggleAddSubjectState = () => {
-    setAddSubject(!addSubject);
-  };
-
-  const toggleEditSubjectState = (subject) => {
-    setSubjectToEdit(subject);
-    setEditSubject(!editSubject);
-  };
-
-  const handleSubjectAdded = () => {
-    dispatch(fetchSubjects());
-  };
-
-  const filteredSubjects = subjects.filter((subject) => {
-    return (
-      (yearLevelFilter === "" ||
-        (subject.year_level &&
-          subject.year_level.toString() === yearLevelFilter)) &&
-      (semesterFilter === "" ||
-        (subject.semester && subject.semester.toString() === semesterFilter)) &&
-      (programFilter === "" || subject.program_name === programFilter)
-    );
-  });
-
-  const searchedSubjects = filteredSubjects.filter((subject) =>
-    subject.subject_name
-      .toLowerCase()
-      .includes(subjectSearchQuery.toLowerCase())
-  );
+  const {
+    addSubject,
+    editSubject,
+    subjectToEdit,
+    subjectToDelete,
+    showDeleteConfirmation,
+    toggleAddSubjectState,
+    toggleEditSubjectState,
+    handleSubjectAdded,
+    deleteSubjectHandler,
+    showDeleteConfirmationModal,
+    hideDeleteConfirmationModal,
+  } = useSubjectModalStates();
 
   return (
     <div className="w-full  ml-[320px] overflow-hidden">

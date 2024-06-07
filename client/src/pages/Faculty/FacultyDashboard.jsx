@@ -65,6 +65,7 @@ const FacultyDashboard = () => {
     }
     dayTimeSlotSchedules[key].push({
       section: item.section_name,
+      subjectCode: item.subject_code,
       timeSlot: item.time_slot,
     });
   });
@@ -128,14 +129,21 @@ const FacultyDashboard = () => {
                     <h3 className="text-lg   mb-4 shadow-blue-200 shadow-sm border hover:shadow-lg  hover:shadow-blue-200 transition-all duration-300 ease-in-out rounded-md p-2 text-center">
                       {day}
                     </h3>
-                    <ul>
+                    <ul className="flex flex-col gap-4">
                       {dayTimeSlotSchedules[day]?.map(
-                        ({ section, timeSlot }, index) => (
+                        ({ section, timeSlot, subjectCode }, index) => (
                           <li
-                            className="shadow-blue-200 shadow-sm border hover:shadow-lg  hover:shadow-blue-200 transition-all   duration-300 ease-in-out rounded-md p-2  text-center flex flex-col gap-1"
+                            className="shadow-blue-200 shadow-sm border hover:shadow-lg  hover:shadow-blue-200 transition-all   duration-300 ease-in-out rounded-md p-2  flex flex-col gap-1"
                             key={index}
                           >
-                            <p className="text-base">{section}</p>
+                            <p className="text-base">
+                              <span className="font-medium">Section:</span>{" "}
+                              {section}
+                            </p>
+                            <p className="text-md">
+                              <span className="font-medium">Subject Code:</span>{" "}
+                              {subjectCode}
+                            </p>
                             <p className="text-md">{timeSlot}</p>
                           </li>
                         )

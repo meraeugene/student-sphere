@@ -1,74 +1,26 @@
-import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import useAssignSubjectsData from "@/hooks/useAssignSubjectsData";
 import AssignSubjectsRegisterForm from "../../components/Admin/AssignSubjects/AssignSubjectsRegisterForm";
-import { toast } from "react-toastify";
-import { fetchFaculties } from "../../features/faculties/facultiesSlice";
+import useAssignSubjectsModalStates from "@/hooks/useAssignSubjectsModalStates";
 
 const AssignSubjects = () => {
-  const facultyMembers = useSelector((state) => state.faculties.faculties);
-  const subjects = useSelector((state) => state.subjects.subjects);
-  const [selectedFaculty, setSelectedFaculty] = useState(null);
-  const [selectedSubject, setSelectedSubject] = useState(null);
-  const [assignSubject, setAssignSubject] = useState(false);
-  const [facultySearchQuery, setFacultySearchQuery] = useState("");
-  const [subjectSearchQuery, setSubjectSearchQuery] = useState("");
+  const {
+    filteredFacultyMembers,
+    setFacultySearchQuery,
+    facultySearchQuery,
+    searchedSubjects,
+    setSubjectSearchQuery,
+  } = useAssignSubjectsData();
 
-  const handleFacultyCheckboxChange = (facultyId) => {
-    setSelectedFaculty((prevSelected) =>
-      prevSelected === facultyId ? null : facultyId
-    );
-  };
-
-  const handleSubjectCheckboxChange = (subjectCode) => {
-    setSelectedSubject((prevSelected) =>
-      prevSelected === subjectCode ? null : subjectCode
-    );
-  };
-
-  const getFilteredSubjects = () => {
-    if (!selectedFaculty) return subjects;
-    const selectedFacultyMember = facultyMembers.find(
-      (faculty) => faculty.faculty_id === selectedFaculty
-    );
-    const selectedPrograms = selectedFacultyMember
-      ? [selectedFacultyMember.program_name]
-      : [];
-    return subjects.filter((subject) =>
-      selectedPrograms.includes(subject.program_name)
-    );
-  };
-
-  const filteredSubjects = getFilteredSubjects();
-
-  // Filter faculty members based on the search query
-  const filteredFacultyMembers = facultyMembers.filter((facultyMember) =>
-    `${facultyMember.first_name} ${facultyMember.last_name}`
-      .toLowerCase()
-      .includes(facultySearchQuery.toLowerCase())
-  );
-
-  // Filter subjects based on the search query
-  const searchedSubjects = filteredSubjects.filter((subject) =>
-    subject.subject_name
-      .toLowerCase()
-      .includes(subjectSearchQuery.toLowerCase())
-  );
-
-  // Function to handle assigning subject
-  const handleAssignSubject = () => {
-    if (!selectedFaculty || !selectedSubject) {
-      toast.error("Please select both a faculty and a subject first.");
-      return;
-    }
-    setAssignSubject(!assignSubject);
-  };
-
-  const dispatch = useDispatch();
-
-  const handleFacultySubjectsAdded = () => {
-    dispatch(fetchFaculties());
-  };
-
+  const {
+    selectedFaculty,
+    selectedSubject,
+    assignSubject,
+    subjectSearchQuery,
+    handleFacultyCheckboxChange,
+    handleSubjectCheckboxChange,
+    handleAssignSubject,
+    handleFacultySubjectsAdded,
+  } = useAssignSubjectsModalStates();
   return (
     <div className="w-full ml-[320px] ">
       <div className="px-8 py-10">

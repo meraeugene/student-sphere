@@ -1,55 +1,27 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { capitalizeFirstLetter } from "../../utils/capitalizeFirstLetter";
 import { FaRegEdit } from "react-icons/fa";
 import GradeForm from "../../components/Faculty/GradeForm";
-import { fetchGrades } from "../../features/grades/gradesSlice";
 import EditGradeForm from "../../components/Faculty/EditGradeForm";
 import { MdErrorOutline } from "react-icons/md";
 import StudentGradesModal from "@/components/StudentGradesModal";
+import useGradesData from "@/hooks/useGradesData";
+import useGradesModalStates from "@/hooks/useGradesModalStates";
 
 const Grades = () => {
-  const [addStudentGrade, setAddStudentGrade] = useState(false);
-  const [studentToAddGrade, setStudentToAddGrade] = useState({});
-  const [editStudentGrade, setEditStudentGrade] = useState(false);
-  const [studentToEditGrade, setStudentToEditGrade] = useState({});
+  const { students, handleStudentGradesAdded } = useGradesData();
 
-  // State for profile details modal
-  const [showProfileDetailsModal, setShowProfileDetailsModal] = useState(false);
-  const [studentDetails, setStudentDetails] = useState(null);
-
-  const { userInfo } = useSelector((state) => state.auth);
-
-  const dispatch = useDispatch();
-
-  const { grades: students } = useSelector((state) => state.grades);
-
-  const toggleAddStudentGradeState = (studentData) => {
-    setStudentToAddGrade(studentData);
-    setAddStudentGrade(!addStudentGrade);
-  };
-
-  const handleStudentGradesAdded = () => {
-    dispatch(fetchGrades({ facultyId: userInfo.faculty_id }));
-  };
-
-  const toggleEditStudentGradeState = (studentData) => {
-    setStudentToEditGrade(studentData);
-    setEditStudentGrade(!editStudentGrade);
-  };
-
-  useEffect(() => {
-    dispatch(fetchGrades({ facultyId: userInfo.faculty_id }));
-  }, [dispatch, userInfo.faculty_id]);
-
-  const showProfileDetailsModalHandler = (studentData) => {
-    setStudentDetails(studentData);
-    setShowProfileDetailsModal(true);
-  };
-
-  const closeProfileDetailsModal = () => {
-    setShowProfileDetailsModal(false);
-  };
+  const {
+    addStudentGrade,
+    studentToAddGrade,
+    editStudentGrade,
+    studentToEditGrade,
+    showProfileDetailsModal,
+    studentDetails,
+    toggleAddStudentGradeState,
+    toggleEditStudentGradeState,
+    showProfileDetailsModalHandler,
+    closeProfileDetailsModal,
+  } = useGradesModalStates();
 
   return (
     <div className="w-full ml-[320px] overflow-auto">

@@ -51,6 +51,18 @@ if (!$conn) {
 $conn->begin_transaction();
 
 try {
+    // Check if the subject code is already assigned to another faculty for any of the specified sections
+    $checkDuplicateStmt = $conn->prepare("SELECT COUNT(*) FROM faculty_subjects WHERE subject_code = ? AND section_id IN (?) AND day_of_week = ?");
+    $checkDuplicateStmt->bind_param("sss", $subjectCode, $sectionIdsString, $dayOfWeek);
+    $checkDuplicateStmt->execute();
+    $checkDuplicateStmt->bind_result($duplicateCount);
+    $checkDuplicateStmt->fetch();
+    $checkDuplicateStmt->close();
+
+    if ($duplicateCount > 0) {
+        throw new Exception("The subject ($subjectCode) is already assigned to one of the specified sections on the same day ($dayOfWeek).");
+    }
+
     // Check if the subject code is already assigned to another faculty
     $checkStmt = $conn->prepare("SELECT COUNT(*) FROM faculty_subjects WHERE subject_code = ? AND faculty_id != ?");
     $checkStmt->bind_param("si", $subjectCode, $facultyId);
@@ -58,6 +70,18 @@ try {
     $checkStmt->bind_result($count);
     $checkStmt->fetch();
     $checkStmt->close();
+
+    // Check if the time slot is already assigned to another faculty member for the same section on the specified day
+    $checkTimeSlotStmt = $conn->prepare("SELECT COUNT(*) FROM faculty_subjects WHERE faculty_id != ? AND day_of_week = ? AND time_slot = ? AND section_id IN (?)");
+    $checkTimeSlotStmt->bind_param("isss", $facultyId, $dayOfWeek, $timeSlot, $sectionIdsString);
+    $checkTimeSlotStmt->execute();
+    $checkTimeSlotStmt->bind_result($existingCount);
+    $checkTimeSlotStmt->fetch();
+    $checkTimeSlotStmt->close();
+
+    if ($existingCount > 0) {
+        throw new Exception("The time slot ($timeSlot) on the specified day ($dayOfWeek) is already assigned to another faculty member for the same section. Please choose a different time slot for this day.");
+    }
 
     foreach ($sectionIds as $sectionId) {
         $stmt = $conn->prepare("INSERT INTO faculty_subjects (faculty_id, section_id, subject_code, school_year, day_of_week, time_slot) VALUES (?, ?, ?, ?, ?, ?)");
