@@ -17,10 +17,12 @@ const StudentGrades = () => {
   return (
     <div className="w-full ml-[320px] overflow-auto">
       <div className="px-8 py-10">
-        <h1 className="text-2xl poppins-medium uppercase mb-6">
-          Report of Grades
-        </h1>
-
+        <div className="flex items-center gap-2 mb-10">
+          <img src="/images/grades-black.svg" alt="grades" />
+          <h1 className="text-2xl poppins-medium uppercase ">
+            Report of Grades
+          </h1>
+        </div>
         {studentGrades.length > 0 ? (
           <div className="faculty-members-table__container my-10">
             <div className="mb-8 overflow-auto">

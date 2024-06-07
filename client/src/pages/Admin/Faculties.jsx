@@ -1,22 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { GiTeacher } from "react-icons/gi";
-import { MdErrorOutline } from "react-icons/md";
 import { FaTrash, FaRegEdit } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteFaculty,
   fetchFaculties,
-  removeSection,
+  removeSubjects,
 } from "../../features/faculties/facultiesSlice";
 import FacultyRegistrationForm from "../../components/Faculty/FacultyRegistrationForm";
 import EditFacultyForm from "../../components/Faculty/EditFacultyForm";
 import { capitalizeFirstLetter } from "../../utils/capitalizeFirstLetter";
+import DeleteModal from "../../components/DeleteModal";
+import FacultyDetailsModal from "@/components/FacultyDetailsModal";
 
 const Faculties = () => {
   const dispatch = useDispatch();
-  const { faculties: facultyMembers, status } = useSelector(
-    (state) => state.faculties
-  );
+  const { faculties: facultyMembers } = useSelector((state) => state.faculties);
   const { departmentNames } = useSelector((state) => state.departments);
   const { programs } = useSelector((state) => state.programs);
 
@@ -28,28 +27,47 @@ const Faculties = () => {
     program: "",
   });
   const [filteredPrograms, setFilteredPrograms] = useState([]);
+  const [facultySearchQuery, setFacultySearchQuery] = useState("");
+
+  // State for delete confirmation modal
+  const [facultyIdToDelete, setFacultyIdToDelete] = useState(null);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [sectionIdToDelete, setSectionIdToDelete] = useState(null);
+  const [showSectionDeleteConfirmation, setShowSectionDeleteConfirmation] =
+    useState(false);
+
+  // State for profile details modal
+  const [showProfileDetailsModal, setShowProfileDetailsModal] = useState(false);
+  const [facultyMemberDetails, setFacultyMemberDetails] = useState(null);
 
   const deleteFacultyMemberHandler = async (facultyId) => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
-      try {
-        await dispatch(deleteFaculty(facultyId)).unwrap();
-      } catch (error) {
-        console.error("Error:", error);
-      }
+    try {
+      await dispatch(deleteFaculty(facultyId)).unwrap();
+    } catch (error) {
+      console.error("Error:", error);
     }
   };
 
+  // Function to show delete confirmation modal
+  const showDeleteConfirmationModal = (id, isFaculty) => {
+    if (isFaculty) {
+      setFacultyIdToDelete(id);
+      setShowDeleteConfirmation(true);
+    } else {
+      setSectionIdToDelete(id);
+      setShowSectionDeleteConfirmation(true);
+    }
+  };
+
+  const hideDeleteConfirmationModal = () => {
+    setShowDeleteConfirmation(false);
+  };
+
   const removeSectionHandler = async (facultyId) => {
-    if (
-      window.confirm(
-        "Are you sure you want to remove the section of this user?"
-      )
-    ) {
-      try {
-        await dispatch(removeSection(facultyId)).unwrap();
-      } catch (error) {
-        console.error("Error:", error);
-      }
+    try {
+      await dispatch(removeSubjects(facultyId)).unwrap();
+    } catch (error) {
+      console.error("Error:", error);
     }
   };
 
@@ -108,6 +126,22 @@ const Faculties = () => {
     );
   });
 
+  const searchedFacultyMembers = filteredFacultyMembers.filter(
+    (facultyMember) =>
+      `${facultyMember.first_name} ${facultyMember.last_name}`
+        .toLowerCase()
+        .includes(facultySearchQuery.toLowerCase())
+  );
+
+  const showProfileDetailsModalHandler = (facultyMemberData) => {
+    setFacultyMemberDetails(facultyMemberData);
+    setShowProfileDetailsModal(true);
+  };
+
+  const closeProfileDetailsModal = () => {
+    setShowProfileDetailsModal(false);
+  };
+
   return (
     <div className="w-full ml-[320px] overflow-hidden">
       <div className="px-8 py-10">
@@ -129,7 +163,20 @@ const Faculties = () => {
         </div>
 
         <div className="flex justify-between mt-10">
-          <div></div>
+          <div>
+            <div className="search__container relative">
+              <input
+                type="search"
+                placeholder="Search faculty name..."
+                value={facultySearchQuery}
+                onChange={(e) => setFacultySearchQuery(e.target.value)}
+                className="border pl-9 pr-4 bg-[#F5F6F8] text-[#495D72] outline-none w-[250px] h-[40px] rounded-md font-medium"
+              />
+              <div className="absolute top-1/2 left-[10px] transform -translate-y-1/2">
+                <img src="/images/search.png" alt="search" />
+              </div>
+            </div>
+          </div>
           <div className="flex gap-4 items-center ">
             <select
               name="department"
@@ -160,14 +207,7 @@ const Faculties = () => {
           </div>
         </div>
 
-        {filteredFacultyMembers.length === 0 && (
-          <div className="w-full flex mt-10 bg-red-100 rounded-md items-center  border play-regular text-lg px-4 py-3 font-bold gap-2 text-red-800">
-            <MdErrorOutline color="red" />
-            <h1>No Faculty Members</h1>
-          </div>
-        )}
-
-        {filteredFacultyMembers.length > 0 && (
+        {searchedFacultyMembers.length > 0 ? (
           <div className="faculty-members-table__container my-10">
             <div className="mb-8 overflow-auto">
               <table className="min-w-full border shadow-sm">
@@ -194,7 +234,7 @@ const Faculties = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredFacultyMembers.map((facultyMember, index) => (
+                  {searchedFacultyMembers.map((facultyMember, index) => (
                     <tr
                       key={index + 1}
                       className="whitespace-nowrap border hover:bg-gray-50"
@@ -269,7 +309,12 @@ const Faculties = () => {
                       </td>
 
                       <td className="flex h-full items-center gap-2 px-4 py-2">
-                        <button className="btn-sm rounded border border-gray-400 h-[35px] px-2 hover:bg-gray-200 text-sm">
+                        <button
+                          onClick={() =>
+                            showProfileDetailsModalHandler(facultyMember)
+                          }
+                          className="btn-sm rounded border border-gray-400 h-[35px] px-2 hover:bg-gray-200 text-sm"
+                        >
                           Details
                         </button>
                         <button
@@ -287,7 +332,10 @@ const Faculties = () => {
                               : ""
                           }`}
                           onClick={() =>
-                            deleteFacultyMemberHandler(facultyMember.faculty_id)
+                            showDeleteConfirmationModal(
+                              facultyMember.faculty_id,
+                              true
+                            )
                           }
                           disabled={facultyMember?.sections?.length > 0}
                         >
@@ -298,7 +346,10 @@ const Faculties = () => {
                           <button
                             className="btn-sm text-sm bg-[#af2833] border-none text-white poppins-regular rounded h-[35px] px-2 outline-none hover:opacity-90"
                             onClick={() =>
-                              removeSectionHandler(facultyMember.faculty_id)
+                              showDeleteConfirmationModal(
+                                facultyMember.faculty_id,
+                                false
+                              )
                             }
                           >
                             REMOVE SUBJECTS
@@ -311,6 +362,37 @@ const Faculties = () => {
               </table>
             </div>
           </div>
+        ) : (
+          <div className="text-lg text-gray-500 rounded-md poppins-regular mt-8  py-2 px-4 border">
+            No faculty member found. Please try again.
+          </div>
+        )}
+
+        {showProfileDetailsModal && facultyMemberDetails && (
+          <FacultyDetailsModal
+            data={facultyMemberDetails}
+            close={closeProfileDetailsModal}
+          />
+        )}
+
+        {showDeleteConfirmation && facultyIdToDelete && (
+          <DeleteModal
+            onCancel={hideDeleteConfirmationModal}
+            onDelete={() => {
+              deleteFacultyMemberHandler(facultyIdToDelete);
+              hideDeleteConfirmationModal();
+            }}
+          />
+        )}
+
+        {showSectionDeleteConfirmation && sectionIdToDelete && (
+          <DeleteModal
+            onCancel={() => setShowSectionDeleteConfirmation(false)}
+            onDelete={() => {
+              removeSectionHandler(sectionIdToDelete);
+              setShowSectionDeleteConfirmation(false);
+            }}
+          />
         )}
 
         {addFacultyMember && (

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdErrorOutline } from "react-icons/md";
 import { FaUser } from "react-icons/fa6";
 import { MdLocationPin } from "react-icons/md";
@@ -7,7 +7,6 @@ import { FaUsers } from "react-icons/fa";
 import { fetchDepartments } from "../../features/departments/departmentsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import DepartmentRegistrationForm from "../../components/Admin/Departments/DepartmentRegistrationForm";
-import Loader from "../../components/Loader";
 
 const Departments = () => {
   const dispatch = useDispatch();
@@ -21,6 +20,10 @@ const Departments = () => {
   const handleDepartmentAdded = () => {
     dispatch(fetchDepartments());
   };
+
+  useEffect(() => {
+    dispatch(fetchDepartments());
+  }, [dispatch]);
 
   return (
     <div className="w-full  ml-[320px]  ">

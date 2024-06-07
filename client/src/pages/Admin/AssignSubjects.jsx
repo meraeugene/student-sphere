@@ -102,7 +102,7 @@ const AssignSubjects = () => {
               <div className="search__container relative">
                 <input
                   type="search"
-                  placeholder="Search"
+                  placeholder="Search faculty name..."
                   value={facultySearchQuery}
                   onChange={(e) => setFacultySearchQuery(e.target.value)}
                   className="border pl-9 pr-4 bg-[#F5F6F8] text-[#495D72] outline-none w-[250px] h-[34px] rounded-md font-medium"
@@ -164,7 +164,7 @@ const AssignSubjects = () => {
               <div className="search__container relative">
                 <input
                   type="search"
-                  placeholder="Search"
+                  placeholder="Search subject name..."
                   value={subjectSearchQuery}
                   onChange={(e) => setSubjectSearchQuery(e.target.value)}
                   className="border pl-9 pr-4 bg-[#F5F6F8] text-[#495D72] outline-none w-[250px] h-[34px] rounded-md font-medium"

@@ -26,7 +26,7 @@ $user_id = sanitize_input($_GET["user_id"]);
 
 // Prepare and execute statement to fetch user profile from database
 $stmt = $conn->prepare("
-    SELECT u.username, u.role, i.first_name, i.last_name, i.email, i.phone_number, i.gender, i.date_of_birth, i.address 
+    SELECT u.username, u.role, i.first_name, i.last_name, i.email, i.phone_number, i.gender, i.date_of_birth, i.address, i.profile_picture
     FROM users u 
     JOIN user_info i ON u.user_id = i.user_id 
     WHERE u.user_id = ?
@@ -37,7 +37,7 @@ if (!$stmt) {
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($username, $role, $first_name, $last_name, $email, $phone_number, $gender, $date_of_birth, $address);
+$stmt->bind_result($username, $role, $first_name, $last_name, $email, $phone_number, $gender, $date_of_birth, $address, $profile_picture);
 $stmt->fetch();
 
 if ($stmt->num_rows > 0) {
@@ -51,7 +51,8 @@ if ($stmt->num_rows > 0) {
         "phone_number" => $phone_number,
         "gender" => $gender,
         "date_of_birth" => $date_of_birth,
-        "address" => $address
+        "address" => $address,
+        "profile_picture" => $profile_picture
     ]);
 } else {
     // User not found

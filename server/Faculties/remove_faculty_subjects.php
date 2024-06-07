@@ -44,10 +44,10 @@ $stmt->bind_param("i", $facultyId);
 
 // Execute the statement
 if ($stmt->execute()) {
-    echo json_encode(["message" => "Faculty member section removed successfully"]);
+    echo json_encode(["message" => "Faculty member subjects removed successfully"]);
 } else {
     http_response_code(500); // Internal Server Error
-    echo json_encode(["error" => "Error removing faculty member section: " . $stmt->error]);
+    echo json_encode(["error" => "Error removing faculty member subjects: " . $stmt->error]);
 }
 
 // Close statement

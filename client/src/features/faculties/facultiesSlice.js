@@ -101,14 +101,14 @@ export const assignSubjectsToFaculty = createAsyncThunk(
   }
 );
 
-export const removeSection = createAsyncThunk(
-  "faculties/removeSection",
+export const removeSubjects = createAsyncThunk(
+  "faculties/removeSubjects",
   async (facultyId, { dispatch }) => {
     try {
       const formData = new FormData();
       formData.append("facultyId", facultyId);
       const response = await axios.post(
-        "http://localhost/student-sphere/server/Faculties/remove_faculty_sections.php",
+        "http://localhost/student-sphere/server/Faculties/remove_faculty_subjects.php",
         formData
       );
       dispatch(fetchFaculties());

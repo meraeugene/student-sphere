@@ -50,7 +50,6 @@ export const updateSubject = createAsyncThunk(
   "subjects/updateSubject",
   async (subjectData, { rejectWithValue }) => {
     try {
-      console.log(subjectData);
       const formData = new FormData();
 
       Object.entries(subjectData).forEach(([key, value]) => {

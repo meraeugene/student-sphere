@@ -8,7 +8,7 @@ import {
 } from "../../features/subjects/subjectsSlice";
 import { FaRegEdit } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
-import { MdErrorOutline } from "react-icons/md";
+import DeleteModal from "../../components/DeleteModal";
 
 const Subjects = () => {
   const dispatch = useDispatch();
@@ -20,20 +20,32 @@ const Subjects = () => {
   const [yearLevelFilter, setYearLevelFilter] = useState("");
   const [semesterFilter, setSemesterFilter] = useState("");
   const [programFilter, setProgramFilter] = useState("");
+  const [subjectSearchQuery, setSubjectSearchQuery] = useState("");
+
+  // State for delete confirmation modal
+  const [subjectToDelete, setSubjectToDelete] = useState(null);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+
+  const deleteSubjectHandler = async (subjectCode) => {
+    try {
+      await dispatch(deleteSubject(subjectCode)).unwrap();
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const showDeleteConfirmationModal = (subjectCode) => {
+    setSubjectToDelete(subjectCode);
+    setShowDeleteConfirmation(true);
+  };
+
+  const hideDeleteConfirmationModal = () => {
+    setShowDeleteConfirmation(false);
+  };
 
   useEffect(() => {
     dispatch(fetchSubjects());
   }, [dispatch]);
-
-  const deleteSubjectHandler = async (subjectCode) => {
-    if (window.confirm("Are you sure you want to delete this subject?")) {
-      try {
-        await dispatch(deleteSubject(subjectCode)).unwrap();
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    }
-  };
 
   const toggleAddSubjectState = () => {
     setAddSubject(!addSubject);
@@ -59,6 +71,12 @@ const Subjects = () => {
     );
   });
 
+  const searchedSubjects = filteredSubjects.filter((subject) =>
+    subject.subject_name
+      .toLowerCase()
+      .includes(subjectSearchQuery.toLowerCase())
+  );
+
   return (
     <div className="w-full  ml-[320px] overflow-hidden">
       <div className="px-8 py-10 ">
@@ -80,7 +98,20 @@ const Subjects = () => {
         </div>
 
         <div className="flex justify-between mt-10 mb-8">
-          <div></div>
+          <div>
+            <div className="search__container relative ">
+              <input
+                type="search"
+                placeholder="Search subject name..."
+                value={subjectSearchQuery}
+                onChange={(e) => setSubjectSearchQuery(e.target.value)}
+                className="border pl-9 pr-4 bg-[#F5F6F8] text-[#495D72] outline-none h-[40px] rounded-md font-medium"
+              />
+              <div className="absolute top-1/2 left-[10px] transform -translate-y-1/2">
+                <img src="/images/search.png" alt="search" />
+              </div>
+            </div>
+          </div>
           <div className="flex items-center gap-4">
             <select
               value={yearLevelFilter}
@@ -121,7 +152,7 @@ const Subjects = () => {
           </div>
         </div>
 
-        {filteredSubjects.length > 0 ? (
+        {searchedSubjects.length > 0 ? (
           <div className="faculty-members-table__container my-10">
             <div className="mb-8 overflow-auto">
               <table className="min-w-full border shadow-sm   ">
@@ -147,7 +178,7 @@ const Subjects = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredSubjects.map((subject, index) => (
+                  {searchedSubjects.map((subject, index) => (
                     <tr
                       key={index + 1}
                       className="whitespace-nowrap border  hover:bg-gray-50  "
@@ -184,7 +215,7 @@ const Subjects = () => {
                         <button
                           className="btn-sm rounded border border-gray-400 h-[35px] px-2 hover:bg-gray-200"
                           onClick={() =>
-                            deleteSubjectHandler(subject.subject_code)
+                            showDeleteConfirmationModal(subject.subject_code)
                           }
                         >
                           <FaTrash color="red" />
@@ -197,10 +228,19 @@ const Subjects = () => {
             </div>
           </div>
         ) : (
-          <div className="w-full flex  bg-red-100 rounded-md items-center  border play-regular text-lg px-4 py-3 font-bold gap-2 text-red-800 mt-10">
-            <MdErrorOutline color="red" />
-            <h1>No Subject</h1>
+          <div className="text-lg text-gray-500 rounded-md poppins-regular mt-8  py-2 px-4 border">
+            No subjects found. Please try again.
           </div>
+        )}
+
+        {showDeleteConfirmation && subjectToDelete && (
+          <DeleteModal
+            onCancel={hideDeleteConfirmationModal}
+            onDelete={() => {
+              deleteSubjectHandler(subjectToDelete);
+              hideDeleteConfirmationModal();
+            }}
+          />
         )}
 
         {addSubject && (

@@ -18,28 +18,30 @@ function sanitize_input($data) {
     return $data;
 }
 
-// Get studentId from the request
-$studentId = isset($_GET['studentId']) ? intval($_GET['studentId']) : 0;
+// Get facultyId from the request
+$facultyId = isset($_GET['facultyId']) ? intval($_GET['facultyId']) : 0;
 
-if ($studentId <= 0) {
+if ($facultyId <= 0) {
     http_response_code(400);
-    echo json_encode(["error" => "Invalid student ID"]);
+    echo json_encode(["error" => "Invalid faculty ID"]);
     exit;
 }
 
-// SQL query to fetch student subjects enrolled
+// SQL query to fetch faculty schedule
 $sql = "
-    SELECT 
-        sub.subject_code, sub.subject_name, sub.unit,
-        GROUP_CONCAT(CONCAT(fs.day_of_week, ' ', fs.time_slot) ORDER BY fs.day_of_week, fs.time_slot SEPARATOR ', ') AS schedule,
-        GROUP_CONCAT(ui.first_name, ' ', ui.last_name ORDER BY fs.day_of_week, fs.time_slot SEPARATOR ', ') AS teacher,
+    SELECT DISTINCT
+        s.section_name,
+        sub.subject_code,
+        sub.subject_name,
+        fs.school_year,
+        fs.day_of_week,
+        fs.time_slot,
+        CONCAT(ui.first_name, ' ', ui.last_name) AS teacher,
         ui.email AS faculty_email
     FROM 
-        students s
+        faculty_subjects fs
     JOIN 
-        sections ss ON s.section_id = ss.section_id
-    JOIN 
-        faculty_subjects fs ON ss.section_id = fs.section_id
+        sections s ON fs.section_id = s.section_id
     JOIN 
         subjects sub ON fs.subject_code = sub.subject_code
     JOIN 
@@ -47,11 +49,9 @@ $sql = "
     JOIN 
         user_info ui ON f.user_id = ui.user_id
     WHERE 
-        s.student_id = ?
-    GROUP BY 
-        sub.subject_code, sub.subject_name
+        fs.faculty_id = ?
     ORDER BY 
-        sub.subject_name ASC
+        fs.day_of_week, fs.time_slot;
 ";
 
 // Prepare the SQL statement
@@ -65,8 +65,8 @@ if ($stmt === false) {
     exit;
 }
 
-// Bind the student ID parameter
-$stmt->bind_param("i", $studentId);
+// Bind the faculty ID parameter
+$stmt->bind_param("i", $facultyId);
 
 // Execute the statement
 if (!$stmt->execute()) {
@@ -78,15 +78,15 @@ if (!$stmt->execute()) {
 
 // Get the result
 $result = $stmt->get_result();
-$subjects = [];
+$schedule = [];
 
-// Fetch the subjects and store them in an array
+// Fetch the schedule and store them in an array
 while ($row = $result->fetch_assoc()) {
-    $subjects[] = $row;
+    $schedule[] = $row;
 }
 
-// Return subjects as JSON
-echo json_encode($subjects);
+// Return schedule as JSON
+echo json_encode($schedule);
 
 // Close statement
 $stmt->close();

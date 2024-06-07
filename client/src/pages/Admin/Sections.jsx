@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { MdErrorOutline } from "react-icons/md";
 import { FaTrash, FaRegEdit } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -8,6 +7,7 @@ import {
 } from "../../features/sections/sectionsSlice";
 import SectionRegistrationForm from "../../components/Admin/Sections/SectionRegistrationForm";
 import EditSectionForm from "../../components/Admin/Sections/EditSectionForm.jsx";
+import DeleteModal from "../../components/DeleteModal";
 
 const Sections = () => {
   const dispatch = useDispatch();
@@ -24,15 +24,27 @@ const Sections = () => {
     program: "",
   });
   const [filteredPrograms, setFilteredPrograms] = useState([]);
+  const [sectionSearchQuery, setSectionSearchQuery] = useState("");
+
+  // State for delete confirmation modal
+  const [sectionToDelete, setSectionToDelete] = useState(null);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   const deleteSectionHandler = async (sectionId) => {
-    if (window.confirm("Are you sure you want to delete this section?")) {
-      try {
-        await dispatch(deleteSection(sectionId)).unwrap();
-      } catch (error) {
-        console.error("Error:", error);
-      }
+    try {
+      await dispatch(deleteSection(sectionId)).unwrap();
+    } catch (error) {
+      console.error("Error:", error);
     }
+  };
+
+  const showDeleteConfirmationModal = (sectionId) => {
+    setSectionToDelete(sectionId);
+    setShowDeleteConfirmation(true);
+  };
+
+  const hideDeleteConfirmationModal = () => {
+    setShowDeleteConfirmation(false);
   };
 
   const toggleAddSectionState = () => {
@@ -87,6 +99,12 @@ const Sections = () => {
     );
   });
 
+  const searchedSections = filteredSections.filter((section) =>
+    section.section_name
+      .toLowerCase()
+      .includes(sectionSearchQuery.toLowerCase())
+  );
+
   return (
     <div className="w-full  ml-[320px]  ">
       <div className="px-8 py-10 ">
@@ -108,7 +126,21 @@ const Sections = () => {
         </div>
 
         <div className="flex justify-between mt-10">
-          <div></div>
+          <div>
+            <div className="search__container relative ">
+              <input
+                type="search"
+                placeholder="Search section name..."
+                value={sectionSearchQuery}
+                onChange={(e) => setSectionSearchQuery(e.target.value)}
+                className="border pl-9 pr-4 bg-[#F5F6F8] text-[#495D72] outline-none h-[40px] rounded-md font-medium"
+              />
+              <div className="absolute top-1/2 left-[10px] transform -translate-y-1/2">
+                <img src="/images/search.png" alt="search" />
+              </div>
+            </div>
+          </div>
+
           <div className="flex gap-4 items-center ">
             <select
               name="yearLevel"
@@ -155,7 +187,7 @@ const Sections = () => {
           </div>
         </div>
 
-        {filteredSections.length > 0 ? (
+        {searchedSections.length > 0 ? (
           <div className="mt-8">
             <div className="mb-8 overflow-auto">
               <table className="min-w-full border shadow-sm   ">
@@ -176,7 +208,7 @@ const Sections = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredSections.map((section, index) => (
+                  {searchedSections.map((section, index) => (
                     <tr
                       key={index}
                       className="whitespace-nowrap border  hover:bg-gray-50  "
@@ -196,7 +228,7 @@ const Sections = () => {
                         <button
                           className="btn-sm rounded border border-gray-400 h-[35px] px-2 hover:bg-gray-200"
                           onClick={() =>
-                            deleteSectionHandler(section.section_id)
+                            showDeleteConfirmationModal(section.section_id)
                           }
                         >
                           <FaTrash color="red" />
@@ -209,11 +241,21 @@ const Sections = () => {
             </div>
           </div>
         ) : (
-          <div className="w-full flex  bg-red-100 rounded-md items-center  border play-regular text-lg px-4 py-3 font-bold gap-2 text-red-800 mt-10">
-            <MdErrorOutline color="red" />
-            <h1>No Sections</h1>
+          <div className="text-lg text-gray-500 rounded-md poppins-regular mt-8  py-2 px-4 border">
+            No sections found. Please try again.
           </div>
         )}
+
+        {showDeleteConfirmation && sectionToDelete && (
+          <DeleteModal
+            onCancel={hideDeleteConfirmationModal}
+            onDelete={() => {
+              deleteSectionHandler(sectionToDelete);
+              hideDeleteConfirmationModal();
+            }}
+          />
+        )}
+
         {addSection && (
           <SectionRegistrationForm
             toggleAddSectionState={toggleAddSectionState}

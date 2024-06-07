@@ -198,7 +198,7 @@ const EditGradeForm = ({
                   ></l-dot-pulse>
                 ) : (
                   <div className="flex items-center gap-3">
-                    <span>Update Faculty Member</span>
+                    <span>Update Student Grade</span>
                     <svg
                       width="18"
                       height="14"

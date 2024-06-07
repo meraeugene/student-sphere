@@ -3,12 +3,12 @@
 header("Access-Control-Allow-Origin: *");
 
 // Allow the Content-Type header
-header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
 // Set the response content type to JSON
 header("Content-Type: application/json");
 
-require_once "../config.php"; 
+require_once "../config.php";
 
 // Function to sanitize user input
 function sanitize_input($data) {
@@ -19,33 +19,42 @@ function sanitize_input($data) {
 }
 
 // Get the POST data
-$post_data = json_decode(file_get_contents("php://input"), true);
+$user_id = sanitize_input($_POST["user_id"]);
+$first_name = sanitize_input($_POST["firstName"]);
+$last_name = sanitize_input($_POST["lastName"]);
+$email = sanitize_input($_POST["email"]);
+$phone_number = sanitize_input($_POST["phoneNumber"]);
+$date_of_birth = sanitize_input($_POST["birthday"]);
+$address = sanitize_input($_POST["address"]);
 
-if (!isset($post_data["user_id"])) {
-    echo json_encode(["error" => "User ID is required"]);
-    exit;
+// Handle file upload
+$profile_picture = null;
+if (isset($_FILES['profilePicture']) && $_FILES['profilePicture']['error'] == UPLOAD_ERR_OK) {
+    $upload_dir = '../../client/public/uploads/profile_pictures/';
+    if (!file_exists($upload_dir)) {
+        mkdir($upload_dir, 0777, true);
+    }
+    $file_name = basename($_FILES['profilePicture']['name']);
+    $target_file = $upload_dir . $file_name;
+    if (move_uploaded_file($_FILES['profilePicture']['tmp_name'], $target_file)) {
+        $profile_picture = '/uploads/profile_pictures/' . $file_name; // Save the relative path
+    }
 }
 
-$user_id = sanitize_input($post_data["user_id"]);
-$first_name = sanitize_input($post_data["firstName"]);
-$last_name = sanitize_input($post_data["lastName"]);
-$email = sanitize_input($post_data["email"]);
-$phone_number = sanitize_input($post_data["phoneNumber"]);
-$date_of_birth = sanitize_input($post_data["birthday"]);
-$address = sanitize_input($post_data["address"]);
-
 // Prepare and execute statement to update user profile in the database
-$stmt = $conn->prepare("
+$sql = "
     UPDATE user_info 
-    SET first_name = ?, last_name = ?, email = ?, phone_number = ?, date_of_birth = ?, address = ? 
+    SET first_name = ?, last_name = ?, email = ?, phone_number = ?, date_of_birth = ?, address = ?, profile_picture = ?
     WHERE user_id = ?
-");
+";
+
+$stmt = $conn->prepare($sql);
 
 if (!$stmt) {
     die("Error: " . $conn->error); // Output the error message
 }
 
-$stmt->bind_param("ssssssi", $first_name, $last_name, $email, $phone_number, $date_of_birth, $address, $user_id);
+$stmt->bind_param("sssssssi", $first_name, $last_name, $email, $phone_number, $date_of_birth, $address, $profile_picture, $user_id);
 
 if ($stmt->execute()) {
     echo json_encode(["message" => "Profile updated successfully"]);

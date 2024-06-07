@@ -59,10 +59,6 @@ try {
     $checkStmt->fetch();
     $checkStmt->close();
 
-    if ($count > 0) {
-        throw new Exception("The subject is already assigned to another faculty.");
-    }
-
     foreach ($sectionIds as $sectionId) {
         $stmt = $conn->prepare("INSERT INTO faculty_subjects (faculty_id, section_id, subject_code, school_year, day_of_week, time_slot) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt->bind_param("iissss", $facultyId, $sectionId, $subjectCode, $schoolYear, $dayOfWeek, $timeSlot);

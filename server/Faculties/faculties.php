@@ -22,7 +22,7 @@ $sql = "
     SELECT 
         f.faculty_id,
         ui.first_name, ui.last_name, ui.email, ui.phone_number, 
-        ui.gender, ui.date_of_birth, ui.address,
+        ui.gender, ui.date_of_birth, ui.address, ui.profile_picture,
         d.department_name, d.department_id, 
         p.program_name, p.program_id,
         fs.subject_code,
@@ -85,6 +85,7 @@ while ($row = $result->fetch_assoc()) {
         $faculties[$faculty_id] = [
             'faculty_id' => $row['faculty_id'],
             'username' => $row['username'],
+            'profile_picture' => $row['profile_picture'],
             'first_name' => $row['first_name'],
             'last_name' => $row['last_name'],
             'email' => $row['email'],

@@ -53,6 +53,7 @@ const AdminDashboard = () => {
 
   const firstName = profile ? capitalizeFirstLetter(profile.first_name) : "";
   const lastName = profile ? capitalizeFirstLetter(profile.last_name) : "";
+
   const currentDate = new Date().toLocaleDateString("en-US", {
     day: "numeric",
     month: "short",
@@ -139,7 +140,7 @@ const AdminDashboard = () => {
             />
           </div>
 
-          <div className="calendar basis-[15%] shadow-md bg-white rounded-md">
+          <div className="calendar basis-[15%] shadow-blue-200 shadow-sm border hover:shadow-lg  hover:shadow-blue-200 transition-all duration-300 ease-in-out rounded-md">
             <Calendar mode="single" selected={date} onSelect={setDate} />
           </div>
         </div>

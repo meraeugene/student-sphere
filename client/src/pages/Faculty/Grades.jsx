@@ -6,12 +6,17 @@ import GradeForm from "../../components/Faculty/GradeForm";
 import { fetchGrades } from "../../features/grades/gradesSlice";
 import EditGradeForm from "../../components/Faculty/EditGradeForm";
 import { MdErrorOutline } from "react-icons/md";
+import StudentGradesModal from "@/components/StudentGradesModal";
 
 const Grades = () => {
   const [addStudentGrade, setAddStudentGrade] = useState(false);
   const [studentToAddGrade, setStudentToAddGrade] = useState({});
   const [editStudentGrade, setEditStudentGrade] = useState(false);
   const [studentToEditGrade, setStudentToEditGrade] = useState({});
+
+  // State for profile details modal
+  const [showProfileDetailsModal, setShowProfileDetailsModal] = useState(false);
+  const [studentDetails, setStudentDetails] = useState(null);
 
   const { userInfo } = useSelector((state) => state.auth);
 
@@ -37,12 +42,24 @@ const Grades = () => {
     dispatch(fetchGrades({ facultyId: userInfo.faculty_id }));
   }, [dispatch, userInfo.faculty_id]);
 
+  const showProfileDetailsModalHandler = (studentData) => {
+    setStudentDetails(studentData);
+    setShowProfileDetailsModal(true);
+  };
+
+  const closeProfileDetailsModal = () => {
+    setShowProfileDetailsModal(false);
+  };
+
   return (
     <div className="w-full ml-[320px] overflow-auto">
       <div className="px-8 py-10">
-        <h1 className="text-2xl poppins-medium uppercase mb-6">
-          Grades Management
-        </h1>
+        <div className="flex items-center gap-2 mb-10">
+          <img src="/images/grades-black.svg" alt="grades" />
+          <h1 className="text-2xl poppins-medium uppercase ">
+            Grades Management
+          </h1>
+        </div>
 
         {students.length > 0 ? (
           <div className="faculty-members-table__container my-10">
@@ -135,7 +152,12 @@ const Grades = () => {
                       </td>
 
                       <td className="flex h-full items-center gap-3 px-4 py-2">
-                        <button className="btn-sm rounded border border-gray-400 h-[35px] px-2 hover:bg-gray-200 text-sm">
+                        <button
+                          onClick={() =>
+                            showProfileDetailsModalHandler(student)
+                          }
+                          className="btn-sm rounded border border-gray-400 h-[35px] px-2 hover:bg-gray-200 text-sm"
+                        >
                           Details
                         </button>
 
@@ -174,6 +196,13 @@ const Grades = () => {
           </div>
         )}
       </div>
+
+      {showProfileDetailsModal && studentDetails && (
+        <StudentGradesModal
+          data={studentDetails}
+          close={closeProfileDetailsModal}
+        />
+      )}
 
       {addStudentGrade && (
         <GradeForm

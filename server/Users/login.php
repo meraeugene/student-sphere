@@ -26,14 +26,17 @@ $username = sanitize_input($_POST["username"]);
 $password = sanitize_input($_POST["password"]);
 
 // Prepare and execute statement to fetch user from database
-$stmt = $conn->prepare("SELECT user_id, username, password, role FROM users WHERE username = ?");
+$stmt = $conn->prepare("SELECT u.user_id, u.username, u.password, u.role, ui.first_name, ui.last_name, ui.profile_picture 
+                        FROM users u
+                        INNER JOIN user_info ui ON u.user_id = ui.user_id
+                        WHERE u.username = ?");
 if (!$stmt) {
     die("Error: " . $conn->error); // Output the error message
 }
 $stmt->bind_param("s", $username);
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($user_id, $fetched_username, $hashed_password, $role);
+$stmt->bind_result($user_id, $fetched_username, $hashed_password, $role, $first_name, $last_name, $profile_picture);
 $stmt->fetch();
 
 if ($stmt->num_rows > 0) {
@@ -73,6 +76,9 @@ if ($stmt->num_rows > 0) {
             "role" => $role,
             "faculty_id" => $faculty_id,
             "student_id" => $student_id,
+            "first_name" => $first_name,
+            "last_name" => $last_name,
+            "profile_picture" => $profile_picture,
             "redirect_uri" => "/dashboard"
         ]);
     } else {

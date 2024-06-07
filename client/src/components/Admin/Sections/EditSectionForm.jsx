@@ -40,7 +40,6 @@ const EditSectionForm = ({
   };
 
   const onSubmit = async (data) => {
-    console.log(section.section_id);
     try {
       const response = await dispatch(
         updateSection({

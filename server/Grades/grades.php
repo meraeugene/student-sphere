@@ -24,7 +24,7 @@ $sql = "
     SELECT 
         s.student_id, s.enrollment_status, s.year_level, s.semester,  
         ui.first_name, ui.last_name, ui.gender, ui.email, 
-        ui.date_of_birth, ui.address, ui.phone_number,  
+        ui.date_of_birth, ui.address, ui.phone_number, ui.profile_picture, 
         d.department_id, d.department_name, 
         p.program_name, p.program_id, 
         ss.section_name, ss.section_id,

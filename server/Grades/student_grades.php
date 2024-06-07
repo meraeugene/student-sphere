@@ -50,6 +50,11 @@ $sql = "
         grades g ON s.student_id = g.student_id AND sub.subject_code = g.subject_code
     WHERE 
         s.student_id = ?
+        AND sub.subject_code IN (
+            SELECT fs.subject_code 
+            FROM faculty_subjects fs 
+            WHERE fs.section_id = s.section_id
+        )
     ORDER BY 
         sub.subject_name ASC
 ";
