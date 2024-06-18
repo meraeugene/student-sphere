@@ -58,7 +58,20 @@ const FacultyDashboard = () => {
     weekday: "long",
   });
 
-  // Organize schedule into separate arrays for each day of the week and time slot
+  // Helper function to parse time slot
+  const parseTimeSlot = (timeSlot) => {
+    const [time, modifier] = timeSlot.split(" ");
+    let [hours, minutes] = time.split(":");
+    if (hours === "12") {
+      hours = "00";
+    }
+    if (modifier === "PM") {
+      hours = parseInt(hours, 10) + 12;
+    }
+    return new Date(1970, 0, 1, hours, minutes);
+  };
+
+  // Organize and sort schedule by time slot for each day of the week
   const dayTimeSlotSchedules = {};
 
   schedule.forEach((item) => {
@@ -71,6 +84,12 @@ const FacultyDashboard = () => {
       subjectCode: item.subject_code,
       timeSlot: item.time_slot,
     });
+  });
+
+  Object.keys(dayTimeSlotSchedules).forEach((day) => {
+    dayTimeSlotSchedules[day].sort(
+      (a, b) => parseTimeSlot(a.timeSlot) - parseTimeSlot(b.timeSlot)
+    );
   });
 
   return (

@@ -20,6 +20,7 @@ const ProgramRegistrationForm = ({ toggleAddProgramState, onProgramAdded }) => {
       await dispatch(addProgram(data)).unwrap();
       reset();
       onProgramAdded();
+      toggleAddProgramState();
     } catch (error) {
       console.log(error);
     }

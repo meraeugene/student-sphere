@@ -12,7 +12,6 @@ const AssignSubjectsRegisterForm = ({
   toggleAssignSubjectState,
   selectedFaculty,
   selectedSubject,
-  assignedFacultySubjectsAdded,
 }) => {
   // Use react hoook form
   const {
@@ -72,8 +71,6 @@ const AssignSubjectsRegisterForm = ({
     setValue("sectionIds", values);
   };
 
-  const navigate = useNavigate();
-
   const onSubmit = async (data) => {
     const formData = {
       ...data,
@@ -86,8 +83,8 @@ const AssignSubjectsRegisterForm = ({
 
     try {
       await dispatch(assignSubjectsToFaculty(formData)).unwrap();
-      // reset();
-      // assignedFacultySubjectsAdded();
+      reset();
+      toggleAssignSubjectState();
     } catch (error) {
       console.log(error);
     }

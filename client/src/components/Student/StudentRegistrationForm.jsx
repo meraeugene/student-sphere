@@ -25,6 +25,7 @@ const StudentRegistrationForm = ({ toggleAddStudentState, onStudentAdded }) => {
       reset();
       setStudentId(generateStudentID());
       onStudentAdded();
+      toggleAddStudentState();
     } catch (error) {
       console.error("Error:", error);
       toast.error("An error occurred. Please try again later.");

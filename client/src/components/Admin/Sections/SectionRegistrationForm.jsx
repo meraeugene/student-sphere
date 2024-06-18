@@ -29,6 +29,7 @@ const SectionRegistrationForm = ({ toggleAddSectionState, onSectionAdded }) => {
     try {
       await dispatch(registerSection(data)).unwrap();
       onSectionAdded();
+      toggleAddSectionState();
     } catch (error) {
       console.log(error);
     }

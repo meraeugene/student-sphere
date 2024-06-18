@@ -32,6 +32,7 @@ const FacultyRegistrationForm = ({
 
       await dispatch(registerFaculty(userData)).unwrap();
       reset();
+      toggleAddFacultyMemberState();
       onFacultyAdded();
     } catch (error) {
       console.log(error);
